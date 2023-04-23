@@ -21,9 +21,6 @@ function App() {
         <ActivateFilter />
       </Box>
     </Stack>
-      
-     
-
       <RulesTable />
     </>
   )
