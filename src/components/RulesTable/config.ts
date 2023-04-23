@@ -1,6 +1,6 @@
 import type { RuleDTO, RulesResponse } from "../../types/supabase";
 
-interface ColumnConfig {
+export interface ColumnConfig {
   label: string;
   resource: keyof Omit<RulesResponse & RuleDTO, 'rules'>;
   especialConfig?: boolean,

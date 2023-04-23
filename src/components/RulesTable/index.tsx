@@ -1,12 +1,14 @@
-import {  useMemo } from 'react';
-import { ReadMore } from '@mui/icons-material';
-import { TableCell, TablePagination, TableRow, Typography } from '@mui/material'
+import { FolderOff, ReadMore } from '@mui/icons-material';
+import { CircularProgress, TableCell, TablePagination, TableRow, Typography } from '@mui/material'
 import GenericTable from '../../layout/GenericTable'
-import { useGetRules } from './hooks'
 import { StatusIcon } from '../StatusIcon';
 import { GenericPopover } from '../GenericPopover';
 import { UncontrolledSwitch } from '../Switch/uncontrolledIndexed';
 import { columns } from './config';
+
+import { useGetRulesStatus } from '../../hooks';
+import { GenericHeader } from '../GenericHeader';
+import { Info } from '../../layout/Info';
 
 
 function EspecialConfigCell({resource, value} : {resource: string; value: unknown;}){
@@ -25,22 +27,30 @@ function EspecialConfigCell({resource, value} : {resource: string; value: unknow
   return <UncontrolledSwitch initialStatus={Boolean(value)}/>
 }
 
-export function RulesTable(){
-  const [fetchMore, {results}] = useGetRules('AYebqLNQV6yygs-0Nat3')
 
-  const flatedResults = useMemo(()=>  results?.data
-    ?.map(({rules, ...rest})=> ({...rules, ...rest})), [results?.data])
+export function RulesTable(){
+  const [setPage, {data, isLoading, total, page}] = useGetRulesStatus()
+ 
+  if(isLoading)
+    return <CircularProgress />
+
+  if(!data)
+    return (
+      <Info 
+        icon={<FolderOff color='disabled' fontSize='inherit' />} 
+        primaryText='Sin datos' 
+        secondaryText='Selecciona filtros'
+      />)
 
   return (
     <GenericTable
       body={<>
-        {flatedResults?.map((result)=>(
+        {data?.map((result)=>(
           <TableRow key={result.id}>
               {columns.map(({resource, especialConfig})=> {
                 if(!especialConfig)
-                  return (
-                    <TableCell key={resource+result.id}>{String(result[resource]?? '--')}</TableCell>
-                  )
+                  return <TableCell key={resource+result.id}>{String(result[resource]?? '--')}</TableCell>
+
                 return (
                   <TableCell>
                     <EspecialConfigCell resource={resource} value={result[resource ]?? '--'}/>
@@ -50,18 +60,15 @@ export function RulesTable(){
           </TableRow>
         ))}
       </>} 
-      header={
-        <TableRow>
-        {
-          columns.map(({label})=> <TableCell key={label}>{label}</TableCell>)
-        }
-      </TableRow>}
-        footer={<TablePagination 
+
+      header={<GenericHeader data={columns}/>}
+
+      footer={<TablePagination 
         rowsPerPage={10}
-        count={results?.total ?? 1000}
-        page={results?.page ?? 1}
-        onPageChange={()=> fetchMore()}
-     />}
+        count={total ?? 1000}
+        page={page ?? 1}
+        onPageChange={()=> setPage(prev => prev + 1)}
+      />}
     />
   )
 }

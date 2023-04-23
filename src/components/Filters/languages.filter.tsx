@@ -1,0 +1,42 @@
+import { useQuery } from "@tanstack/react-query"
+import { fetchClient } from "../../lib/modules/fetchClient"
+import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
+import { useCallback } from "react"
+import { setLanguageFilter } from "../../lib/observers"
+
+export const LanguageFilter = ()=>{
+  const {data, isLoading} = useQuery({
+    queryKey: ['languages'],
+    queryFn: () => fetchClient.getAllLanguages()
+  })
+
+  const _handleChange = useCallback((event: SelectChangeEvent)=> {
+    setLanguageFilter(event.target.value)
+  }, [])
+
+  if(isLoading)
+    return <CircularProgress />
+
+  return (
+    <FormControl>
+      <InputLabel id="language" >Lenguage</InputLabel>
+      <Select
+        labelId="language"
+        label="Lenguage"
+        onChange={_handleChange}
+        sx={{ minWidth: 120 }} 
+        defaultValue={''}
+        displayEmpty  
+      >
+        {
+          data?.map(({id, name })=> (
+            <MenuItem key={id} value={id} >
+              {name}
+            </MenuItem>
+          ))
+        }
+      </Select>
+    </FormControl>
+    
+  )
+}

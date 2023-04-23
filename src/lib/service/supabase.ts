@@ -1,18 +1,35 @@
 import {SupabaseClient, createClient} from '@supabase/supabase-js'
 import { supabaseURL, supbaseToken } from '../config/supabase'
-import { Database, RulesResponse } from '../../types/supabase'
-import { FetchClient, PaginationParams } from '../../types/fetchClient'
+import { Database, LanguageDTO, QualityProfileDTO, RulesResponse } from '../../types/supabase'
+import { FetchClientSingleton, PaginationParams, RulesFilter } from '../../types/fetchClient'
 
-export class LocalSupbaseClient implements FetchClient{
-  private static instance: LocalSupbaseClient
+export class LocalSupabaseClient implements FetchClientSingleton{
+  private static instance: LocalSupabaseClient
+
   private constructor(private client: SupabaseClient<Database>){}
 
+  getTotalCountByTable(tableName: string): Promise<number> {
+    throw new Error('Method not implemented.')
+  }
+
+  getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {
+    throw new Error('Method not implemented.')
+  }
+
+  getPaginatedRulesByFilter(filter: RulesFilter, pagination: PaginationParams): Promise<RulesResponse[] | null> {
+    throw new Error('Method not implemented.')
+  }
+
+  getAllLanguages(): Promise<LanguageDTO[] | null> {
+    throw new Error('Method not implemented.')
+  }
+
   static getInstance(){
-    LocalSupbaseClient.instance ??=  new LocalSupbaseClient(
+    LocalSupabaseClient.instance ??=  new LocalSupabaseClient(
       createClient<Database>(supabaseURL, supbaseToken)
     )
 
-    return LocalSupbaseClient.instance
+    return LocalSupabaseClient.instance
   }
 
   private getRange({page, limit = 10}: PaginationParams): [number, number]{
@@ -61,4 +78,4 @@ export class LocalSupbaseClient implements FetchClient{
 }
 
 
-export default LocalSupbaseClient.getInstance
+export default LocalSupabaseClient.getInstance

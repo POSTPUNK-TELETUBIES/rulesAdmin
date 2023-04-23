@@ -15,7 +15,7 @@ const genericMemoizedTable = memo(
           <TableHead>
             {header}
           </TableHead>
-          <TableBody>
+          <TableBody sx={{height:'50vh'}}>
             {body}
           </TableBody>
           {footer && <TableFooter>

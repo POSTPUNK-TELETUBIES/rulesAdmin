@@ -1,52 +1,53 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { type Dispatch, useMemo, useState, type SetStateAction } from "react"
+import { useActiveFilter, useLanguageFilter, useQualityProfileFilter, useRuleTypeFilter, useSeverityFilter } from "../lib/observers"
+import { useQuery } from "@tanstack/react-query"
+import { fetchClient } from "../lib/modules/fetchClient"
+import { RuleDTO, type RulesStatus } from "../types/supabase"
 
-
-interface Results<T = unknown> {
-  data: T[] | null;
-  total: number | null;
+interface UseGetRulesStatusData {
+  data?: (RulesStatus & RuleDTO)[];
+  isLoading: boolean;
+  total?: number;
   page: number;
 }
 
-interface UseGetResponseData<T = unknown> {
-  results: Results<T> | null;
-  isLoading: boolean;
+type UseGetRulesStatusResults = [Dispatch<SetStateAction<number>>, UseGetRulesStatusData]
+
+export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
+  const severity = useSeverityFilter()
+  const lang_id = useLanguageFilter()
+  const isActiveSonar = useActiveFilter()
+  const qualityProfile_id = useQualityProfileFilter()
+  const type = useRuleTypeFilter()
+
+  const [ page, setPage ] = useState(1)
+
+  const {data, isFetching} = useQuery({
+    queryKey: ['rules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
+    queryFn: ()=> fetchClient.getPaginatedRulesByFilter({
+      severity,
+      lang_id,
+      isActiveSonar,
+      qualityProfile_id,
+      type
+    },{
+      page,
+    }),
+    enabled: Boolean(lang_id && qualityProfile_id),
+    keepPreviousData: true
+  })
+
+  // TODO: validar si se peude usar useQueriessssss (plural)
+  const { data: total, isFetching: isFetchingCount } = useQuery({
+    queryKey: ['totalRules'],
+    queryFn: () => fetchClient.getTotalCountByTable('status'),
+  })
+
+  //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
+  const flatedResults = useMemo(()=>  data
+    ?.map(({rules, ...rest})=> ({...rules, ...rest})), [data])
+
+
+  return [setPage, {data: flatedResults,  isLoading: isFetching || isFetchingCount, total, page}]
+
 }
-
-type UsePaginatedResponse<K extends Record<string, unknown>, T =unknown> = [(config?: K) => Promise<Results<T>>,  UseGetResponseData<T>]
-
-export function usePaginatedFetchData< K extends Record<string, unknown>, T = unknown,>(
-  resultCallback: (page: number, config: K)=> Promise<Results<T>>, 
-  initialConfig: K
-): UsePaginatedResponse<K, T>{
-  const [isLoading, setIsLoading ] = useState(false)
-  const [results, setResults] = useState<Results<T> | null>(null)
-  const pageRef = useRef(1)
-
-  const _handleGetResults = useCallback(
-    async (page:number, config?:K)=>{
-      setIsLoading(true)
-      const results = await resultCallback(page, {
-        ...initialConfig,
-        ...config
-      })
-      setResults(results)
-      setIsLoading(false)
-
-      return results
-  }, [initialConfig, resultCallback])
-
-  const fetchNext = useCallback(async (config?: K) => {
-    pageRef.current++
-    return await _handleGetResults(pageRef.current, config)
-  }, [_handleGetResults])
-
-
-  useEffect(()=> {
-    _handleGetResults(1)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-
-  return [fetchNext, {results, isLoading}]
-}
-
-

@@ -1,4 +1,4 @@
-import { RulesResponse } from "./supabase";
+import { LanguageDTO, QualityProfileDTO, RulesResponse } from "./supabase";
 
 export interface PaginationParams {
   page: number,
@@ -9,22 +9,20 @@ export interface Pojo {
   [x: string]: any;
 }
 
-export interface FetchClient{
-  getPaginatedResutsByQualityProfile(
-    qualityProfileKey: string,
-    pagination: PaginationParams
-  ):Promise<{
-    data: RulesResponse[];
-    total: number | null;
-    page: number;
-    error: unknown
-  }>
+export interface RulesFilter {
+  lang_id: string;
+  qualityProfile_id: string;
+  severity: string;
+  type: string;
+  isActiveSonar: boolean;
+}
 
-  getPaginatedQualityProfiles(pagination: PaginationParams):Promise<{
-    data: Pojo[] | null;
-    total: number | null;
-    page: number;
-    error: unknown
-  }>
+export interface FetchClientSingleton{
+  getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null>
 
+  getAllLanguages(): Promise<LanguageDTO[] | null>
+
+  getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<RulesResponse[] | null>
+
+  getTotalCountByTable(tableName: string): Promise<number>
 }

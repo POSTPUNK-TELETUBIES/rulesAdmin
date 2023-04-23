@@ -1,11 +1,14 @@
 import axios, { AxiosInstance } from "axios";
-import { FetchClient, PaginationParams, Pojo } from "../../types/fetchClient";
-import { RulesResponse } from "../../types/supabase";
+import { FetchClientSingleton, PaginationParams, RulesFilter } from "../../types/fetchClient";
+import { LanguageDTO, QualityProfileDTO, RulesResponse } from "../../types/supabase";
 import { supabaseURL, supbaseToken } from "../config/supabase";
 
-export class AxiosFetchData implements FetchClient {
+export class AxiosFetchData implements FetchClientSingleton {
   private static instance: AxiosFetchData
   private constructor(private client: AxiosInstance){}
+  async getTotalCountByTable(tableName: string) {
+    return 100
+  }
 
   static getInstance(){
     AxiosFetchData.instance ??= new AxiosFetchData(
@@ -20,24 +23,32 @@ export class AxiosFetchData implements FetchClient {
     return AxiosFetchData.instance
   }
 
-  async getPaginatedResutsByQualityProfile(qualityProfileKey: string, pagination: PaginationParams): Promise<{ data: RulesResponse[]; total: number | null; page: number; error: unknown; }> {
-    const { data } = await this.client.get('/qualityprofiles', {
-      params: {
-
+  async getPaginatedRulesByFilter(filter: RulesFilter, pagination: PaginationParams): Promise<RulesResponse[] | null> {
+    const { data } = await this.client.get('/rules', {
+      params:{
+        ...filter,
+        ...pagination
       }
     })
 
     return data
   }
-  async getPaginatedQualityProfiles({page, limit =10}: PaginationParams): Promise<{ data: Pojo[] | null; total: number | null; page: number; error: unknown; }> {
+
+  async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {
     const { data } = await this.client.get('/qualityprofiles', {
       params: {
-        limit,
-        offset: (page - 1)*limit
+        language_id: languageId
       }
     })
 
     return data
   }
-  
+
+  async getAllLanguages(): Promise<LanguageDTO[] | null> {
+    const { data } = await this.client.get('/languages')
+
+    return data
+  }
 }
+
+export default AxiosFetchData.getInstance
