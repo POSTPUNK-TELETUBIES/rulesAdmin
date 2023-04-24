@@ -1,5 +1,9 @@
 import { FolderOff, ReadMore } from '@mui/icons-material';
 import { CircularProgress, TableCell, TablePagination, TableRow, Typography } from '@mui/material'
+import relative from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/es'
+import dayjs from 'dayjs';
+
 import GenericTable from '../../layout/GenericTable'
 import { StatusIcon } from '../StatusIcon';
 import { GenericPopover } from '../GenericPopover';
@@ -11,10 +15,22 @@ import { GenericHeader } from '../GenericHeader';
 import { Info } from '../../layout/Info';
 import { MouseEvent, useCallback, useState } from 'react';
 
+dayjs.extend(relative)
+dayjs.locale('es')
 
-const EspecialConfigCell = ({ resource, value, id }: { resource: string; value: unknown; id: string; }) => {
-  if (resource === 'isActiveSonar')
-    return <StatusIcon isActive={Boolean(value)} />
+interface TimeAgoProps {
+  date: string | Date
+}
+
+const TimeAgo = ({date}: TimeAgoProps)=> <Typography>
+    {dayjs(date).from(new Date())}
+  </Typography>
+
+
+// TODO: check another abstraction for especial cases
+const EspecialConfigCell = ({resource, value, id} : {resource: string; value: unknown; id: string;})=>{
+  if(resource === 'isActiveSonar')
+    return <StatusIcon isActive={Boolean(value)}/>
 
   if (resource === 'htmlDesc')
     return (<GenericPopover
@@ -25,7 +41,10 @@ const EspecialConfigCell = ({ resource, value, id }: { resource: string; value: 
         />
       } />)
 
-  return <UncontrolledSwitch initialStatus={Boolean(value)} id={id} />
+  if(resource === 'updated_at')
+    return <TimeAgo date={String(value)} />
+
+  return <UncontrolledSwitch initialStatus={Boolean(value)} id={id}/>
 }
 
 
@@ -65,9 +84,12 @@ export function RulesTable() {
       body={<>
         {data?.map((result) => (
           <TableRow key={result.id}>
-            {columns.map(({ resource, especialConfig }) => {
-              if (!especialConfig)
-                return <TableCell key={resource + result.id}>{String(result[resource] ?? '--')}</TableCell>
+              {columns.map(({resource, especialConfig}) => {
+                if(!especialConfig)
+                  return <TableCell 
+                    key={resource+result.id}>
+                      {String(result[resource]?? '--')}
+                    </TableCell>
 
               return (
                 <TableCell key={resource + result.id}>

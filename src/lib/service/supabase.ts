@@ -15,7 +15,8 @@ export class LocalSupabaseClient implements FetchClientSingleton{
       return this.client
         .from('status')
         .update({
-          isActive: newStatus
+          isActive: newStatus,
+          updated_at: new Date()
         })
         .in('id', data.map(({id})=> id))
         .throwOnError()
@@ -37,18 +38,6 @@ export class LocalSupabaseClient implements FetchClientSingleton{
       .throwOnError()
 
     return count ?? 0
-  }
-
-  async getStatusCount(filters: RulesFilter) :Promise<number> {
-    delete filters.lang_id
-
-    const query = this.client
-      .from('status')
-      .select('*, rules!inner(*), qualityProfiles(*)', {count: 'exact', head: true})
-
-    const { count, error } = await this.buildQuery(query,filters)
-    console.log(error)
-    return count
   }
 
   async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {

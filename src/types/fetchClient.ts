@@ -27,7 +27,5 @@ export interface FetchClientSingleton{
 
   getTotalCountByTable(tableName: string): Promise<number>
 
-  getStatusCount(filter: RulesFilter): Promise<number>
-
   postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void>
 }
