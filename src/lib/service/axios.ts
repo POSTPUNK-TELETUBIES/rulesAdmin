@@ -28,7 +28,7 @@ export class AxiosFetchData implements FetchClientSingleton {
     return AxiosFetchData.instance
   }
 
-  async getPaginatedRulesByFilter(filter: RulesFilter, pagination: PaginationParams): Promise<RulesResponse[] | null> {
+  async getPaginatedRulesByFilter(filter: RulesFilter, pagination: PaginationParams) {
     const { data } = await this.client.get('/rules', {
       params:{
         ...filter,
@@ -36,7 +36,7 @@ export class AxiosFetchData implements FetchClientSingleton {
       }
     })
 
-    return data
+    return { data, count: 100}
   }
 
   async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {

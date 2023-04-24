@@ -94,6 +94,8 @@ export class LocalSupabaseClient implements FetchClientSingleton{
     const {data, count } = await this.buildQuery(query, filter)
           .throwOnError()
           .range(...this.getRange(pagination))
+
+    console.log(count)
       
     return { data: data as RulesResponse[], count}
   }

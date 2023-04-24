@@ -47,19 +47,11 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     keepPreviousData: true
   })
 
-  // TODO: validar si se peude usar useQueriessssss (plural)
-  const { data: total, isFetching: isFetchingCount } = useQuery({
-    queryKey: ['totalRules'],
-    queryFn: () => fetchClient.getTotalCountByTable('status'),
-    enabled: Boolean(lang_id && qualityProfile_id),
-  })
-
-
   //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
   const flatedResults = useMemo(() => !isAvailabletoShow ? [] : data
     ?.map(({ rules, ...rest }) => ({ ...rules, ...rest })), [data, isAvailabletoShow])
 
 
-  return [setPage, { data: flatedResults, isLoading: isFetching || isFetchingCount, total, page }]
+  return [setPage, { data: flatedResults, isLoading: isFetching , total:totalRef.current , page }]
 
 }
