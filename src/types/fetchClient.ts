@@ -23,7 +23,7 @@ export interface FetchClientSingleton{
 
   getAllLanguages(): Promise<LanguageDTO[] | null>
 
-  getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<RulesResponse[] | null>
+  getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<{data: RulesResponse[] | null; count: number}>
 
   getTotalCountByTable(tableName: string): Promise<number>
 
