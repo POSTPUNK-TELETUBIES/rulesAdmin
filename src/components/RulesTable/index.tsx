@@ -14,17 +14,15 @@ import { Info } from '../../layout/Info';
 import { MouseEvent, useCallback, useState } from 'react';
 import { TimeAgo } from '../TimeAgo';
 
-
-
 interface ExpecialConfigCell {
   resource: string; 
   value: unknown; 
   id: string;
-  secondaryValue?: string;
+  secondaryValue?: string | Date;
 }
 
 // TODO: check another abstraction for especial cases
-const EspecialConfigCell = ({resource, value, id, secondaryValue} : ExpecialConfigCell)=>{
+const EspecialConfigCell = ({ resource, value, id, secondaryValue } : ExpecialConfigCell) => {
   if(resource === 'isActiveSonar')
     return <Typography>
       {value ? 'Activo' : 'No activo'}
@@ -42,7 +40,7 @@ const EspecialConfigCell = ({resource, value, id, secondaryValue} : ExpecialConf
   if(resource === 'updated_at')
     return dayjs(String(value))
       .diff(secondaryValue, 'hours') > 28? 
-        <TimeAgo date={String(value)} /> : <Typography>--</Typography>
+        <TimeAgo date={String(value)} /> : <Typography align='center'>--</Typography>
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={id}/>
 }
@@ -84,18 +82,19 @@ export function RulesTable() {
       body={<>
         {data?.map((result) => (
           <TableRow key={result.id}>
-              {columns.map(({resource, especialConfig}) => {
-                if(!especialConfig)
-                  return <TableCell 
-                    key={resource+result.id}>
-                      {String(result[resource]?? '--')}
-                    </TableCell>
+            {columns.map(({ resource, especialConfig }) => {
+              if(!especialConfig)
+                return <TableCell 
+                  key={resource+result.id}>
+                    {String(result[resource]?? '--')}
+                  </TableCell>
 
               return (
                 <TableCell key={resource + result.id}>
                   <EspecialConfigCell
                     id={result.id}
                     resource={resource}
+                    secondaryValue={result.createdAt}
                     value={result[resource] ?? '--'}
                   />
                 </TableCell>
