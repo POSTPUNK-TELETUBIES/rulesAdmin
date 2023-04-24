@@ -15,7 +15,6 @@ import { MouseEvent, useCallback, useState } from 'react';
 import { TimeAgo } from '../TimeAgo';
 
 
-
 interface ExpecialConfigCell {
   resource: string; 
   value: unknown; 
@@ -24,7 +23,7 @@ interface ExpecialConfigCell {
 }
 
 // TODO: check another abstraction for especial cases
-const EspecialConfigCell = ({resource, value, id, secondaryValue} : ExpecialConfigCell)=>{
+const EspecialConfigCell = ({ resource, value, id, secondaryValue } : ExpecialConfigCell) => {
   if(resource === 'isActiveSonar')
     return <Typography>
       {value ? 'Activo' : 'No activo'}
@@ -84,12 +83,12 @@ export function RulesTable() {
       body={<>
         {data?.map((result) => (
           <TableRow key={result.id}>
-              {columns.map(({resource, especialConfig}) => {
-                if(!especialConfig)
-                  return <TableCell 
-                    key={resource+result.id}>
-                      {String(result[resource]?? '--')}
-                    </TableCell>
+            {columns.map(({ resource, especialConfig }) => {
+              if(!especialConfig)
+                return <TableCell 
+                  key={resource+result.id}>
+                    {String(result[resource]?? '--')}
+                  </TableCell>
 
               return (
                 <TableCell key={resource + result.id}>
