@@ -9,12 +9,12 @@ export interface ColumnConfig {
 }
 
 export const columns:  ColumnConfig[] = [
-  {label: 'Condigo de regla', resource: 'key'},
-  {label: 'Regla', resource: 'name'},
-  {label: 'Tipo', resource: 'type'},
-  {label: 'severidad', resource: 'severity'},
-  {label: 'Detalle', especialConfig: true, resource: 'htmlDesc'},
-  {label: 'Estado actual sonar', resource: 'isActiveSonar', especialConfig: true},
-  {label: 'Estado propuesto', resource: 'isActive', especialConfig: true},
-  {label: 'Actualizacion ', resource: 'updated_at', especialConfig: true, icon: <Schedule />}
+  { label: 'Condigo de regla', resource: 'key' },
+  { label: 'Regla', resource: 'name' },
+  { label: 'Tipo', resource: 'type' },
+  { label: 'severidad', resource: 'severity' },
+  { label: 'Detalle', especialConfig: true, resource: 'htmlDesc' },
+  { label: 'Estado actual sonar', resource: 'isActiveSonar', especialConfig: true },
+  { label: 'Estado propuesto', resource: 'isActive', especialConfig: true },
+  { label: 'Actualizacion ', resource: 'updated_at', especialConfig: true, icon: <Schedule /> }
 ]

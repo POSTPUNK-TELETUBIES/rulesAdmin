@@ -14,12 +14,11 @@ import { Info } from '../../layout/Info';
 import { MouseEvent, useCallback, useState } from 'react';
 import { TimeAgo } from '../TimeAgo';
 
-
 interface ExpecialConfigCell {
   resource: string; 
   value: unknown; 
   id: string;
-  secondaryValue?: string;
+  secondaryValue?: string | Date;
 }
 
 // TODO: check another abstraction for especial cases
@@ -41,7 +40,7 @@ const EspecialConfigCell = ({ resource, value, id, secondaryValue } : ExpecialCo
   if(resource === 'updated_at')
     return dayjs(String(value))
       .diff(secondaryValue, 'hours') > 28? 
-        <TimeAgo date={String(value)} /> : <Typography>--</Typography>
+        <TimeAgo date={String(value)} /> : <Typography align='center'>--</Typography>
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={id}/>
 }
@@ -95,6 +94,7 @@ export function RulesTable() {
                   <EspecialConfigCell
                     id={result.id}
                     resource={resource}
+                    secondaryValue={result.createdAt}
                     value={result[resource] ?? '--'}
                   />
                 </TableCell>
