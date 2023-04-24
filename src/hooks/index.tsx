@@ -14,11 +14,13 @@ interface UseGetRulesStatusData {
 type UseGetRulesStatusResults = [Dispatch<SetStateAction<number>>, UseGetRulesStatusData]
 
 export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
+  // subscriptions to reactive status
   const severity = useSeverityFilter()
   const lang_id = useLanguageFilter()
   const isActiveSonar = useActiveFilter()
   const qualityProfile_id = useQualityProfileFilter()
   const type = useRuleTypeFilter()
+  
 
   const [ page, setPage ] = useState(1)
 
@@ -41,8 +43,14 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
 
   // TODO: validar si se peude usar useQueriessssss (plural)
   const { data: total, isFetching: isFetchingCount } = useQuery({
-    queryKey: ['totalRules'],
-    queryFn: () => fetchClient.getTotalCountByTable('status'),
+    queryKey: ['totalRules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
+    queryFn: () => fetchClient.getStatusCount({
+      severity,
+      lang_id,
+      isActiveSonar,
+      qualityProfile_id,
+      type
+    }),
   })
 
 

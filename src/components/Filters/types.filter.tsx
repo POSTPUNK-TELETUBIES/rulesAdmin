@@ -18,9 +18,14 @@ export const TypesFilter = () => {
         labelId='type'
         onChange={_handleChange}
         sx={{maxWidth: 120}}
-        defaultValue={Type.Bug}
+        defaultValue={'all'}
         displayEmpty
       >
+        {
+          <MenuItem value={'all'}>
+            TODOS
+          </MenuItem>
+        }
         {
           typesValues.map((type)=> <MenuItem key={type} value={type}>
             {type}
