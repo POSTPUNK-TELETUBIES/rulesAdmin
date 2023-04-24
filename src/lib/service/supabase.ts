@@ -1,7 +1,8 @@
 import { SupabaseClient, createClient } from '@supabase/supabase-js'
+import type { PostgrestFilterBuilder } from '@supabase/postgrest-js'
 import { supabaseURL, supbaseToken } from '../config/supabase'
 import { Database, LanguageDTO, QualityProfileDTO, RulesResponse } from '../../types/supabase'
-import { FetchClientSingleton, PaginationParams, RulesFilter } from '../../types/fetchClient'
+import { FetchClientSingleton, PaginationParams, Pojo, RulesFilter } from '../../types/fetchClient'
 import { LocalRulesStatus } from './dexie'
 
 export class LocalSupabaseClient implements FetchClientSingleton{
@@ -38,6 +39,18 @@ export class LocalSupabaseClient implements FetchClientSingleton{
     return count ?? 0
   }
 
+  async getStatusCount(filters: RulesFilter) :Promise<number> {
+    delete filters.lang_id
+
+    const query = this.client
+      .from('status')
+      .select('*, rules!inner(*), qualityProfiles(*)', {count: 'exact', head: true})
+
+    const { count, error } = await this.buildQuery(query,filters)
+    console.log(error)
+    return count
+  }
+
   async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {
     const { data } = await this.client
       .from('qualityprofiles')
@@ -48,29 +61,52 @@ export class LocalSupabaseClient implements FetchClientSingleton{
     return data as QualityProfileDTO[]
   }
 
+  private static queryBuilderColumns = {
+    severity: 'rules.severity',
+    type: 'rules.type',
+    isActiveSonar: 'isActiveSonar',
+    qualityProfile_id: 'qualityProfile_id',
+  }
+
+  private buildQuery(query: PostgrestFilterBuilder<any, any, Pojo[]>, filter: Partial<RulesFilter>){
+    for (const key in filter) {
+      if (!Object.prototype.hasOwnProperty.call(filter, key)) 
+        continue
+      
+      const element = filter[key];
+
+      if(element !== 'all' && element != null)
+        query = query.eq(LocalSupabaseClient.queryBuilderColumns[key], element)
+    }
+   
+    return query
+  }
+
   async getPaginatedRulesByFilter(
-    {qualityProfile_id, isActiveSonar, severity, type}: RulesFilter, 
+    filter: RulesFilter, 
     pagination: PaginationParams
-  ): Promise<RulesResponse[] | null> {
-    const {data} = await this.client
-      .from('status')
-      .select(`
-        *,
-        qualityprofiles(
-          *
-        ),
-        rules!inner(
-          *
-        )
-      `)
-      .eq('qualityProfile_id', qualityProfile_id)
-      .eq('isActiveSonar', isActiveSonar)
-      .eq('rules.severity', severity)
-      .eq('rules.type', type)
-      .range(...this.getRange(pagination))
-      .throwOnError()
- 
-    return data as RulesResponse[]
+  ) {   
+    delete filter.lang_id
+  
+    const query = this.client
+    .from('status')
+    .select(`
+      *,
+      qualityprofiles(
+        *
+      ),
+      rules!inner(
+        *
+      )
+    `, {count: 'exact'})
+
+  
+
+    const {data, count } = await this.buildQuery(query, filter)
+          .throwOnError()
+          .range(...this.getRange(pagination))
+      
+    return { data: data as RulesResponse[], count}
   }
 
   async getAllLanguages(): Promise<LanguageDTO[] | null> {

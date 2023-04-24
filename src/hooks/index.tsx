@@ -1,4 +1,4 @@
-import { type Dispatch, useMemo, useState, type SetStateAction } from "react"
+import { type Dispatch, useMemo, useState, type SetStateAction, useRef } from "react"
 import { useActiveFilter, useLanguageFilter, useQualityProfileFilter, useRuleTypeFilter, useSeverityFilter } from "../lib/observers"
 import { useQuery } from "@tanstack/react-query"
 import { fetchClient } from "../lib/modules/fetchClient"
@@ -19,6 +19,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const isActiveSonar = useActiveFilter()
   const qualityProfile_id = useQualityProfileFilter()
   const type = useRuleTypeFilter()
+  const totalRef = useRef(0)
 
   const [page, setPage] = useState(1)
 
@@ -26,15 +27,22 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const { data, isFetching } = useQuery({
     queryKey: ['rules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
-    queryFn: () => fetchClient.getPaginatedRulesByFilter({
-      severity,
-      lang_id,
-      isActiveSonar,
-      qualityProfile_id,
-      type
-    }, {
-      page,
-    }),
+    async queryFn() {
+      const { data, count } = await fetchClient.getPaginatedRulesByFilter({
+        severity,
+        lang_id,
+        isActiveSonar,
+        qualityProfile_id,
+        type
+      }, {
+        page,
+      })
+
+      totalRef.current = count
+
+      return data
+
+    },
     enabled: Boolean(lang_id && qualityProfile_id),
     keepPreviousData: true
   })

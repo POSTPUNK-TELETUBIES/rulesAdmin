@@ -15,7 +15,7 @@ export interface RulesFilter {
   qualityProfile_id: string;
   severity: string;
   type: string;
-  isActiveSonar: boolean;
+  isActiveSonar: boolean | string;
 }
 
 export interface FetchClientSingleton{
@@ -23,9 +23,11 @@ export interface FetchClientSingleton{
 
   getAllLanguages(): Promise<LanguageDTO[] | null>
 
-  getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<RulesResponse[] | null>
+  getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<{data: RulesResponse[] | null; count: number}>
 
   getTotalCountByTable(tableName: string): Promise<number>
+
+  getStatusCount(filter: RulesFilter): Promise<number>
 
   postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void>
 }
