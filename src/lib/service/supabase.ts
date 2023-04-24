@@ -39,6 +39,18 @@ export class LocalSupabaseClient implements FetchClientSingleton{
     return count ?? 0
   }
 
+  async getStatusCount(filters: RulesFilter) :Promise<number> {
+    delete filters.lang_id
+
+    const query = this.client
+      .from('status')
+      .select('*', {count: 'exact', head: true})
+
+    const { count } = await this.buildQuery(query,filters)
+
+    return count
+  }
+
   async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {
     const { data } = await this.client
       .from('qualityprofiles')
@@ -56,19 +68,7 @@ export class LocalSupabaseClient implements FetchClientSingleton{
     qualityProfile_id: 'qualityProfile_id',
   }
 
-  private buildQuery(filter: Partial<RulesFilter>){
-    let query = this.client
-    .from('status')
-    .select(`
-      *,
-      qualityprofiles(
-        *
-      ),
-      rules!inner(
-        *
-      )
-    `)
-  
+  private buildQuery(query: PostgrestFilterBuilder<any, any, Pojo[]>, filter: Partial<RulesFilter>){
     for (const key in filter) {
       if (!Object.prototype.hasOwnProperty.call(filter, key)) 
         continue
@@ -85,12 +85,22 @@ export class LocalSupabaseClient implements FetchClientSingleton{
   async getPaginatedRulesByFilter(
     filter: RulesFilter, 
     pagination: PaginationParams
-  ): Promise<RulesResponse[] | null> {
-    console.log(filter)
-    
+  ): Promise<RulesResponse[] | null> {   
     delete filter.lang_id
+  
+    const query = this.client
+    .from('status')
+    .select(`
+      *,
+      qualityprofiles(
+        *
+      ),
+      rules!inner(
+        *
+      )
+    `)
 
-    const {data} = await this.buildQuery(filter)
+    const {data} = await this.buildQuery(query, filter)
           .throwOnError()
           .range(...this.getRange(pagination))
  

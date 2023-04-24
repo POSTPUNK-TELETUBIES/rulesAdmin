@@ -43,8 +43,14 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
 
   // TODO: validar si se peude usar useQueriessssss (plural)
   const { data: total, isFetching: isFetchingCount } = useQuery({
-    queryKey: ['totalRules'],
-    queryFn: () => fetchClient.getTotalCountByTable('status'),
+    queryKey: ['totalRules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
+    queryFn: () => fetchClient.getStatusCount({
+      severity,
+      lang_id,
+      isActiveSonar,
+      qualityProfile_id,
+      type
+    }),
   })
 
 
