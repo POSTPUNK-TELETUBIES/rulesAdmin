@@ -1,4 +1,4 @@
-import { type Dispatch, useMemo, useState, type SetStateAction } from "react"
+import { type Dispatch, useMemo, useState, type SetStateAction, useRef } from "react"
 import { useActiveFilter, useLanguageFilter, useQualityProfileFilter, useRuleTypeFilter, useSeverityFilter } from "../lib/observers"
 import { useQuery } from "@tanstack/react-query"
 import { fetchClient } from "../lib/modules/fetchClient"
@@ -20,6 +20,8 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
   const isActiveSonar = useActiveFilter()
   const qualityProfile_id = useQualityProfileFilter()
   const type = useRuleTypeFilter()
+  const totalRef = useRef(0)
+
   
 
   const [ page, setPage ] = useState(1)
@@ -28,30 +30,26 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
 
   const {data, isFetching} = useQuery({
     queryKey: ['rules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
-    queryFn: ()=> fetchClient.getPaginatedRulesByFilter({
-      severity,
-      lang_id,
-      isActiveSonar,
-      qualityProfile_id,
-      type
-    },{
-      page,
-    }),
+    async queryFn() {
+      const {data, count} = await fetchClient.getPaginatedRulesByFilter({
+        severity,
+        lang_id,
+        isActiveSonar,
+        qualityProfile_id,
+        type
+      },{
+        page,
+      })
+
+      totalRef.current = count
+
+      return data
+
+    },
     enabled: Boolean(lang_id && qualityProfile_id),
     keepPreviousData: true
   })
 
-  // TODO: validar si se peude usar useQueriessssss (plural)
-  const { data: total, isFetching: isFetchingCount } = useQuery({
-    queryKey: ['totalRules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
-    queryFn: () => fetchClient.getStatusCount({
-      severity,
-      lang_id,
-      isActiveSonar,
-      qualityProfile_id,
-      type
-    }),
-  })
 
 
   //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
@@ -59,6 +57,14 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
     ?.map(({rules, ...rest})=> ({...rules, ...rest})), [data, isAvailabletoShow])
 
 
-  return [setPage, {data: flatedResults,  isLoading: isFetching || isFetchingCount, total, page}]
+  return [
+    setPage, 
+    {
+      data: flatedResults, 
+      isLoading: isFetching ,
+      total: totalRef.current,
+      page
+    }
+  ]
 
 }

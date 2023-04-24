@@ -44,10 +44,10 @@ export class LocalSupabaseClient implements FetchClientSingleton{
 
     const query = this.client
       .from('status')
-      .select('*', {count: 'exact', head: true})
+      .select('*, rules!inner(*), qualityProfiles(*)', {count: 'exact', head: true})
 
-    const { count } = await this.buildQuery(query,filters)
-
+    const { count, error } = await this.buildQuery(query,filters)
+    console.log(error)
     return count
   }
 
@@ -85,7 +85,7 @@ export class LocalSupabaseClient implements FetchClientSingleton{
   async getPaginatedRulesByFilter(
     filter: RulesFilter, 
     pagination: PaginationParams
-  ): Promise<RulesResponse[] | null> {   
+  ) {   
     delete filter.lang_id
   
     const query = this.client
@@ -98,13 +98,15 @@ export class LocalSupabaseClient implements FetchClientSingleton{
       rules!inner(
         *
       )
-    `)
+    `, {count: 'exact'})
 
-    const {data} = await this.buildQuery(query, filter)
+  
+
+    const {data, count } = await this.buildQuery(query, filter)
           .throwOnError()
           .range(...this.getRange(pagination))
- 
-    return data as RulesResponse[]
+      
+    return { data: data as RulesResponse[], count}
   }
 
   async getAllLanguages(): Promise<LanguageDTO[] | null> {
