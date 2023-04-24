@@ -13,26 +13,26 @@ interface UseGetRulesStatusData {
 
 type UseGetRulesStatusResults = [Dispatch<SetStateAction<number>>, UseGetRulesStatusData]
 
-export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
+export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const severity = useSeverityFilter()
   const lang_id = useLanguageFilter()
   const isActiveSonar = useActiveFilter()
   const qualityProfile_id = useQualityProfileFilter()
   const type = useRuleTypeFilter()
 
-  const [ page, setPage ] = useState(1)
+  const [page, setPage] = useState(1)
 
   const isAvailabletoShow = Boolean(lang_id && qualityProfile_id)
 
-  const {data, isFetching} = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['rules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
-    queryFn: ()=> fetchClient.getPaginatedRulesByFilter({
+    queryFn: () => fetchClient.getPaginatedRulesByFilter({
       severity,
       lang_id,
       isActiveSonar,
       qualityProfile_id,
       type
-    },{
+    }, {
       page,
     }),
     enabled: Boolean(lang_id && qualityProfile_id),
@@ -43,14 +43,15 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
   const { data: total, isFetching: isFetchingCount } = useQuery({
     queryKey: ['totalRules'],
     queryFn: () => fetchClient.getTotalCountByTable('status'),
+    enabled: Boolean(lang_id && qualityProfile_id),
   })
 
 
   //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
-  const flatedResults = useMemo(()=> !isAvailabletoShow? [] : data
-    ?.map(({rules, ...rest})=> ({...rules, ...rest})), [data, isAvailabletoShow])
+  const flatedResults = useMemo(() => !isAvailabletoShow ? [] : data
+    ?.map(({ rules, ...rest }) => ({ ...rules, ...rest })), [data, isAvailabletoShow])
 
 
-  return [setPage, {data: flatedResults,  isLoading: isFetching || isFetchingCount, total, page}]
+  return [setPage, { data: flatedResults, isLoading: isFetching || isFetchingCount, total, page }]
 
 }

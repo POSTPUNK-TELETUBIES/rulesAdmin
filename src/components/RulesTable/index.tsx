@@ -9,69 +9,88 @@ import { columns } from './config';
 import { useGetRulesStatus } from '../../hooks';
 import { GenericHeader } from '../GenericHeader';
 import { Info } from '../../layout/Info';
+import { MouseEvent, useCallback, useState } from 'react';
 
 
-const EspecialConfigCell = ({resource, value, id} : {resource: string; value: unknown; id: string;})=>{
-  if(resource === 'isActiveSonar')
-    return <StatusIcon isActive={Boolean(value)}/>
+const EspecialConfigCell = ({ resource, value, id }: { resource: string; value: unknown; id: string; }) => {
+  if (resource === 'isActiveSonar')
+    return <StatusIcon isActive={Boolean(value)} />
 
-  if(resource === 'htmlDesc')
-    return (<GenericPopover 
+  if (resource === 'htmlDesc')
+    return (<GenericPopover
       icon={<ReadMore />}
       popoverBody={
-        <Typography 
-          dangerouslySetInnerHTML={{__html:String(value)}} 
+        <Typography
+          dangerouslySetInnerHTML={{ __html: String(value) }}
         />
-    } />)
+      } />)
 
-  return <UncontrolledSwitch initialStatus={Boolean(value)} id={id}/>
+  return <UncontrolledSwitch initialStatus={Boolean(value)} id={id} />
 }
 
 
-export function RulesTable(){
-  const [setPage, {data, isLoading, total, page}] = useGetRulesStatus()
- 
-  if(isLoading)
+export function RulesTable() {
+  const [setPage, { data, isLoading, total, page }] = useGetRulesStatus()
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = useCallback((
+    event: MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    if (!event) return
+    setPage(newPage)
+  }, [setPage])
+
+  const handleChangeRowsPerPage = useCallback((
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }, [setPage]);
+
+  if (isLoading)
     return <CircularProgress />
 
-  if(!data)
+  if (!data)
     return (
-      <Info 
-        icon={<FolderOff color='disabled' fontSize='inherit' />} 
-        primaryText='Sin datos' 
+      <Info
+        icon={<FolderOff color='disabled' fontSize='inherit' />}
+        primaryText='Sin datos'
         secondaryText='Selecciona filtros'
       />)
 
   return (
     <GenericTable
       body={<>
-        {data?.map((result)=>(
+        {data?.map((result) => (
           <TableRow key={result.id}>
-              {columns.map(({resource, especialConfig})=> {
-                if(!especialConfig)
-                  return <TableCell key={resource+result.id}>{String(result[resource]?? '--')}</TableCell>
+            {columns.map(({ resource, especialConfig }) => {
+              if (!especialConfig)
+                return <TableCell key={resource + result.id}>{String(result[resource] ?? '--')}</TableCell>
 
-                return (
-                  <TableCell key={resource+result.id}>
-                    <EspecialConfigCell 
-                      id={result.id}
-                      resource={resource} 
-                      value={result[resource] ?? '--'}
-                    />
-                  </TableCell>
-                )
-              })}
+              return (
+                <TableCell key={resource + result.id}>
+                  <EspecialConfigCell
+                    id={result.id}
+                    resource={resource}
+                    value={result[resource] ?? '--'}
+                  />
+                </TableCell>
+              )
+            })}
           </TableRow>
         ))}
-      </>} 
+      </>}
 
-      header={<GenericHeader data={columns}/>}
+      header={<GenericHeader data={columns} />}
 
-      footer={<TablePagination 
-        rowsPerPage={10}
+      footer={<TablePagination
+        rowsPerPage={rowsPerPage}
         count={total ?? 1000}
-        page={page ?? 1}
-        onPageChange={()=> setPage(prev => prev + 1)}
+        page={page - 1}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />}
     />
   )
