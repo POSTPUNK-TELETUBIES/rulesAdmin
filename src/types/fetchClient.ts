@@ -15,7 +15,7 @@ export interface RulesFilter {
   qualityProfile_id: string;
   severity: string;
   type: string;
-  isActiveSonar: boolean;
+  isActiveSonar: boolean | string;
 }
 
 export interface FetchClientSingleton{

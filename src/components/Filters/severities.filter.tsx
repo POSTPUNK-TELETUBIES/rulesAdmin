@@ -18,9 +18,14 @@ export const SeverityProfileFilter = ()=>{
         labelId="severity"
         onChange={_handleChange} 
         sx={{maxWidth: 120}}
-        defaultValue={severityValues[0]}
+        defaultValue={'all'}
         displayEmpty
       >
+        {
+          <MenuItem value={'all'}>
+           TODOS
+          </MenuItem>
+        }
         {
           severityValues.map(severity => 
             <MenuItem key={severity} value={severity}>
