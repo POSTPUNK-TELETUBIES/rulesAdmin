@@ -1,4 +1,5 @@
 import { FolderOff, ReadMore } from '@mui/icons-material';
+import dayjs from 'dayjs';
 import { CircularProgress, TableCell, TablePagination, TableRow, Typography } from '@mui/material'
 
 import GenericTable from '../../layout/GenericTable'
@@ -15,9 +16,15 @@ import { TimeAgo } from '../TimeAgo';
 
 
 
+interface ExpecialConfigCell {
+  resource: string; 
+  value: unknown; 
+  id: string;
+  secondaryValue?: string;
+}
 
 // TODO: check another abstraction for especial cases
-const EspecialConfigCell = ({resource, value, id} : {resource: string; value: unknown; id: string;})=>{
+const EspecialConfigCell = ({resource, value, id, secondaryValue} : ExpecialConfigCell)=>{
   if(resource === 'isActiveSonar')
     return <Typography>
       {value ? 'Activo' : 'No activo'}
@@ -33,7 +40,9 @@ const EspecialConfigCell = ({resource, value, id} : {resource: string; value: un
       } />)
 
   if(resource === 'updated_at')
-    return <TimeAgo date={String(value)} />
+    return dayjs(String(value))
+      .diff(secondaryValue, 'hours') > 28? 
+        <TimeAgo date={String(value)} /> : <Typography>--</Typography>
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={id}/>
 }
