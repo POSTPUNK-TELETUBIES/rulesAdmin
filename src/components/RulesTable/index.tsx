@@ -11,7 +11,7 @@ import { GenericHeader } from '../GenericHeader';
 import { Info } from '../../layout/Info';
 
 
-function EspecialConfigCell({resource, value} : {resource: string; value: unknown;}){
+const EspecialConfigCell = ({resource, value, id} : {resource: string; value: unknown; id: string;})=>{
   if(resource === 'isActiveSonar')
     return <StatusIcon isActive={Boolean(value)}/>
 
@@ -23,8 +23,8 @@ function EspecialConfigCell({resource, value} : {resource: string; value: unknow
           dangerouslySetInnerHTML={{__html:String(value)}} 
         />
     } />)
-  
-  return <UncontrolledSwitch initialStatus={Boolean(value)}/>
+
+  return <UncontrolledSwitch initialStatus={Boolean(value)} id={id}/>
 }
 
 
@@ -52,8 +52,12 @@ export function RulesTable(){
                   return <TableCell key={resource+result.id}>{String(result[resource]?? '--')}</TableCell>
 
                 return (
-                  <TableCell>
-                    <EspecialConfigCell resource={resource} value={result[resource ]?? '--'}/>
+                  <TableCell key={resource+result.id}>
+                    <EspecialConfigCell 
+                      id={result.id}
+                      resource={resource} 
+                      value={result[resource] ?? '--'}
+                    />
                   </TableCell>
                 )
               })}

@@ -13,5 +13,5 @@ export const columns: readonly ColumnConfig[] = Object.freeze([
   {label: 'severidad', resource: 'severity'},
   {label: 'Detalle', especialConfig: true, resource: 'htmlDesc'},
   {label: 'Estado actual sonar', resource: 'isActiveSonar', especialConfig: true},
-  {label: 'Estado propuesto', resource: 'isActivate', especialConfig: true},
+  {label: 'Estado propuesto', resource: 'isActive', especialConfig: true},
 ])

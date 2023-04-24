@@ -2,10 +2,15 @@ import axios, { AxiosInstance } from "axios";
 import { FetchClientSingleton, PaginationParams, RulesFilter } from "../../types/fetchClient";
 import { LanguageDTO, QualityProfileDTO, RulesResponse } from "../../types/supabase";
 import { supabaseURL, supbaseToken } from "../config/supabase";
+import { LocalRulesStatus } from "./dexie";
 
 export class AxiosFetchData implements FetchClientSingleton {
   private static instance: AxiosFetchData
   private constructor(private client: AxiosInstance){}
+  postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+ 
   async getTotalCountByTable(tableName: string) {
     return 100
   }

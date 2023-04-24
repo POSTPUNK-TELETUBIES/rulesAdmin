@@ -1,7 +1,28 @@
-import Dexie from 'dexie';
+import Dexie, {type Table} from 'dexie';
 
-export const db = new Dexie('myDatabase');
+export interface LocalRulesStatus {
+  id: number;
+  updated_at: Date;
+  newStatus: boolean;
+}
 
-db.version(1).stores({
-  friends: '++id, name, age'
-});
+export class SyncroIndexedDb extends Dexie{
+  private static instace: SyncroIndexedDb
+  rulesStatus!: Table<LocalRulesStatus>
+
+  static getInstance(){
+    SyncroIndexedDb.instace ??= new SyncroIndexedDb()
+
+    return SyncroIndexedDb.instace
+  }
+
+  private constructor(){
+    super('syncro')
+    this.version(1).stores({
+      rulesStatus: 'id, updated_at, newStatus'
+    });
+  }
+}
+
+export default SyncroIndexedDb.getInstance()
+

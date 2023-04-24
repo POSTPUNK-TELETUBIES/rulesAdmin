@@ -1,3 +1,4 @@
+import { LocalRulesStatus } from "../lib/service/dexie";
 import { LanguageDTO, QualityProfileDTO, RulesResponse } from "./supabase";
 
 export interface PaginationParams {
@@ -25,4 +26,6 @@ export interface FetchClientSingleton{
   getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<RulesResponse[] | null>
 
   getTotalCountByTable(tableName: string): Promise<number>
+
+  postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void>
 }

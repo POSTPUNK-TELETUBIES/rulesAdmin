@@ -10,3 +10,6 @@ export const reactQueryClient = new QueryClient({
     }
   }
 })
+
+import.meta.env.DEV && 
+  (()=> { window.queryClient = reactQueryClient})()

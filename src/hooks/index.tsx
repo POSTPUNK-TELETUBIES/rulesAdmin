@@ -22,6 +22,8 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
 
   const [ page, setPage ] = useState(1)
 
+  const isAvailabletoShow = Boolean(lang_id && qualityProfile_id)
+
   const {data, isFetching} = useQuery({
     queryKey: ['rules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
     queryFn: ()=> fetchClient.getPaginatedRulesByFilter({
@@ -43,9 +45,10 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults=>{
     queryFn: () => fetchClient.getTotalCountByTable('status'),
   })
 
+
   //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
-  const flatedResults = useMemo(()=>  data
-    ?.map(({rules, ...rest})=> ({...rules, ...rest})), [data])
+  const flatedResults = useMemo(()=> !isAvailabletoShow? [] : data
+    ?.map(({rules, ...rest})=> ({...rules, ...rest})), [data, isAvailabletoShow])
 
 
   return [setPage, {data: flatedResults,  isLoading: isFetching || isFetchingCount, total, page}]
