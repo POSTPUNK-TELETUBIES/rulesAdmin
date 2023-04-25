@@ -1,126 +1,160 @@
-import { SupabaseClient, createClient } from '@supabase/supabase-js'
-import type { PostgrestFilterBuilder } from '@supabase/postgrest-js'
-import { supabaseURL, supbaseToken } from '../config/supabase'
-import { Database, LanguageDTO, QualityProfileDTO, RulesResponse } from '../../types/supabase'
-import { FetchClientSingleton, PaginationParams, Pojo, RulesFilter } from '../../types/fetchClient'
-import { LocalRulesStatus } from './dexie'
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import type { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { supabaseURL, supbaseToken } from "../config/supabase";
+import {
+  Database,
+  LanguageDTO,
+  QualityProfileDTO,
+  RulesResponse,
+} from "../../types/supabase";
+import {
+  FetchClientSingleton,
+  PaginationParams,
+  Pojo,
+  RulesFilter,
+} from "../../types/fetchClient";
+import { LocalRulesStatus } from "./dexie";
 
-export class LocalSupabaseClient implements FetchClientSingleton{
-  private static instance: LocalSupabaseClient
+export class LocalSupabaseClient implements FetchClientSingleton {
+  private static instance: LocalSupabaseClient;
 
-  private constructor(private client: SupabaseClient<Database>){}
+  private constructor(private client: SupabaseClient<Database>) {}
 
-  private changeIsActive(data:LocalRulesStatus[], newStatus = true ){
-    if(data.length)
+  //TODO: evaluar pasar a un servio aparte
+  async downloadReport(filter: RulesFilter) {
+    const { data } = await this.client
+      .rpc("get_changed_q", { quality_id: Number(filter.qualityProfile_id) })
+      .select("*")
+      .csv();
+
+    // TODO: create an element and get wiht querySelector
+    // TODO: or investigate how to pipe with rxjs
+    const downloader = document.createElement("a");
+    downloader.download = "report";
+    const url = URL.createObjectURL(new Blob([data], { type: "text/csv" }));
+    downloader.href = url;
+
+    downloader.click();
+    URL.revokeObjectURL(url);
+    downloader.remove();
+  }
+
+  private changeIsActive(data: LocalRulesStatus[], newStatus = true) {
+    if (data.length)
       return this.client
-        .from('status')
+        .from("status")
         .update({
           isActive: newStatus,
-          updated_at: new Date()
+          updated_at: new Date(),
         })
-        .in('id', data.map(({id})=> id))
-        .throwOnError()
+        .in(
+          "id",
+          data.map(({ id }) => id)
+        )
+        .throwOnError();
   }
 
   async postNewStatus(updateInfo: LocalRulesStatus[]) {
-    const toFalse = updateInfo.filter(({newStatus})=> !newStatus)
-    const toTrue = updateInfo.filter(({newStatus})=> newStatus)
+    const toFalse = updateInfo.filter(({ newStatus }) => !newStatus);
+    const toTrue = updateInfo.filter(({ newStatus }) => newStatus);
 
     await Promise.all([
       this.changeIsActive(toFalse, false),
-      this.changeIsActive(toTrue, true)
-    ])
+      this.changeIsActive(toTrue, true),
+    ]);
   }
 
   async getTotalCountByTable(tableName: string): Promise<number> {
-    const { count } =  await this.client.from(tableName)
-      .select('*', {count: 'exact', head: true})
-      .throwOnError()
+    const { count } = await this.client
+      .from(tableName)
+      .select("*", { count: "exact", head: true })
+      .throwOnError();
 
-    return count ?? 0
+    return count ?? 0;
   }
 
-  async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {
+  async getQualityProfilesByLanguage(
+    languageId: string
+  ): Promise<QualityProfileDTO[] | null> {
     const { data } = await this.client
-      .from('qualityprofiles')
+      .from("qualityprofiles")
       .select()
-      .eq('language_id', languageId )
-      .throwOnError()
+      .eq("language_id", languageId)
+      .throwOnError();
 
-    return data as QualityProfileDTO[]
+    return data as QualityProfileDTO[];
   }
 
   private static queryBuilderColumns = {
-    severity: 'rules.severity',
-    type: 'rules.type',
-    isActiveSonar: 'isActiveSonar',
-    qualityProfile_id: 'qualityProfile_id',
-  }
+    severity: "rules.severity",
+    type: "rules.type",
+    isActiveSonar: "isActiveSonar",
+    qualityProfile_id: "qualityProfile_id",
+  };
 
-  private buildQuery(query: PostgrestFilterBuilder<any, any, Pojo[]>, filter: Partial<RulesFilter>){
+  private buildQuery(
+    query: PostgrestFilterBuilder<any, any, Pojo[]>,
+    filter: Partial<RulesFilter>
+  ) {
     for (const key in filter) {
-      if (!Object.prototype.hasOwnProperty.call(filter, key)) 
-        continue
-      
+      if (!Object.prototype.hasOwnProperty.call(filter, key)) continue;
+
       const element = filter[key];
 
-      if(element !== 'all' && element != null)
-        query = query.eq(LocalSupabaseClient.queryBuilderColumns[key], element)
+      if (element !== "all" && element != null)
+        query = query.eq(LocalSupabaseClient.queryBuilderColumns[key], element);
     }
-   
-    return query
+
+    return query;
   }
 
   async getPaginatedRulesByFilter(
-    filter: RulesFilter, 
+    filter: RulesFilter,
     pagination: PaginationParams
-  ) {   
-    delete filter.lang_id
-  
-    const query = this.client
-    .from('status')
-    .select(`
-      *,
-      qualityprofiles(
-        *
-      ),
-      rules!inner(
-        *
-      )
-    `, {count: 'exact'})
+  ) {
+    delete filter.lang_id;
 
-  
+    const query = this.client.from("status").select(
+      `
+        *,
+        qualityprofiles(
+          *
+        ),
+        rules!inner(
+          *
+        )
+      `,
+      { count: "exact" }
+    );
 
-    const {data, count } = await this.buildQuery(query, filter)
-          .throwOnError()
-          .range(...this.getRange(pagination))
+    const { data, count } = await this.buildQuery(query, filter)
+      .range(...this.getRange(pagination))
+      .order("id", { ascending: true })
+      .throwOnError();
 
-    console.log(count)
-      
-    return { data: data as RulesResponse[], count}
+    return { data: data as RulesResponse[], count };
   }
 
   async getAllLanguages(): Promise<LanguageDTO[] | null> {
     const { data } = await this.client
-      .from('languages')
+      .from("languages")
       .select()
-      .throwOnError()
+      .throwOnError();
 
-    return data as LanguageDTO[]
+    return data as LanguageDTO[];
   }
 
-  static getInstance(){
-    LocalSupabaseClient.instance ??=  new LocalSupabaseClient(
+  static getInstance() {
+    LocalSupabaseClient.instance ??= new LocalSupabaseClient(
       createClient<Database>(supabaseURL, supbaseToken)
-    )
+    );
 
-    return LocalSupabaseClient.instance
+    return LocalSupabaseClient.instance;
   }
 
-  private getRange({page, limit = 10}: PaginationParams): [number, number]{
-    return [(page-1)*limit, page*limit - 1]
+  private getRange({ page, limit = 10 }: PaginationParams): [number, number] {
+    return [(page - 1) * limit, page * limit - 1];
   }
 }
 
-export default LocalSupabaseClient.getInstance
-
+export default LocalSupabaseClient.getInstance;
