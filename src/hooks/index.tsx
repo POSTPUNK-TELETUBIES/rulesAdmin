@@ -1,8 +1,21 @@
-import { type Dispatch, useMemo, useState, type SetStateAction, useRef } from "react"
-import { useActiveFilter, useLanguageFilter, useQualityProfileFilter, useRuleTypeFilter, useSeverityFilter } from "../lib/observers"
-import { useQuery } from "@tanstack/react-query"
-import { fetchClient } from "../lib/modules/fetchClient"
-import { RuleDTO, type RulesStatus } from "../types/supabase"
+import {
+  type Dispatch,
+  useMemo,
+  useState,
+  type SetStateAction,
+  useRef,
+} from "react";
+import {
+  setTotalStatus$,
+  useActiveFilter,
+  useLanguageFilter,
+  useQualityProfileFilter,
+  useRuleTypeFilter,
+  useSeverityFilter,
+} from "../lib/observers";
+import { useQuery } from "@tanstack/react-query";
+import { fetchClient } from "../lib/modules/fetchClient";
+import { RuleDTO, type RulesStatus } from "../types/supabase";
 
 interface UseGetRulesStatusData {
   data?: (RulesStatus & RuleDTO)[];
@@ -11,47 +24,72 @@ interface UseGetRulesStatusData {
   page: number;
 }
 
-type UseGetRulesStatusResults = [Dispatch<SetStateAction<number>>, UseGetRulesStatusData]
+type UseGetRulesStatusResults = [
+  Dispatch<SetStateAction<number>>,
+  UseGetRulesStatusData
+];
 
 export const useGetRulesStatus = (): UseGetRulesStatusResults => {
-  const severity = useSeverityFilter()
-  const lang_id = useLanguageFilter()
-  const isActiveSonar = useActiveFilter()
-  const qualityProfile_id = useQualityProfileFilter()
-  const type = useRuleTypeFilter()
-  const totalRef = useRef(0)
+  const severity = useSeverityFilter();
+  const lang_id = useLanguageFilter();
+  const isActiveSonar = useActiveFilter();
+  const qualityProfile_id = useQualityProfileFilter();
+  const type = useRuleTypeFilter();
+  const totalRef = useRef(0);
 
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
 
-  const isAvailabletoShow = Boolean(lang_id && qualityProfile_id)
+  const isAvailabletoShow = Boolean(lang_id && qualityProfile_id);
 
   const { data, isFetching } = useQuery({
-    queryKey: ['rules', lang_id, qualityProfile_id, type, isActiveSonar, severity],
+    queryKey: [
+      "rules",
+      lang_id,
+      qualityProfile_id,
+      type,
+      isActiveSonar,
+      severity,
+    ],
     async queryFn() {
-      const { data, count } = await fetchClient.getPaginatedRulesByFilter({
-        severity,
-        lang_id,
-        isActiveSonar,
-        qualityProfile_id,
-        type
-      }, {
-        page,
-      })
+      const { data, count } = await fetchClient.getPaginatedRulesByFilter(
+        {
+          severity,
+          lang_id,
+          isActiveSonar,
+          qualityProfile_id,
+          type,
+        },
+        {
+          page,
+        }
+      );
 
-      totalRef.current = count
+      totalRef.current = count;
 
-      return data
+      setTotalStatus$(count);
 
+      return data;
     },
     enabled: Boolean(lang_id && qualityProfile_id),
-    keepPreviousData: true
-  })
+    keepPreviousData: true,
+  });
 
   //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
-  const flatedResults = useMemo(() => !isAvailabletoShow ? [] : data
-    ?.map(({ rules, ...rest }) => ({ ...rules, ...rest })), [data, isAvailabletoShow])
+  const flatedResults = useMemo(
+    () =>
+      !isAvailabletoShow
+        ? []
+        : data?.map(({ rules, ...rest }) => ({ ...rules, ...rest })),
+    [data, isAvailabletoShow]
+  );
 
-
-  return [setPage, { data: flatedResults, isLoading: isFetching , total:totalRef.current , page }]
-
-}
+  return [
+    setPage,
+    {
+      data: flatedResults,
+      isLoading: isFetching,
+      total: totalRef.current,
+      page,
+    },
+  ];
+};
