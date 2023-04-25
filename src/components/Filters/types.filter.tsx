@@ -1,37 +1,40 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
-import { Type } from "../../types/supabase"
-import { useCallback } from "react"
-import { setRuleTypeFilterChange } from "../../lib/observers"
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import { Type } from "../../types/supabase";
+import { useCallback } from "react";
+import { setRuleTypeFilterChange } from "../../lib/observers";
 
-const typesValues = Object.freeze(Object.values(Type))
+const typesValues = Object.freeze(Object.values(Type));
 
 export const TypesFilter = () => {
-  const _handleChange = useCallback((event: SelectChangeEvent)=> 
-   setRuleTypeFilterChange(event.target.value)
-  , [])
+  const _handleChange = useCallback(
+    (event: SelectChangeEvent) => setRuleTypeFilterChange(event.target.value),
+    []
+  );
 
   return (
-    <FormControl sx={{minWidth: 120}}>
-      <InputLabel id='type'>Tipo</InputLabel>
+    <FormControl>
+      <InputLabel id="type">Tipo</InputLabel>
       <Select
-        label='Tipo'
-        labelId='type'
+        label="Tipo"
+        labelId="type"
         onChange={_handleChange}
-        sx={{maxWidth: 120}}
-        defaultValue={'all'}
+        sx={{ width: 200 }}
+        defaultValue={"all"}
         displayEmpty
       >
-        {
-          <MenuItem value={'all'}>
-            TODOS
-          </MenuItem>
-        }
-        {
-          typesValues.map((type)=> <MenuItem key={type} value={type}>
+        {<MenuItem value={"all"}>TODOS</MenuItem>}
+        {typesValues.map((type) => (
+          <MenuItem key={type} value={type}>
             {type}
-          </MenuItem>)
-        }
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
-  )
-}
+  );
+};

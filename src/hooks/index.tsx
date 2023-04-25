@@ -1,17 +1,19 @@
 import {
   type Dispatch,
   useMemo,
-  useState,
   type SetStateAction,
   useRef,
   useEffect,
+  useState,
 } from "react";
 import {
+  setPage,
   setTotalStatus$,
   useActiveFilter,
   useLanguageFilter,
   useQualityProfileFilter,
   useRuleTypeFilter,
+  useSetPage,
   useSeverityFilter,
 } from "../lib/observers";
 import { useQuery } from "@tanstack/react-query";
@@ -23,9 +25,11 @@ interface UseGetRulesStatusData {
   isLoading: boolean;
   total?: number;
   page: number;
+  rowsPerPage: number;
 }
 
 type UseGetRulesStatusResults = [
+  Dispatch<SetStateAction<number>>,
   Dispatch<SetStateAction<number>>,
   UseGetRulesStatusData
 ];
@@ -36,10 +40,11 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const isActiveSonar = useActiveFilter();
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
+  const page = useSetPage();
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const totalRef = useRef(0);
-
-  const [page, setPage] = useState(1);
 
   const isAvailabletoShow = Boolean(lang_id && qualityProfile_id);
 
@@ -52,6 +57,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
       isActiveSonar,
       severity,
       page,
+      rowsPerPage,
     ],
     async queryFn() {
       const { data, count } = await fetchClient.getPaginatedRulesByFilter(
@@ -64,6 +70,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
         },
         {
           page,
+          limit: rowsPerPage,
         }
       );
 
@@ -73,7 +80,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
       return data;
     },
-    enabled: Boolean(lang_id && qualityProfile_id),
+    enabled: isAvailabletoShow,
     keepPreviousData: true,
   });
 
@@ -92,11 +99,13 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   return [
     setPage,
+    setRowsPerPage,
     {
       data: flatedResults,
       isLoading: isFetching,
       total: totalRef.current,
       page,
+      rowsPerPage,
     },
   ];
 };

@@ -11,6 +11,9 @@ import { LocalRulesStatus } from "./dexie";
 export class AxiosFetchData implements FetchClientSingleton {
   private static instance: AxiosFetchData;
   private constructor(private client: AxiosInstance) {}
+  downloadReport(_filter: RulesFilter): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   postNewStatus(_updateInfo: LocalRulesStatus[]): Promise<void> {
     throw new Error("Method not implemented.");
   }

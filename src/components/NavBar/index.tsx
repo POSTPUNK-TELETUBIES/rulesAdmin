@@ -16,7 +16,11 @@ export const NavBar = () => {
   return (
     <AppBar>
       <Container>
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+          <img
+            src="https://www.pacifico.com.pe/image/layout_set_logo?img_id=26556784&t=1682438787127"
+            alt="logo de pacifico seguros"
+          />
           <Stack direction="row" justifyContent="center" alignItems="center">
             {palette?.mode === ColorPalletes.DARK ? (
               <ModeNight />

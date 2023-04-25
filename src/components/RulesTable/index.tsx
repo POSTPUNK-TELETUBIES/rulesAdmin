@@ -1,6 +1,7 @@
-import { FolderOff, ReadMore } from "@mui/icons-material";
+import { FolderOff, Visibility } from "@mui/icons-material";
 import dayjs from "dayjs";
 import {
+  Box,
   CircularProgress,
   TableCell,
   TablePagination,
@@ -10,14 +11,14 @@ import {
 
 import GenericTable from "../../layout/GenericTable";
 
-import { GenericPopover } from "../GenericPopover";
+import GenericPopover from "../../layout/GenericPopover";
 import { UncontrolledSwitch } from "../Switch/uncontrolledIndexed";
 import { columns } from "./config";
 
 import { useGetRulesStatus } from "../../hooks";
 import { GenericHeader } from "../GenericHeader";
 import { Info } from "../../layout/Info";
-import { MouseEvent, useCallback, useState } from "react";
+import { MouseEvent, useCallback } from "react";
 import { TimeAgo } from "../TimeAgo";
 
 interface ExpecialConfigCell {
@@ -35,35 +36,34 @@ const EspecialConfigCell = ({
   secondaryValue,
 }: ExpecialConfigCell) => {
   if (resource === "isActiveSonar")
-    return <Typography>{value ? "Activo" : "No activo"}</Typography>;
+    return <Typography>{value ? "Activo" : "Inactivo"}</Typography>;
 
   if (resource === "htmlDesc")
     return (
       <GenericPopover
-        icon={<ReadMore />}
+        icon={<Visibility />}
         popoverBody={
           <Typography dangerouslySetInnerHTML={{ __html: String(value) }} />
         }
       />
     );
 
-  if (resource === "updated_at") {
-    console.log(value, secondaryValue);
-
+  if (resource === "updated_at")
     return Math.abs(dayjs(String(value)).diff(secondaryValue, "hours")) > 6 ? (
       <TimeAgo date={String(value)} />
     ) : (
       <Typography align="center">--</Typography>
     );
-  }
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={id} />;
 };
 
 export function RulesTable() {
-  const [setPage, { data, isLoading, total, page }] = useGetRulesStatus();
-
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [
+    setPage,
+    setRowsPerPage,
+    { data, isLoading, total, page, rowsPerPage },
+  ] = useGetRulesStatus();
 
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -77,12 +77,17 @@ export function RulesTable() {
   const handleChangeRowsPerPage = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
+      setPage(1);
     },
-    [setPage]
+    [setPage, setRowsPerPage]
   );
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading)
+    return (
+      <Box display="grid" sx={{ placeContent: "center", minHeight: 400 }}>
+        <CircularProgress />
+      </Box>
+    );
 
   if (!data?.length)
     return (
