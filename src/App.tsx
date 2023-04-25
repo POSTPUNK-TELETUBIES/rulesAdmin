@@ -4,8 +4,15 @@ import { TypesFilter } from "./components/Filters/types.filter";
 import { SeverityProfileFilter } from "./components/Filters/severities.filter";
 import { ActivateFilter } from "./components/Filters/activate.filter";
 import { RulesTable } from "./components/RulesTable";
-import { Box, Button, CircularProgress, Container, Stack } from "@mui/material";
-import { Download, Sync } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { Download, Info, QuestionAnswer, Sync } from "@mui/icons-material";
 import syncroIndexedDb from "./lib/service/dexie";
 import { useCallback, useState } from "react";
 import { fetchClient } from "./lib/modules/fetchClient";
@@ -77,8 +84,21 @@ function App() {
       app={
         <>
           <NavBar />
-          <Container>
-            <Stack direction="column" gap={4} marginTop={12}>
+          <Container sx={{ paddingY: 12 }}>
+            <Stack gap={3}>
+              <Typography variant="h4" component="h1">
+                Sistema de activacion e inspeccion de reglas
+              </Typography>
+              <Typography>
+                <QuestionAnswer /> Selecciona el nuevo estado que se desea que
+                tengan las reglas
+              </Typography>
+              <Typography>
+                <Info /> Recuerda que el estado propuesto no se aplicara de
+                inmediato en Sonar Qube
+              </Typography>
+            </Stack>
+            <Stack direction="column" gap={4} marginTop={4}>
               <Box display={"flex"} gap={4}>
                 <LanguageFilter />
                 <QualityProfileFilter />

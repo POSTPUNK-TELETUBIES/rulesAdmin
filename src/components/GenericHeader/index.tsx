@@ -7,9 +7,12 @@ interface GenericHeaderProps {
 }
 
 export const GenericHeader = memo(({ data }: GenericHeaderProps) => (
-  <TableRow sx={{ background: (theme) => theme.palette.grey[900] }}>
+  <TableRow>
     {data.map(({ label, icon }) => (
-      <TableCell key={label}>
+      <TableCell
+        sx={{ background: (theme) => `${theme.palette.grey[900]} !important` }}
+        key={label}
+      >
         <Stack direction="row" gap={1}>
           {icon}
           <Typography sx={{ color: (theme) => theme.palette.common.white }}>
