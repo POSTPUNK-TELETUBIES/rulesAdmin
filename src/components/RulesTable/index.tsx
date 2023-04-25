@@ -18,7 +18,7 @@ import { columns } from "./config";
 import { useGetRulesStatus } from "../../hooks";
 import { GenericHeader } from "../GenericHeader";
 import { Info } from "../../layout/Info";
-import { MouseEvent, useCallback, useState } from "react";
+import { MouseEvent, useCallback } from "react";
 import { TimeAgo } from "../TimeAgo";
 
 interface ExpecialConfigCell {
@@ -59,9 +59,11 @@ const EspecialConfigCell = ({
 };
 
 export function RulesTable() {
-  const [setPage, { data, isLoading, total, page }] = useGetRulesStatus();
-
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [
+    setPage,
+    setRowsPerPage,
+    { data, isLoading, total, page, rowsPerPage },
+  ] = useGetRulesStatus();
 
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -75,9 +77,9 @@ export function RulesTable() {
   const handleChangeRowsPerPage = useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
+      setPage(1);
     },
-    [setPage]
+    [setPage, setRowsPerPage]
   );
 
   if (isLoading)
