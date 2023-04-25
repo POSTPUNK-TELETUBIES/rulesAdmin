@@ -24,6 +24,6 @@ export const columns: ColumnConfig[] = [
     label: "Ultima propuesta: ",
     resource: "updated_at",
     especialConfig: true,
-    icon: <Schedule />,
+    icon: <Schedule sx={{ color: (theme) => theme.palette.common.white }} />,
   },
 ];
