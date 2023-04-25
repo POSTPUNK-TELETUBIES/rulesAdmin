@@ -34,5 +34,5 @@ export interface FetchClientSingleton {
 
   postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void>;
 
-  downloadReport(filter: RulesFilter): Promise<void>;
+  downloadReport(filter: Partial<RulesFilter>): Promise<void>;
 }

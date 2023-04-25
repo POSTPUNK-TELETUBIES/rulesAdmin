@@ -1,17 +1,18 @@
 import {
   type Dispatch,
   useMemo,
-  useState,
   type SetStateAction,
   useRef,
   useEffect,
 } from "react";
 import {
+  setPage,
   setTotalStatus$,
   useActiveFilter,
   useLanguageFilter,
   useQualityProfileFilter,
   useRuleTypeFilter,
+  useSetPage,
   useSeverityFilter,
 } from "../lib/observers";
 import { useQuery } from "@tanstack/react-query";
@@ -36,10 +37,9 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const isActiveSonar = useActiveFilter();
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
+  const page = useSetPage();
 
   const totalRef = useRef(0);
-
-  const [page, setPage] = useState(1);
 
   const isAvailabletoShow = Boolean(lang_id && qualityProfile_id);
 

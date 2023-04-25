@@ -1,6 +1,7 @@
 import { FolderOff, ReadMore } from "@mui/icons-material";
 import dayjs from "dayjs";
 import {
+  Box,
   CircularProgress,
   TableCell,
   TablePagination,
@@ -79,7 +80,12 @@ export function RulesTable() {
     [setPage]
   );
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading)
+    return (
+      <Box display="grid" sx={{ placeContent: "center", minHeight: 400 }}>
+        <CircularProgress />
+      </Box>
+    );
 
   if (!data?.length)
     return (

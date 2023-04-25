@@ -27,3 +27,6 @@ export const [totalStatus$, setTotalStatus$] = createSignal<
   number | null | undefined
 >();
 export const [useTotalStatus] = bind(totalStatus$, 0);
+
+export const [page$, setPage] = createSignal<string>();
+export const [useSetPage] = bind(page$, 1);
