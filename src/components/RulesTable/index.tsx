@@ -20,11 +20,13 @@ import { GenericHeader } from "../GenericHeader";
 import { Info } from "../../layout/Info";
 import { MouseEvent, useCallback } from "react";
 import { TimeAgo } from "../TimeAgo";
+import { PopOverDetails } from "../PopOverDetails";
+import { RuleDTO, RulesStatus } from "../../types/supabase";
 
 interface ExpecialConfigCell {
   resource: string;
   value: unknown;
-  id: string;
+  result: RulesStatus & RuleDTO;
   secondaryValue?: string | Date;
 }
 
@@ -32,7 +34,7 @@ interface ExpecialConfigCell {
 const EspecialConfigCell = ({
   resource,
   value,
-  id,
+  result,
   secondaryValue,
 }: ExpecialConfigCell) => {
   if (resource === "isActiveSonar")
@@ -43,7 +45,12 @@ const EspecialConfigCell = ({
       <GenericPopover
         icon={<Visibility />}
         popoverBody={
-          <Typography dangerouslySetInnerHTML={{ __html: String(value) }} />
+          <PopOverDetails
+            tags={[result.severity, result.type]}
+            isActive={result.isActive}
+            ruleTitle={result.name}
+            ruleDescription={result.htmlDesc}
+          />
         }
       />
     );
@@ -55,7 +62,7 @@ const EspecialConfigCell = ({
       <Typography align="center">--</Typography>
     );
 
-  return <UncontrolledSwitch initialStatus={Boolean(value)} id={id} />;
+  return <UncontrolledSwitch initialStatus={Boolean(value)} id={result.id} />;
 };
 
 export function RulesTable() {
@@ -115,7 +122,7 @@ export function RulesTable() {
                 return (
                   <TableCell key={resource + result.id}>
                     <EspecialConfigCell
-                      id={result.id}
+                      result={result}
                       resource={resource}
                       secondaryValue={result.created_at}
                       value={result[resource] ?? "--"}
