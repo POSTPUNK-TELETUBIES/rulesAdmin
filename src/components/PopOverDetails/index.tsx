@@ -1,4 +1,5 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
+import { ColorPalletes } from "../../theme";
 
 export interface DetailProps {
   tags: string[];
@@ -20,9 +21,13 @@ export function PopOverDetails(props: DetailProps) {
           spacing={2}
         >
           <Chip
+            sx={{
+              background: ({ palette }) => palette.grey[800],
+              color: "white",
+            }}
             label={`Regla ${isActive ? "Activo" : "Inactivo"} desde:`}
-          ></Chip>
-          <Chip label={`${dateSonar}`}></Chip>
+          />
+          <Chip label={`${dateSonar ?? "Sin info"}`}></Chip>
         </Stack>
         <Stack
           direction="row"
@@ -30,9 +35,21 @@ export function PopOverDetails(props: DetailProps) {
           alignItems="center"
           spacing={2}
         >
-          {tags.map((tag) => (
-            <Chip key={tag} label={tag} />
-          ))}
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              padding: 2,
+              background: ({ palette }) =>
+                palette.mode === ColorPalletes.DARK
+                  ? palette.grey[800]
+                  : palette.grey[100],
+            }}
+          >
+            {tags.map((tag) => (
+              <Chip key={tag} label={tag} />
+            ))}
+          </Stack>
         </Stack>
       </Stack>
       <Stack
@@ -41,28 +58,19 @@ export function PopOverDetails(props: DetailProps) {
         alignItems="center"
         padding={2}
       >
-        <Stack direction="row" useFlexGap flexWrap="wrap" sx={{ flexGrow: 1 }}>
-          <Chip sx={{ width: "100%" }} label={`${ruleTitle}`}></Chip>
-        </Stack>
+        <Chip
+          color="secondary"
+          label={
+            <Typography noWrap variant="h5">
+              {ruleTitle}
+            </Typography>
+          }
+        />
       </Stack>
 
-      <Stack
-        direction="column"
-        justifyContent="center"
-        alignItems="flex-start"
-        spacing={2}
-        padding={2}
-      >
-        <Stack direction="row" useFlexGap flexWrap="wrap" sx={{ flexGrow: 1 }}>
-          <Chip label={"Descripción de la Regla"}></Chip>
-        </Stack>
-        <Stack direction="row" useFlexGap flexWrap="wrap" sx={{ flexGrow: 1 }}>
-          <Chip
-            sx={{ width: "100%", height: "100%" }}
-            label={"ruleDescription"}
-          />
-          <Typography dangerouslySetInnerHTML={{ __html: ruleDescription }} />
-        </Stack>
+      <Stack direction="column" justifyContent="center" spacing={2} padding={2}>
+        <Chip label={"Descripción de la Regla"}></Chip>
+        <Typography dangerouslySetInnerHTML={{ __html: ruleDescription }} />
       </Stack>
     </Box>
   );
