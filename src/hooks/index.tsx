@@ -4,6 +4,7 @@ import {
   type SetStateAction,
   useRef,
   useEffect,
+  useState,
 } from "react";
 import {
   setPage,
@@ -24,9 +25,11 @@ interface UseGetRulesStatusData {
   isLoading: boolean;
   total?: number;
   page: number;
+  rowsPerPage: number;
 }
 
 type UseGetRulesStatusResults = [
+  Dispatch<SetStateAction<number>>,
   Dispatch<SetStateAction<number>>,
   UseGetRulesStatusData
 ];
@@ -38,6 +41,8 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
   const page = useSetPage();
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const totalRef = useRef(0);
 
@@ -52,6 +57,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
       isActiveSonar,
       severity,
       page,
+      rowsPerPage,
     ],
     async queryFn() {
       const { data, count } = await fetchClient.getPaginatedRulesByFilter(
@@ -64,6 +70,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
         },
         {
           page,
+          limit: rowsPerPage,
         }
       );
 
@@ -92,11 +99,13 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   return [
     setPage,
+    setRowsPerPage,
     {
       data: flatedResults,
       isLoading: isFetching,
       total: totalRef.current,
       page,
+      rowsPerPage,
     },
   ];
 };
