@@ -73,7 +73,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
       return data;
     },
-    enabled: Boolean(lang_id && qualityProfile_id),
+    enabled: isAvailabletoShow,
     keepPreviousData: true,
   });
 

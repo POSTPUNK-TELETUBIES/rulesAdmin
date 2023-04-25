@@ -2,8 +2,8 @@ import { LocalRulesStatus } from "../lib/service/dexie";
 import { LanguageDTO, QualityProfileDTO, RulesResponse } from "./supabase";
 
 export interface PaginationParams {
-  page: number,
-  limit?: number,
+  page: number;
+  limit?: number;
 }
 
 export interface Pojo {
@@ -18,14 +18,21 @@ export interface RulesFilter {
   isActiveSonar: boolean | string;
 }
 
-export interface FetchClientSingleton{
-  getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null>
+export interface FetchClientSingleton {
+  getQualityProfilesByLanguage(
+    languageId: string
+  ): Promise<QualityProfileDTO[] | null>;
 
-  getAllLanguages(): Promise<LanguageDTO[] | null>
+  getAllLanguages(): Promise<LanguageDTO[] | null>;
 
-  getPaginatedRulesByFilter(filter: RulesFilter, pagination?: PaginationParams): Promise<{data: RulesResponse[] | null; count: number}>
+  getPaginatedRulesByFilter(
+    filter: RulesFilter,
+    pagination?: PaginationParams
+  ): Promise<{ data: RulesResponse[] | null; count: number }>;
 
-  getTotalCountByTable(tableName: string): Promise<number>
+  getTotalCountByTable(tableName: string): Promise<number>;
 
-  postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void>
+  postNewStatus(updateInfo: LocalRulesStatus[]): Promise<void>;
+
+  downloadReport(filter: RulesFilter): Promise<void>;
 }
