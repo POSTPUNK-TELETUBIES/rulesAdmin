@@ -1,5 +1,9 @@
 pre{
   overflow-x: scroll;
+  color: white;
+  background-color: #454545;
+  padding: 2rem;
+
 }
 
 /* ===== Scrollbar CSS ===== */
