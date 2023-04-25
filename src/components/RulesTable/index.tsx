@@ -47,12 +47,15 @@ const EspecialConfigCell = ({
       />
     );
 
-  if (resource === "updated_at")
-    return dayjs(String(value)).diff(secondaryValue, "hours") > 28 ? (
+  if (resource === "updated_at") {
+    console.log(value, secondaryValue);
+
+    return Math.abs(dayjs(String(value)).diff(secondaryValue, "hours")) > 6 ? (
       <TimeAgo date={String(value)} />
     ) : (
       <Typography align="center">--</Typography>
     );
+  }
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={id} />;
 };
@@ -65,7 +68,8 @@ export function RulesTable() {
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
       if (!event) return;
-      setPage(newPage);
+
+      setPage(newPage + 1);
     },
     [setPage]
   );
@@ -108,7 +112,7 @@ export function RulesTable() {
                     <EspecialConfigCell
                       id={result.id}
                       resource={resource}
-                      secondaryValue={result.createdAt}
+                      secondaryValue={result.created_at}
                       value={result[resource] ?? "--"}
                     />
                   </TableCell>

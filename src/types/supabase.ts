@@ -1,16 +1,16 @@
 export enum Severity {
-  Blocker = 'BLOCKER',
-  Critical = 'CRITICAL',
-  Info = 'INFO',
-  Major = 'MAJOR',
-  Minor = 'MINOR',
+  Blocker = "BLOCKER",
+  Critical = "CRITICAL",
+  Info = "INFO",
+  Major = "MAJOR",
+  Minor = "MINOR",
 }
 
 export enum Type {
-  Bug = 'BUG',
-  CodeSmell = 'CODE_SMELL',
-  SecurityHotspot = 'SECURITY_HOTSPOT',
-  Vulnerability = 'VULNERABILITY',
+  Bug = "BUG",
+  CodeSmell = "CODE_SMELL",
+  SecurityHotspot = "SECURITY_HOTSPOT",
+  Vulnerability = "VULNERABILITY",
 }
 
 export interface RulesCreateDTO {
@@ -63,7 +63,7 @@ export interface BasicRuleInfo {
 
 export interface RulesStatus extends RulesStatusCreateDTO {
   id: string;
-  createdAt: Date;
+  created_at: Date;
 }
 
 export interface Database {
@@ -93,7 +93,6 @@ export interface Database {
   };
 }
 
-
-export interface RulesResponse extends RulesStatus{
-  rules: RuleDTO
+export interface RulesResponse extends RulesStatus {
+  rules: RuleDTO;
 }

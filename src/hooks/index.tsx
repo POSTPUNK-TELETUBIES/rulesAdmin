@@ -4,6 +4,7 @@ import {
   useState,
   type SetStateAction,
   useRef,
+  useEffect,
 } from "react";
 import {
   setTotalStatus$,
@@ -35,6 +36,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const isActiveSonar = useActiveFilter();
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
+
   const totalRef = useRef(0);
 
   const [page, setPage] = useState(1);
@@ -49,6 +51,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
       type,
       isActiveSonar,
       severity,
+      page,
     ],
     async queryFn() {
       const { data, count } = await fetchClient.getPaginatedRulesByFilter(
@@ -82,6 +85,10 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
         : data?.map(({ rules, ...rest }) => ({ ...rules, ...rest })),
     [data, isAvailabletoShow]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [type, severity, isActiveSonar, qualityProfile_id]);
 
   return [
     setPage,
