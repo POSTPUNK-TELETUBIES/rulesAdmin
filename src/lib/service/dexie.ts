@@ -1,4 +1,4 @@
-import Dexie, {type Table} from 'dexie';
+import Dexie, { type Table } from "dexie";
 
 export interface LocalRulesStatus {
   id: number;
@@ -6,23 +6,22 @@ export interface LocalRulesStatus {
   newStatus: boolean;
 }
 
-export class SyncroIndexedDb extends Dexie{
-  private static instace: SyncroIndexedDb
-  rulesStatus!: Table<LocalRulesStatus>
+export class SyncroIndexedDb extends Dexie {
+  private static instace: SyncroIndexedDb;
+  rulesStatus!: Table<LocalRulesStatus>;
 
-  static getInstance(){
-    SyncroIndexedDb.instace ??= new SyncroIndexedDb()
+  static getInstance() {
+    SyncroIndexedDb.instace ??= new SyncroIndexedDb();
 
-    return SyncroIndexedDb.instace
+    return SyncroIndexedDb.instace;
   }
 
-  private constructor(){
-    super('syncro')
+  private constructor() {
+    super("syncro");
     this.version(1).stores({
-      rulesStatus: 'id, updated_at, newStatus'
+      rulesStatus: "id, updated_at, newStatus",
     });
   }
 }
 
-export default SyncroIndexedDb.getInstance()
-
+export default SyncroIndexedDb.getInstance();

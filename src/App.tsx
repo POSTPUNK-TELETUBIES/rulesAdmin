@@ -5,18 +5,38 @@ import { SeverityProfileFilter } from "./components/Filters/severities.filter";
 import { ActivateFilter } from "./components/Filters/activate.filter";
 import { RulesTable } from "./components/RulesTable";
 import { Box, Button, CircularProgress, Container, Stack } from "@mui/material";
-import { Sync } from "@mui/icons-material";
+import { Download, Sync } from "@mui/icons-material";
 import syncroIndexedDb from "./lib/service/dexie";
 import { useCallback, useState } from "react";
 import { fetchClient } from "./lib/modules/fetchClient";
 import { ColorModeWrapper } from "./theme";
 import { NavBar } from "./components/NavBar";
-import { useTotalStatus } from "./lib/observers";
+import { useQualityProfileFilter, useTotalStatus } from "./lib/observers";
+
+//TODO: abstraer, generalizar
+const DownloadButton = ({ cb }: { cb?: () => Promise<void> }) => {
+  const qualityProfile_id = useQualityProfileFilter();
+
+  const _handleClick = useCallback(async () => {
+    if (!qualityProfile_id) return;
+
+    if (cb) await cb();
+
+    await fetchClient.downloadReport(qualityProfile_id);
+  }, [cb, qualityProfile_id]);
+
+  return (
+    <Button startIcon={<Download />} variant="contained" onClick={_handleClick}>
+      Descargar
+    </Button>
+  );
+};
 
 const ActionButtons = () => {
   const totalstatus = useTotalStatus();
 
   const [isProcessing, setIsProcessing] = useState(false);
+
   const _handleClick = useCallback(async () => {
     setIsProcessing(true);
     const changes = await syncroIndexedDb.rulesStatus.toArray();
@@ -35,9 +55,12 @@ const ActionButtons = () => {
   if (!totalstatus) return;
 
   return (
-    <Button startIcon={<Sync />} variant="contained" onClick={_handleClick}>
-      Syncronizar
-    </Button>
+    <>
+      <Button startIcon={<Sync />} variant="contained" onClick={_handleClick}>
+        Sincronizar
+      </Button>
+      <DownloadButton cb={_handleClick} />
+    </>
   );
 };
 
@@ -60,7 +83,12 @@ function App() {
               </Box>
             </Stack>
             <RulesTable />
-            <Stack>
+            <Stack
+              paddingY={3}
+              direction="row"
+              gap={3}
+              justifyContent={"space-between"}
+            >
               <ActionButtons />
             </Stack>
           </Container>
