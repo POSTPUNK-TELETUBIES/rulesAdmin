@@ -15,7 +15,8 @@ export class LocalSupabaseClient implements FetchClientSingleton{
       return this.client
         .from('status')
         .update({
-          isActive: newStatus
+          isActive: newStatus,
+          updated_at: new Date()
         })
         .in('id', data.map(({id})=> id))
         .throwOnError()
@@ -37,18 +38,6 @@ export class LocalSupabaseClient implements FetchClientSingleton{
       .throwOnError()
 
     return count ?? 0
-  }
-
-  async getStatusCount(filters: RulesFilter) :Promise<number> {
-    delete filters.lang_id
-
-    const query = this.client
-      .from('status')
-      .select('*', {count: 'exact', head: true})
-
-    const { count } = await this.buildQuery(query,filters)
-
-    return count
   }
 
   async getQualityProfilesByLanguage(languageId: string): Promise<QualityProfileDTO[] | null> {
@@ -85,7 +74,7 @@ export class LocalSupabaseClient implements FetchClientSingleton{
   async getPaginatedRulesByFilter(
     filter: RulesFilter, 
     pagination: PaginationParams
-  ): Promise<RulesResponse[] | null> {   
+  ) {   
     delete filter.lang_id
   
     const query = this.client
@@ -98,13 +87,17 @@ export class LocalSupabaseClient implements FetchClientSingleton{
       rules!inner(
         *
       )
-    `)
+    `, {count: 'exact'})
 
-    const {data} = await this.buildQuery(query, filter)
+  
+
+    const {data, count } = await this.buildQuery(query, filter)
           .throwOnError()
           .range(...this.getRange(pagination))
- 
-    return data as RulesResponse[]
+
+    console.log(count)
+      
+    return { data: data as RulesResponse[], count}
   }
 
   async getAllLanguages(): Promise<LanguageDTO[] | null> {

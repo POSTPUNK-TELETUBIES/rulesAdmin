@@ -11,6 +11,8 @@
   "rules": {
     "react-refresh/only-export-components": "warn",
     "no-console": "warn",
-    "complexity": "error"
+    "complexity": "error",
+    "object-curly-spacing": ["error", "always"],
+    "arrow-spacing": "error"
   }
 }
