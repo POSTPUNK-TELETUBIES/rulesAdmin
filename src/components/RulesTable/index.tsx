@@ -47,15 +47,12 @@ const EspecialConfigCell = ({
       />
     );
 
-  if (resource === "updated_at") {
-    console.log(value, secondaryValue);
-
+  if (resource === "updated_at")
     return Math.abs(dayjs(String(value)).diff(secondaryValue, "hours")) > 6 ? (
       <TimeAgo date={String(value)} />
     ) : (
       <Typography align="center">--</Typography>
     );
-  }
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={id} />;
 };
