@@ -128,8 +128,9 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     );
 
     const { data, count } = await this.buildQuery(query, filter)
-      .throwOnError()
-      .range(...this.getRange(pagination));
+      .range(...this.getRange(pagination))
+      .order("id", { ascending: true })
+      .throwOnError();
 
     return { data: data as RulesResponse[], count };
   }

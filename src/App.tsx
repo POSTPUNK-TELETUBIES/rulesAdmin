@@ -11,7 +11,12 @@ import { useCallback, useState } from "react";
 import { fetchClient } from "./lib/modules/fetchClient";
 import { ColorModeWrapper } from "./theme";
 import { NavBar } from "./components/NavBar";
-import { useQualityProfileFilter, useTotalStatus } from "./lib/observers";
+import {
+  setPage,
+  useQualityProfileFilter,
+  useTotalStatus,
+} from "./lib/observers";
+import { reactQueryClient } from "./lib/modules/reactQuery";
 
 //TODO: abstraer, generalizar
 const DownloadButton = ({ cb }: { cb?: () => Promise<void> }) => {
@@ -22,7 +27,7 @@ const DownloadButton = ({ cb }: { cb?: () => Promise<void> }) => {
 
     if (cb) await cb();
 
-    await fetchClient.downloadReport(qualityProfile_id);
+    await fetchClient.downloadReport({ qualityProfile_id });
   }, [cb, qualityProfile_id]);
 
   return (
@@ -42,6 +47,8 @@ const ActionButtons = () => {
     const changes = await syncroIndexedDb.rulesStatus.toArray();
     await fetchClient.postNewStatus(changes);
     await syncroIndexedDb.rulesStatus.clear();
+    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+    setPage(1);
     setIsProcessing(false);
   }, []);
 
