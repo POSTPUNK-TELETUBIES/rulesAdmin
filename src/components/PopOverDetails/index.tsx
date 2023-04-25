@@ -1,11 +1,11 @@
-import { Box, Chip, Stack } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 
 export interface DetailProps {
   tags: string[];
   isActive: boolean;
-  dateSonar: string | Date;
+  dateSonar?: string | Date;
   ruleTitle: string;
-  ruleDescription: JSX.Element;
+  ruleDescription: string;
 }
 
 export function PopOverDetails(props: DetailProps) {
@@ -59,8 +59,9 @@ export function PopOverDetails(props: DetailProps) {
         <Stack direction="row" useFlexGap flexWrap="wrap" sx={{ flexGrow: 1 }}>
           <Chip
             sx={{ width: "100%", height: "100%" }}
-            label={`${ruleDescription}`}
-          ></Chip>
+            label={"ruleDescription"}
+          />
+          <Typography dangerouslySetInnerHTML={{ __html: ruleDescription }} />
         </Stack>
       </Stack>
     </Box>
