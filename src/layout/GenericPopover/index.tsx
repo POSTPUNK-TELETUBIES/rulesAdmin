@@ -1,10 +1,12 @@
-import { IconButton, Popover, SxProps, Theme } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { Box, IconButton, Popover, SxProps, Theme } from "@mui/material";
 import { MouseEvent, memo, useCallback, useState } from "react";
 
 interface GenericPopoverProps {
   popoverBody: JSX.Element;
   icon: JSX.Element;
   sxProps?: SxProps<Theme>;
+  isLeft?: boolean;
 }
 
 const defaultSxProps: SxProps = {
@@ -19,6 +21,7 @@ const memoizedGenericPopOver = memo(function ({
   popoverBody,
   icon,
   sxProps,
+  isLeft,
 }: GenericPopoverProps) {
   const [popOverRef, setPopOverRef] = useState<HTMLButtonElement | null>(null);
 
@@ -49,7 +52,12 @@ const memoizedGenericPopOver = memo(function ({
         onClose={_handleClose}
         anchorEl={popOverRef}
       >
-        {popoverBody}
+        <Box display="flex" justifyContent={isLeft ? "flex-start" : "flex-end"}>
+          <IconButton onClick={_handleClose}>
+            <Close />
+          </IconButton>
+        </Box>
+        <Box margin={2}>{popoverBody}</Box>
       </Popover>
     </>
   );

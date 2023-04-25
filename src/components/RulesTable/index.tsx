@@ -10,7 +10,7 @@ import {
 
 import GenericTable from "../../layout/GenericTable";
 
-import { GenericPopover } from "../GenericPopover";
+import GenericPopover from "../../layout/GenericPopover";
 import { UncontrolledSwitch } from "../Switch/uncontrolledIndexed";
 import { columns } from "./config";
 
