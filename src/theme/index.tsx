@@ -1,7 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "@mui/material/CssBaseline";
-import { createContext, useMemo, useState } from "react";
-import { CssBaseline } from "@mui/material";
+import { createContext, useEffect, useMemo, useState } from "react";
+import { CssBaseline, useMediaQuery } from "@mui/material";
 
 export enum ColorPalletes {
   DARK = "dark",
@@ -27,7 +27,12 @@ export const ColorModeContext = createContext({
 });
 
 export const ColorModeWrapper = ({ app }: { app: JSX.Element }) => {
-  const [colorMode, setColorMode] = useState<ColorPalletes>(ColorPalletes.DARK);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const [colorMode, setColorMode] = useState<ColorPalletes>(
+    (localStorage.getItem("mode") as ColorPalletes) ||
+      (prefersDarkMode ? ColorPalletes.DARK : ColorPalletes.LIGTH)
+  );
 
   const colorModeOptions = useMemo(
     () => ({
@@ -39,6 +44,10 @@ export const ColorModeWrapper = ({ app }: { app: JSX.Element }) => {
     }),
     []
   );
+
+  useEffect(() => {
+    localStorage.setItem("mode", colorMode);
+  }, [colorMode]);
 
   return (
     <ColorModeContext.Provider value={colorModeOptions}>

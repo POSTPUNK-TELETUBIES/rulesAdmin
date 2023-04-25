@@ -87,15 +87,15 @@ function App() {
           <Container sx={{ paddingY: 12 }}>
             <Stack gap={3}>
               <Typography variant="h4" component="h1">
-                Sistema de activacion e inspeccion de reglas
+                Sistema de activación e inspección de reglas
               </Typography>
               <Typography>
-                <QuestionAnswer /> Selecciona el nuevo estado que se desea que
-                tengan las reglas
+                <QuestionAnswer /> Activa o desactiva los switches dependiendo
+                si deseas habilitar la regla o no
               </Typography>
               <Typography>
-                <Info /> Recuerda que el estado propuesto no se aplicara de
-                inmediato en Sonar Qube
+                <Info /> Recuerda que los estados que propongas no se aplicarán
+                de inmediato en SonarQube
               </Typography>
             </Stack>
             <Stack direction="column" gap={4} marginTop={4}>

@@ -24,9 +24,9 @@ export const ActivateFilter = () => {
         displayEmpty
         label="Estado actual sonar"
       >
-        <MenuItem value="all">TODOS</MenuItem>
-        <MenuItem value="active">ACTIVOS</MenuItem>
-        <MenuItem value="deactive">INACTIVOS</MenuItem>
+        <MenuItem value="all">Todos</MenuItem>
+        <MenuItem value="active">Activo</MenuItem>
+        <MenuItem value="deactive">Inactivo</MenuItem>
       </Select>
     </FormControl>
   );
