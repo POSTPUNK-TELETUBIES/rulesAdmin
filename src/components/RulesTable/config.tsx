@@ -9,10 +9,10 @@ export interface ColumnConfig {
 }
 
 export const columns: ColumnConfig[] = [
-  { label: "Condigo de regla", resource: "key" },
+  { label: "Código de regla", resource: "key" },
   { label: "Regla", resource: "name" },
   { label: "Tipo", resource: "type" },
-  { label: "severidad", resource: "severity" },
+  { label: "Severidad", resource: "severity" },
   { label: "Detalle", especialConfig: true, resource: "htmlDesc" },
   {
     label: "Estado actual sonar",

@@ -1,4 +1,4 @@
-import { FolderOff, ReadMore } from "@mui/icons-material";
+import { FolderOff, Visibility } from "@mui/icons-material";
 import dayjs from "dayjs";
 import {
   Box,
@@ -36,12 +36,12 @@ const EspecialConfigCell = ({
   secondaryValue,
 }: ExpecialConfigCell) => {
   if (resource === "isActiveSonar")
-    return <Typography>{value ? "Activo" : "No activo"}</Typography>;
+    return <Typography>{value ? "Activo" : "Inactivo"}</Typography>;
 
   if (resource === "htmlDesc")
     return (
       <GenericPopover
-        icon={<ReadMore />}
+        icon={<Visibility />}
         popoverBody={
           <Typography dangerouslySetInnerHTML={{ __html: String(value) }} />
         }
