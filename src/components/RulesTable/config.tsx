@@ -15,13 +15,13 @@ export const columns: ColumnConfig[] = [
   { label: "Severidad", resource: "severity" },
   { label: "Detalle", especialConfig: true, resource: "htmlDesc" },
   {
-    label: "Estado actual",
+    label: "Estado Actual",
     resource: "isActiveSonar",
     especialConfig: true,
   },
-  { label: "Estado propuesto", resource: "isActive", especialConfig: true },
+  { label: "Estado Propuesto", resource: "isActive", especialConfig: true },
   {
-    label: "Ultima propuesta: ",
+    label: "Última Propuesta: ",
     resource: "updated_at",
     especialConfig: true,
     icon: <Schedule sx={{ color: (theme) => theme.palette.common.white }} />,
