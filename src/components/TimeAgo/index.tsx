@@ -15,6 +15,6 @@ interface TimeAgoProps {
 
 export const TimeAgo = ({ date }: TimeAgoProps) => <Typography>
   {dayjs(date).from(new Date()).replace(
-    /segundo|segundos|minuto|minutos|hora|horas/,
+    /segundos|segundo|minutos|minuto|horas|hora/,
     match => options[match])}
 </Typography>
