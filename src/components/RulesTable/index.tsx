@@ -143,13 +143,16 @@ export function RulesTable() {
         }
         header={<GenericHeader data={columns} />}
       />
-      <TablePagination
-        rowsPerPage={rowsPerPage}
-        count={total ?? 1000}
-        page={page - 1}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <TablePagination
+          rowsPerPage={rowsPerPage}
+          count={total ?? 1000}
+          page={page - 1}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="Filas por pagina"
+        />
+      </Box>
     </>
   );
 }
