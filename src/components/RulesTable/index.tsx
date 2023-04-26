@@ -89,49 +89,55 @@ export function RulesTable() {
     [setPage, setRowsPerPage]
   );
 
-  if (isLoading)
-    return (
-      <Box display="grid" sx={{ placeContent: "center", minHeight: 400 }}>
-        <CircularProgress />
-      </Box>
-    );
-
-  if (!data?.length)
-    return (
-      <Info
-        icon={<FolderOff color="disabled" fontSize="inherit" />}
-        primaryText="Sin datos"
-        secondaryText="Selecciona filtros"
-      />
-    );
-
+  // TODO: refactor this spagetti 💩
   return (
     <GenericTable
       body={
         <>
-          {data?.map((result) => (
-            <TableRow key={result.id}>
-              {columns.map(({ resource, especialConfig }) => {
-                if (!especialConfig)
+          {isLoading ? (
+            <TableCell colSpan={columns.length}>
+              <Box
+                display="grid"
+                sx={{ placeContent: "center", minHeight: 400 }}
+              >
+                <CircularProgress />
+              </Box>
+            </TableCell>
+          ) : data?.length ? (
+            data?.map((result) => (
+              <TableRow key={result.id}>
+                {columns.map(({ resource, especialConfig }) => {
+                  if (!especialConfig)
+                    return (
+                      <TableCell key={resource + result.id}>
+                        {String(result[resource] ?? "--")}
+                      </TableCell>
+                    );
+
                   return (
                     <TableCell key={resource + result.id}>
-                      {String(result[resource] ?? "--")}
+                      <EspecialConfigCell
+                        result={result}
+                        resource={resource}
+                        secondaryValue={result.created_at}
+                        value={result[resource] ?? "--"}
+                      />
                     </TableCell>
                   );
-
-                return (
-                  <TableCell key={resource + result.id}>
-                    <EspecialConfigCell
-                      result={result}
-                      resource={resource}
-                      secondaryValue={result.created_at}
-                      value={result[resource] ?? "--"}
-                    />
-                  </TableCell>
-                );
-              })}
+                })}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length}>
+                <Info
+                  icon={<FolderOff color="disabled" fontSize="inherit" />}
+                  primaryText="Sin datos"
+                  secondaryText="Selecciona filtros"
+                />
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </>
       }
       header={<GenericHeader data={columns} />}

@@ -27,3 +27,8 @@ pre{
   border-radius: 10px;
   border: 3px solid #ffffff;
 }
+
+
+.reactour__popover{
+  color: black !important;
+}

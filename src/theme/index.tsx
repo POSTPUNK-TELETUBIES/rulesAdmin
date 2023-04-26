@@ -31,7 +31,7 @@ export const ColorModeWrapper = ({ app }: { app: JSX.Element }) => {
 
   const [colorMode, setColorMode] = useState<ColorPalletes>(
     (localStorage.getItem("mode") as ColorPalletes) ||
-      (prefersDarkMode ? ColorPalletes.DARK : ColorPalletes.LIGTH)
+      (!prefersDarkMode ? ColorPalletes.DARK : ColorPalletes.LIGTH)
   );
 
   const colorModeOptions = useMemo(
