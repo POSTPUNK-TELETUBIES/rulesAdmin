@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Chip, Stack, Tooltip, Typography } from "@mui/material";
 import { ColorPalletes } from "../../theme";
 
 export interface DetailProps {
@@ -22,10 +22,13 @@ export function PopOverDetails(props: DetailProps) {
         >
           <Chip
             sx={{
-              background: ({ palette }) => palette.grey[800],
+              backgroundColor: ({ palette }) =>
+                palette.mode === ColorPalletes.DARK
+                  ? palette.grey[900]
+                  : palette.grey[800],
               color: "white",
             }}
-            label={`Regla ${isActive ? "Activo" : "Inactivo"} desde:`}
+            label={`Regla ${isActive ? "activo" : "inactivo"} desde:`}
           />
           <Chip label={`${dateSonar ?? "Sin info"}`}></Chip>
         </Stack>
@@ -35,21 +38,9 @@ export function PopOverDetails(props: DetailProps) {
           alignItems="center"
           spacing={2}
         >
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{
-              padding: 2,
-              background: ({ palette }) =>
-                palette.mode === ColorPalletes.DARK
-                  ? palette.grey[800]
-                  : palette.grey[100],
-            }}
-          >
-            {tags.map((tag) => (
-              <Chip key={tag} label={tag} />
-            ))}
-          </Stack>
+          {tags.map((tag) => (
+            <Chip key={tag} label={tag} />
+          ))}
         </Stack>
       </Stack>
       <Stack
@@ -57,19 +48,33 @@ export function PopOverDetails(props: DetailProps) {
         justifyContent="flex-start"
         alignItems="center"
         padding={2}
+        pb={0}
       >
-        <Chip
-          color="secondary"
-          label={
-            <Typography noWrap variant="h5">
-              {ruleTitle}
-            </Typography>
-          }
-        />
+        <Tooltip title={ruleTitle}>
+          <Chip
+            color="secondary"
+            label={
+              <Typography noWrap variant="h5">
+                {ruleTitle}
+              </Typography>
+            }
+          />
+        </Tooltip>
       </Stack>
 
-      <Stack direction="column" justifyContent="center" spacing={2} padding={2}>
-        <Chip label={"Descripción de la Regla"}></Chip>
+      <Stack direction="column" justifyContent="center" padding={2}>
+        <Stack direction="row" justifyContent="flex-start">
+          <Chip
+            label={"Descripción de la Regla"}
+            sx={{
+              backgroundColor: ({ palette }) =>
+                palette.mode === ColorPalletes.DARK
+                  ? palette.grey[900]
+                  : palette.grey[800],
+              color: "white",
+            }}
+          ></Chip>
+        </Stack>
         <Typography dangerouslySetInnerHTML={{ __html: ruleDescription }} />
       </Stack>
     </Box>
