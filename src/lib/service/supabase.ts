@@ -20,12 +20,23 @@ export class LocalSupabaseClient implements FetchClientSingleton {
 
   private constructor(private client: SupabaseClient<Database>) {}
 
-  //TODO: evaluar pasar a un servio aparte
-  async downloadReport(filter: RulesFilter) {
-    const { data } = await this.client
-      .rpc("get_changed_q", { quality_id: Number(filter.qualityProfile_id) })
+  private async getCSVReportUpdatables(qualityProfileId: number) {
+    return await this.client
+      .rpc("get_changed_q", { quality_id: Number(qualityProfileId) })
       .select("*")
-      .csv();
+      .csv()
+      .throwOnError();
+  }
+
+  private async getCSVCompletFiltered(filter: RulesFilter) {
+    return await this.prepareFilteredQuery(filter).csv().throwOnError();
+  }
+
+  //TODO: evaluar pasar a un servio aparte
+  async downloadReport(filter: RulesFilter, toUpdate = true) {
+    const { data } = toUpdate
+      ? await this.getCSVReportUpdatables(Number(filter.qualityProfile_id))
+      : await this.getCSVCompletFiltered(filter);
 
     // TODO: create an element and get wiht querySelector
     // TODO: or investigate how to pipe with rxjs
@@ -108,10 +119,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     return query;
   }
 
-  async getPaginatedRulesByFilter(
-    filter: RulesFilter,
-    pagination: PaginationParams
-  ) {
+  private prepareFilteredQuery(filter: RulesFilter) {
     delete filter.lang_id;
 
     const query = this.client.from("status").select(
@@ -127,7 +135,16 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       { count: "exact" }
     );
 
-    const { data, count } = await this.buildQuery(query, filter)
+    return this.buildQuery(query, filter);
+  }
+
+  async getPaginatedRulesByFilter(
+    filter: RulesFilter,
+    pagination: PaginationParams
+  ) {
+    const query = this.prepareFilteredQuery(filter);
+
+    const { data, count } = await query
       .range(...this.getRange(pagination))
       .order("id", { ascending: true })
       .throwOnError();
