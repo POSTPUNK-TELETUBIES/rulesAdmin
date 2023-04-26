@@ -14,6 +14,7 @@ interface GenericTablePros {
   body: JSX.Element;
   footer?: JSX.Element;
   stickyHeader?: boolean;
+  isEmpty?: boolean;
 }
 
 const genericMemoizedTable = memo(function GenericTable({
@@ -37,9 +38,10 @@ const genericMemoizedTable = memo(function GenericTable({
           >
             {body}
           </TableBody>
-          {footer && <TableFooter>{footer}</TableFooter>}
+          {footer && body && <TableFooter>{footer}</TableFooter>}
         </Table>
       </TableContainer>
+      {!body && <div>asdsadsadsda</div>}
     </Paper>
   );
 });

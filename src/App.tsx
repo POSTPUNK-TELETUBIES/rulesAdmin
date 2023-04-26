@@ -1,3 +1,5 @@
+import { MouseEvent, useCallback, useState } from "react";
+
 import { QualityProfileFilter } from "./components/Filters/qualityprofiles.filter";
 import { LanguageFilter } from "./components/Filters/languages.filter";
 import { TypesFilter } from "./components/Filters/types.filter";
@@ -15,7 +17,7 @@ import {
 } from "@mui/material";
 import { Download, Info, QuestionAnswer, Sync } from "@mui/icons-material";
 import syncroIndexedDb from "./lib/service/dexie";
-import { MouseEvent, useCallback, useState } from "react";
+
 import { fetchClient } from "./lib/modules/fetchClient";
 import { ColorModeWrapper } from "./theme";
 import { NavBar } from "./components/NavBar";
@@ -27,6 +29,7 @@ import {
   useSeverityFilter,
   useTotalStatus,
 } from "./lib/observers";
+
 import { reactQueryClient } from "./lib/modules/reactQuery";
 
 //TODO: abstraer, generalizar
@@ -101,10 +104,15 @@ const ActionButtons = () => {
 
   const _handleClick = useCallback(async () => {
     setIsProcessing(true);
+
     const changes = await syncroIndexedDb.rulesStatus.toArray();
+
     await fetchClient.postNewStatus(changes);
+
     await syncroIndexedDb.rulesStatus.clear();
+
     await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+
     setPage(1);
     setIsProcessing(false);
   }, []);
@@ -142,7 +150,7 @@ function App() {
               </Typography>
             </Stack>
             <Stack direction="column" gap={4} marginTop={4}>
-              <Box display={"flex"} gap={4}>
+              <Box className="mainFilters" display={"flex"} gap={4}>
                 <LanguageFilter />
                 <QualityProfileFilter />
               </Box>

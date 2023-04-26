@@ -8,10 +8,14 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { setLanguageFilter } from "../../lib/observers";
 
+import { useTour } from "@reactour/tour";
+
 export const LanguageFilter = () => {
+  const { setIsOpen, isOpen } = useTour();
+
   const { data, isLoading } = useQuery({
     queryKey: ["languages"],
     queryFn: () => fetchClient.getAllLanguages(),
@@ -20,6 +24,23 @@ export const LanguageFilter = () => {
   const _handleChange = useCallback((event: SelectChangeEvent) => {
     setLanguageFilter(event.target.value);
   }, []);
+
+  useEffect(() => {
+    const firstVisit = localStorage.getItem("firstVisit");
+
+    if (firstVisit) return;
+
+    localStorage.setItem("firstVisit", new Date().toDateString());
+
+    setIsOpen(true);
+  }, [setIsOpen]);
+
+  useEffect(() => {
+    const body = document.querySelector("body");
+
+    if (isOpen) body.style.overflow = "hidden";
+    else body.style.overflow = "auto";
+  }, [isOpen]);
 
   if (isLoading) return <CircularProgress />;
 

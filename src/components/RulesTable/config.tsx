@@ -6,6 +6,7 @@ export interface ColumnConfig {
   resource: keyof Omit<RulesResponse & RuleDTO, "rules">;
   especialConfig?: boolean;
   icon?: JSX.Element;
+  className?: string;
 }
 
 export const columns: ColumnConfig[] = [
@@ -18,8 +19,14 @@ export const columns: ColumnConfig[] = [
     label: "Estado Actual",
     resource: "isActiveSonar",
     especialConfig: true,
+    className: "actualState",
   },
-  { label: "Estado Propuesto", resource: "isActive", especialConfig: true },
+  {
+    label: "Estado Propuesto",
+    resource: "isActive",
+    especialConfig: true,
+    className: "proposedState",
+  },
   {
     label: "Última Propuesta: ",
     resource: "updated_at",
