@@ -7,40 +7,90 @@ import { RulesTable } from "./components/RulesTable";
 import {
   Box,
   Button,
-  CircularProgress,
   Container,
+  Menu,
+  MenuItem,
   Stack,
   Typography,
 } from "@mui/material";
 import { Download, Info, QuestionAnswer, Sync } from "@mui/icons-material";
 import syncroIndexedDb from "./lib/service/dexie";
-import { useCallback, useState } from "react";
+import { MouseEvent, useCallback, useState } from "react";
 import { fetchClient } from "./lib/modules/fetchClient";
 import { ColorModeWrapper } from "./theme";
 import { NavBar } from "./components/NavBar";
 import {
   setPage,
+  useActiveFilter,
   useQualityProfileFilter,
+  useRuleTypeFilter,
+  useSeverityFilter,
   useTotalStatus,
 } from "./lib/observers";
 import { reactQueryClient } from "./lib/modules/reactQuery";
 
 //TODO: abstraer, generalizar
 const DownloadButton = ({ cb }: { cb?: () => Promise<void> }) => {
+  const severity = useSeverityFilter();
+  const isActiveSonar = useActiveFilter();
   const qualityProfile_id = useQualityProfileFilter();
+  const type = useRuleTypeFilter();
 
-  const _handleClick = useCallback(async () => {
-    if (!qualityProfile_id) return;
+  const [elementRef, setElemenRef] = useState<HTMLButtonElement>(null);
 
+  const _handleClose = useCallback(() => {
+    setElemenRef(null);
+  }, []);
+
+  const _handleClick = useCallback(
+    async ({ currentTarget }: MouseEvent<HTMLButtonElement>) => {
+      if (!qualityProfile_id) return;
+
+      setElemenRef(currentTarget);
+    },
+    [qualityProfile_id]
+  );
+
+  const _handleDownloadDiff = useCallback(async () => {
     if (cb) await cb();
 
     await fetchClient.downloadReport({ qualityProfile_id });
   }, [cb, qualityProfile_id]);
 
+  const _handleDownloadFiltered = useCallback(async () => {
+    if (cb) await cb();
+
+    await fetchClient.downloadReport(
+      {
+        isActiveSonar,
+        qualityProfile_id,
+        severity,
+        type,
+      },
+      false
+    );
+  }, [isActiveSonar, qualityProfile_id, severity, type, cb]);
+
   return (
-    <Button startIcon={<Download />} variant="contained" onClick={_handleClick}>
-      Descargar
-    </Button>
+    <>
+      <Button
+        startIcon={<Download />}
+        variant="contained"
+        onClick={_handleClick}
+      >
+        Descarga Personalizada
+      </Button>
+      <Menu
+        anchorEl={elementRef}
+        onClose={_handleClose}
+        open={Boolean(elementRef)}
+      >
+        <MenuItem onClick={_handleDownloadDiff}>
+          Reporte de Actualizables
+        </MenuItem>
+        <MenuItem onClick={_handleDownloadFiltered}>Reporte Completo</MenuItem>
+      </Menu>
+    </>
   );
 };
 
@@ -59,14 +109,7 @@ const ActionButtons = () => {
     setIsProcessing(false);
   }, []);
 
-  if (isProcessing)
-    return (
-      <Box width="100%" display="flex" justifyContent="center" padding={2}>
-        <CircularProgress sx={{ margin: "auto" }} color="info" />
-      </Box>
-    );
-
-  if (!totalstatus) return;
+  if (!totalstatus || isProcessing) return;
 
   return (
     <>
