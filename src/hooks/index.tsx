@@ -5,6 +5,7 @@ import {
   useRef,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 import {
   setPage,
@@ -19,6 +20,9 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { fetchClient } from "../lib/modules/fetchClient";
 import { RuleDTO, type RulesStatus } from "../types/supabase";
+
+import syncroIndexedDb from "../lib/service/dexie";
+import { reactQueryClient } from "../lib/modules/reactQuery";
 
 interface UseGetRulesStatusData {
   data?: (RulesStatus & RuleDTO)[];
@@ -108,4 +112,25 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
       rowsPerPage,
     },
   ];
+};
+
+export const useSyncro = (): [() => Promise<void>, boolean] => {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const syncroStatus = useCallback(async () => {
+    setIsProcessing(true);
+
+    const changes = await syncroIndexedDb.rulesStatus.toArray();
+
+    await fetchClient.postNewStatus(changes);
+
+    await syncroIndexedDb.rulesStatus.clear();
+
+    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+
+    setPage(1);
+    setIsProcessing(false);
+  }, []);
+
+  return [syncroStatus, isProcessing];
 };

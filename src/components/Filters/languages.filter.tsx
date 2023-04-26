@@ -42,25 +42,29 @@ export const LanguageFilter = () => {
     else body.style.overflow = "auto";
   }, [isOpen]);
 
-  if (isLoading) return <CircularProgress />;
-
   return (
-    <FormControl>
-      <InputLabel id="language">Lenguaje</InputLabel>
-      <Select
-        labelId="language"
-        label="Lenguaje"
-        onChange={_handleChange}
-        sx={{ width: 200 }}
-        defaultValue={""}
-        displayEmpty
-      >
-        {data?.map(({ id, name }) => (
-          <MenuItem key={id} value={id}>
-            {name}
-          </MenuItem>
-        ))}
-      </Select>
+    <FormControl sx={{ width: 200 }} className="language">
+      {!isLoading ? (
+        <>
+          <InputLabel id="language">Lenguaje</InputLabel>
+          <Select
+            labelId="language"
+            label="Lenguaje"
+            onChange={_handleChange}
+            sx={{ width: 200 }}
+            defaultValue={""}
+            displayEmpty
+          >
+            {data?.map(({ id, name }) => (
+              <MenuItem key={id} value={id}>
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </>
+      ) : (
+        <CircularProgress />
+      )}
     </FormControl>
   );
 };

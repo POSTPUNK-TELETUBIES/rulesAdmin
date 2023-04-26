@@ -30,3 +30,6 @@ export const [useTotalStatus] = bind(totalStatus$, 0);
 
 export const [page$, setPage] = createSignal<string>();
 export const [useSetPage] = bind(page$, 1);
+
+export const [openMenu$, setOpenMenu] = createSignal<boolean>();
+export const [useSetOpenMenu] = bind(openMenu$, false);
