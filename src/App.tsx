@@ -1,133 +1,17 @@
-import { MouseEvent, useCallback, useState } from "react";
-
 import { QualityProfileFilter } from "./components/Filters/qualityprofiles.filter";
 import { LanguageFilter } from "./components/Filters/languages.filter";
 import { TypesFilter } from "./components/Filters/types.filter";
 import { SeverityProfileFilter } from "./components/Filters/severities.filter";
 import { ActivateFilter } from "./components/Filters/activate.filter";
 import { RulesTable } from "./components/RulesTable";
-import {
-  Box,
-  Button,
-  Container,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { Download, Info, QuestionAnswer, Sync } from "@mui/icons-material";
-import syncroIndexedDb from "./lib/service/dexie";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import { Info, QuestionAnswer } from "@mui/icons-material";
 
-import { fetchClient } from "./lib/modules/fetchClient";
 import { ColorModeWrapper } from "./theme";
 import { NavBar } from "./components/NavBar";
-import {
-  setPage,
-  useActiveFilter,
-  useQualityProfileFilter,
-  useRuleTypeFilter,
-  useSeverityFilter,
-  useTotalStatus,
-} from "./lib/observers";
 
-import { reactQueryClient } from "./lib/modules/reactQuery";
-
-//TODO: abstraer, generalizar
-const DownloadButton = ({ cb }: { cb?: () => Promise<void> }) => {
-  const severity = useSeverityFilter();
-  const isActiveSonar = useActiveFilter();
-  const qualityProfile_id = useQualityProfileFilter();
-  const type = useRuleTypeFilter();
-
-  const [elementRef, setElemenRef] = useState<HTMLButtonElement>(null);
-
-  const _handleClose = useCallback(() => {
-    setElemenRef(null);
-  }, []);
-
-  const _handleClick = useCallback(
-    async ({ currentTarget }: MouseEvent<HTMLButtonElement>) => {
-      if (!qualityProfile_id) return;
-
-      setElemenRef(currentTarget);
-    },
-    [qualityProfile_id]
-  );
-
-  const _handleDownloadDiff = useCallback(async () => {
-    if (cb) await cb();
-
-    await fetchClient.downloadReport({ qualityProfile_id });
-  }, [cb, qualityProfile_id]);
-
-  const _handleDownloadFiltered = useCallback(async () => {
-    if (cb) await cb();
-
-    await fetchClient.downloadReport(
-      {
-        isActiveSonar,
-        qualityProfile_id,
-        severity,
-        type,
-      },
-      false
-    );
-  }, [isActiveSonar, qualityProfile_id, severity, type, cb]);
-
-  return (
-    <>
-      <Button
-        startIcon={<Download />}
-        variant="contained"
-        onClick={_handleClick}
-      >
-        Descarga Personalizada
-      </Button>
-      <Menu
-        anchorEl={elementRef}
-        onClose={_handleClose}
-        open={Boolean(elementRef)}
-      >
-        <MenuItem onClick={_handleDownloadDiff}>
-          Reporte de Actualizables
-        </MenuItem>
-        <MenuItem onClick={_handleDownloadFiltered}>Reporte Completo</MenuItem>
-      </Menu>
-    </>
-  );
-};
-
-const ActionButtons = () => {
-  const totalstatus = useTotalStatus();
-
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const _handleClick = useCallback(async () => {
-    setIsProcessing(true);
-
-    const changes = await syncroIndexedDb.rulesStatus.toArray();
-
-    await fetchClient.postNewStatus(changes);
-
-    await syncroIndexedDb.rulesStatus.clear();
-
-    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
-
-    setPage(1);
-    setIsProcessing(false);
-  }, []);
-
-  if (!totalstatus || isProcessing) return;
-
-  return (
-    <>
-      <Button startIcon={<Sync />} variant="contained" onClick={_handleClick}>
-        Sincronizar
-      </Button>
-      <DownloadButton cb={_handleClick} />
-    </>
-  );
-};
+import { DraggableMenu } from "./components/DraggableMenu";
+import { Sticky } from "./layout/Sticky";
 
 function App() {
   return (
@@ -135,7 +19,7 @@ function App() {
       app={
         <>
           <NavBar />
-          <Container sx={{ paddingY: 12 }}>
+          <Container sx={{ paddingTop: 12 }}>
             <Stack gap={3}>
               <Typography variant="h4" component="h1">
                 Sistema de activación e inspección de reglas
@@ -161,14 +45,13 @@ function App() {
               </Box>
             </Stack>
             <RulesTable />
+            <Sticky content={<DraggableMenu />} />
             <Stack
               paddingY={3}
               direction="row"
               gap={3}
               justifyContent={"space-between"}
-            >
-              <ActionButtons />
-            </Stack>
+            ></Stack>
           </Container>
         </>
       }
