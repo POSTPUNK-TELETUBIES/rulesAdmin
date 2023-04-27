@@ -59,7 +59,7 @@ const EspecialConfigCell = ({
     return Math.abs(dayjs(String(value)).diff(secondaryValue, "hours")) > 6 ? (
       <TimeAgo date={String(value)} />
     ) : (
-      <Typography align="center">--</Typography>
+      <Typography align="left">--</Typography>
     );
 
   return <UncontrolledSwitch initialStatus={Boolean(value)} id={result.id} />;
