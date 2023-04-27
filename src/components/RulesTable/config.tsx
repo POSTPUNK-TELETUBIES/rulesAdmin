@@ -15,7 +15,7 @@ export interface ColumnConfig {
 }
 
 export const columns: ColumnConfig[] = [
-  { label: "Código", resource: "key" },
+  { label: "Código", resource: "key", textAlign: "left" },
   { label: "Regla", resource: "name", textAlign: "left" },
   { label: "Tipo", resource: "type", filter: <TypesFilter /> },
   {

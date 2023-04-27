@@ -35,7 +35,7 @@ export const QualityProfileFilter = () => {
   if (isFetching) return <CircularProgress />;
 
   return (
-    <FormControl sx={{ width: 200 }}>
+    <FormControl className="mainFilters" sx={{ width: 200 }}>
       <InputLabel id="qualityprofile">Quality Profile</InputLabel>
       <Select
         ref={selectRef}
