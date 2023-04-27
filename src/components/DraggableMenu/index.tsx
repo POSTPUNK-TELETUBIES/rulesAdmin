@@ -42,13 +42,21 @@ export const DraggableMenu = () => {
         <IconButton
           ref={menuRef}
           onClick={_handleClick}
-          sx={{ background: ({ palette }) => palette.secondary.main }}
+          sx={{
+            background: ({ palette }) => palette.secondary.main,
+            zIndex: 500,
+          }}
           className="dragableMenu"
         >
           <MenuIcon fontSize="large" />
         </IconButton>
       </Draggable>
-      <Menu anchorEl={refMenu} open={!!refMenu} onClose={_handleClose}>
+      <Menu
+        className="menuDragable"
+        anchorEl={refMenu}
+        open={!!refMenu}
+        onClose={_handleClose}
+      >
         <MenuItem onClick={_handleClickSyncro}>
           <ListItemIcon>
             <Sync fontSize="small" />

@@ -43,7 +43,7 @@ export const FilterPopover = ({
 
   return (
     <>
-      <IconButton onClick={_handleClick}>
+      <IconButton onClick={_handleClick} sx={{ padding: "1px !important" }}>
         <Badge variant="dot" invisible={invisible} color="secondary">
           <FilterList sx={{ color: "white" }} />
         </Badge>

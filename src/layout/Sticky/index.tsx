@@ -6,6 +6,7 @@ export const Sticky = ({ content }: { content: JSX.Element }) => (
       left: 20,
       display: "flex",
       justifyContent: "flex-end",
+      zIndex: 500,
     }}
   >
     {content}

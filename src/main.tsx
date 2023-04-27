@@ -24,35 +24,36 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         {
           selector: ".language",
           content:
-            "Seleciona un lenguaje primero para que se carguen los perfiles",
+            "Selecciona el lenguaje de programación del cual deseas consultar reglas.",
         },
         {
           selector: ".mainFilters",
-          content:
-            "Ahora procede a seleccionar el perfil q pertenece al lenguaje",
+          content: "Ahora procede a seleccionar el perfil a consultar",
         },
         {
           selector: ".actualState",
-          content: "El estado actual en Sonar Qube",
+          content:
+            "Este es el estado actual de la regla en Sonarqube. Las reglas activas son las que analizan los repositorios.",
         },
         {
           selector: ".proposedState",
           content:
-            "Este estado no hara los cambios inmediatamente, es solo para el reporte",
-        },
-        {
-          selector: ".dragableMenu",
-          content:
-            "Aqui se encuentran las opciones de descarga y guardado, el boton es arrastable a cualquier lugar",
+            "Aquí podrás proponer si una regla debe estar activada o desactivada, recuerda que tu propuesta no se verá reflejada en SonarQube inmediatamente.",
         },
         {
           selector: ".dragableMenu",
           content: (
             <Typography>
-              'Puedes abrir el menu con <kbd>ctrl</kbd> + <kbd>m</kbd>
+              Las opciones de descarga y guardado se encuentran en este botón.
+              Si no lo encuentras rápido, ubícalo con <kbd>ctrl</kbd> +{" "}
+              <kbd>m</kbd>, ¡también lo puedes mover por toda la pantalla!
             </Typography>
           ),
         },
+        /* {
+          selector: '.menuDragable',
+          content: '¡Ya puedes empezar!',
+        } */
       ]}
     >
       <QueryClientProvider client={reactQueryClient}>
