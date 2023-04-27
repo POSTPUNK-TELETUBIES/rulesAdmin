@@ -1,0 +1,39 @@
+name: DEPLOY DEV
+permissions:
+  contents: write
+on:
+  push:
+    tags:
+      - "dev-v*"
+
+jobs:
+  deploy-dev:
+    environment: dev
+    env:
+      VITE_SUPABASE_TOKEN: ${{ vars.SUPABASE_TOKEN }}
+      VITE_TYPE_CLIENT: ${{ vars.SUPABASE_CLIENT }}
+      VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      BASE_PATH: ${{ vars.BASE_PATH }}
+    name: deploy dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: npm
+
+      - run: npm install -g yarn
+
+      - name: Build
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+          touch dist/.nojekyll
+      - name: Deploy
+        # https://github.com/JamesIves/github-pages-deploy-action
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
