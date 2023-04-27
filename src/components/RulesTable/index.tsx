@@ -107,16 +107,22 @@ export function RulesTable() {
             ) : data?.length ? (
               data?.map((result) => (
                 <TableRow key={result.id}>
-                  {columns.map(({ resource, especialConfig }) => {
+                  {columns.map(({ resource, especialConfig, textAlign }) => {
                     if (!especialConfig)
                       return (
-                        <TableCell key={resource + result.id}>
+                        <TableCell
+                          sx={{ textAlign: textAlign ?? "center" }}
+                          key={resource + result.id}
+                        >
                           {String(result[resource] ?? "--")}
                         </TableCell>
                       );
 
                     return (
-                      <TableCell key={resource + result.id}>
+                      <TableCell
+                        key={resource + result.id}
+                        sx={{ textAlign: "center" }}
+                      >
                         <EspecialConfigCell
                           result={result}
                           resource={resource}
