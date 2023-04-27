@@ -8,16 +8,28 @@ export enum ColorPalletes {
   LIGTH = "light",
 }
 
+const globals = {
+  fontFamily: ["Foco"].join(","),
+};
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
+  ...globals,
 });
 
 const lightTheme = createTheme({
   palette: {
     mode: "light",
+    primary: {
+      main: "#0099CC",
+    },
+    secondary: {
+      main: "#EE2C70",
+    },
   },
+  ...globals,
 });
 
 export const ColorModeContext = createContext({

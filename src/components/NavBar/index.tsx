@@ -22,7 +22,12 @@ export const NavBar = () => {
   }, [colorMode]);
 
   return (
-    <AppBar>
+    <AppBar
+      sx={{
+        background: ({ palette }) =>
+          `linear-gradient(90deg, ${palette.primary.main} 80%, ${palette.secondary.main} 100%)`,
+      }}
+    >
       <Container>
         <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
           <Box
