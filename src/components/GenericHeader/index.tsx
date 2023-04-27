@@ -9,7 +9,7 @@ interface GenericHeaderProps {
 export const GenericHeader = memo(({ data }: GenericHeaderProps) => {
   return (
     <TableRow>
-      {data.map(({ label, icon, className }) => (
+      {data.map(({ label, icon, className, filter }) => (
         <TableCell
           className={className}
           sx={{
@@ -17,7 +17,8 @@ export const GenericHeader = memo(({ data }: GenericHeaderProps) => {
           }}
           key={label}
         >
-          <Stack direction="row" gap={1}>
+          <Stack direction="row" gap={1} alignItems="center">
+            {filter}
             {icon}
             <Typography sx={{ color: (theme) => theme.palette.common.white }}>
               {label}
