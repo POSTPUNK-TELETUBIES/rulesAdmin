@@ -22,6 +22,10 @@ export class SyncroIndexedDb extends Dexie {
       rulesStatus: "id, updated_at, newStatus",
     });
   }
+
+  async getLocalRules(ids: number[]) {
+    return await this.rulesStatus.where("id").anyOf(ids).toArray();
+  }
 }
 
 export default SyncroIndexedDb.getInstance();
