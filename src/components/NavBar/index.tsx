@@ -41,7 +41,7 @@ export const NavBar = () => {
             <Typography variant="h6" fontWeight={900}>
               Sonardash
             </Typography>
-            <Typography variant="body1">/ Gestion de Reglas</Typography>
+            <Typography variant="body1">/ Gestión de Reglas</Typography>
             <img
               src="https://www.pacifico.com.pe/image/layout_set_logo?img_id=26556784&t=1682438787127"
               alt="logo de pacifico seguros"
