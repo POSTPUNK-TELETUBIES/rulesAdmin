@@ -17,6 +17,13 @@ import { LocalRulesStatus } from "./dexie";
 
 export class LocalSupabaseClient implements FetchClientSingleton {
   private static instance: LocalSupabaseClient;
+  private static readonly whiteList = {
+    ts: true,
+    js: true,
+    css: true,
+    java: true,
+    web: true,
+  };
 
   private constructor(private client: SupabaseClient<Database>) {}
 
@@ -158,7 +165,9 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       .select()
       .throwOnError();
 
-    return data as LanguageDTO[];
+    return (<LanguageDTO[]>data).filter(
+      ({ name }) => LocalSupabaseClient.whiteList[name]
+    );
   }
 
   static getInstance() {
