@@ -9,12 +9,24 @@ import "./index.css";
 import hotkeys from "hotkeys-js";
 import { setOpenMenu } from "./lib/observers/index.ts";
 import { Typography } from "@mui/material";
+import { woopraDomain } from "./lib/config/woopra.ts";
 
 hotkeys("ctrl+m", (event) => {
   event.preventDefault();
 
   setOpenMenu(true);
 });
+
+if (woopraDomain) {
+  window.woopra.config({
+    domain: woopraDomain,
+    outgoing_tracking: true,
+    download_tracking: true,
+    click_tracking: true,
+  });
+
+  window.woopra.track();
+}
 
 //TODO: pasar steps a configuracion
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
