@@ -14,6 +14,7 @@ jobs:
       VITE_TYPE_CLIENT: ${{ vars.SUPABASE_CLIENT }}
       VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
       BASE_PATH: ${{ vars.BASE_PATH }}
+      VITE_WOOPRA_DOMAIN: ${{ vars.WOOPRA_DOMAIN }}
     name: deploy dev
     runs-on: ubuntu-latest
     steps:
