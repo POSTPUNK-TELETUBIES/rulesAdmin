@@ -36,7 +36,7 @@ export function RulesTable() {
     [setPage, setRowsPerPage]
   );
 
-  // TODO: refactor this spagetti 💩
+  // TODO: refactor this spagetti 💩,
   return (
     <>
       <GenericTable

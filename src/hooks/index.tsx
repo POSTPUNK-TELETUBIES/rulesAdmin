@@ -1,6 +1,5 @@
 import {
   type Dispatch,
-  useMemo,
   type SetStateAction,
   useRef,
   useEffect,
@@ -21,7 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchClient } from "../lib/modules/fetchClient";
 import { RuleDTO, type RulesStatus } from "../types/supabase";
 
-import syncroIndexedDb from "../lib/service/dexie";
+import synchroIndexedDb from "../lib/service/dexie";
 import { reactQueryClient } from "../lib/modules/reactQuery";
 
 interface UseGetRulesStatusData {
@@ -50,7 +49,9 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const totalRef = useRef(0);
 
-  const isAvailabletoShow = Boolean(lang_id && qualityProfile_id);
+  const [flattedData, setFlattedData] = useState([]);
+
+  const isAvailableToShow = Boolean(lang_id && qualityProfile_id);
 
   const { data, isFetching } = useQuery({
     queryKey: [
@@ -84,28 +85,49 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
       return data;
     },
-    enabled: isAvailabletoShow,
+    enabled: isAvailableToShow,
     keepPreviousData: true,
   });
-
-  //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
-  const flatedResults = useMemo(
-    () =>
-      !isAvailabletoShow
-        ? []
-        : data?.map(({ rules, ...rest }) => ({ ...rules, ...rest })),
-    [data, isAvailabletoShow]
-  );
 
   useEffect(() => {
     setPage(1);
   }, [type, severity, isActiveSonar, qualityProfile_id]);
 
+  //TODO: el parse de data no es responsabilidad de este component, cambiar a como viene la data
+  const parseFlattedData = useCallback(async () => {
+    if (!isAvailableToShow) return;
+
+    const parsedData = data?.map(({ rules, ...rest }) => ({
+      ...rules,
+      ...rest,
+    }));
+
+    const cache = await synchroIndexedDb.getLocalRules(
+      parsedData.map(({ id }) => Number(id))
+    );
+
+    const cacheBy = cache.reduce((acmPojo, { id, newStatus }) => {
+      acmPojo[id] = newStatus;
+      return acmPojo;
+    }, {});
+
+    const flattedData = parsedData.map((parsedItem) => ({
+      ...parsedItem,
+      isActive: cacheBy[parsedItem.id] ?? parsedItem.isActive,
+    }));
+
+    setFlattedData(flattedData);
+  }, [data, isAvailableToShow]);
+
+  useEffect(() => {
+    parseFlattedData();
+  }, [data, page, parseFlattedData]);
+
   return [
     setPage,
     setRowsPerPage,
     {
-      data: flatedResults,
+      data: flattedData,
       isLoading: isFetching,
       total: totalRef.current,
       page,
@@ -114,17 +136,17 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   ];
 };
 
-export const useSyncro = (): [() => Promise<void>, boolean] => {
+export const useSynchro = (): [() => Promise<void>, boolean] => {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const syncroStatus = useCallback(async () => {
+  const synchroStatus = useCallback(async () => {
     setIsProcessing(true);
 
-    const changes = await syncroIndexedDb.rulesStatus.toArray();
+    const changes = await synchroIndexedDb.rulesStatus.toArray();
 
     await fetchClient.postNewStatus(changes);
 
-    await syncroIndexedDb.rulesStatus.clear();
+    await synchroIndexedDb.rulesStatus.clear();
 
     await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
 
@@ -132,5 +154,5 @@ export const useSyncro = (): [() => Promise<void>, boolean] => {
     setIsProcessing(false);
   }, []);
 
-  return [syncroStatus, isProcessing];
+  return [synchroStatus, isProcessing];
 };
