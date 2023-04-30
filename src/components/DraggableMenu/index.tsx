@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { useSyncro } from "../../hooks";
+import { useSynchro } from "../../hooks";
 import { DownloadButton } from "../ActionButtons";
 import { useSetOpenMenu } from "../../lib/observers";
 
@@ -18,7 +18,7 @@ export const DraggableMenu = () => {
   const menuRef = useRef<HTMLButtonElement>(null);
   const isMenuOpen = useSetOpenMenu();
 
-  const [_handleClickSyncro] = useSyncro();
+  const [_handleClickSyncro] = useSynchro();
 
   const _handleClose = useCallback(() => {
     setRefMenu(null);
