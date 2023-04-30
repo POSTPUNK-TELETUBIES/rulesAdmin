@@ -11,6 +11,7 @@ import { useCallback, useContext } from "react";
 import { ColorModeContext, ColorPalletes } from "../../theme";
 import { useTheme } from "@mui/material/styles";
 import { LightMode, ModeNight } from "@mui/icons-material";
+import { Status } from "./status";
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
@@ -47,6 +48,7 @@ export const NavBar = () => {
               alt="logo de pacifico seguros"
             />
           </Box>
+          <Status />
           <Stack direction="row" justifyContent="center" alignItems="center">
             {palette?.mode === ColorPalletes.DARK ? (
               <ModeNight />
