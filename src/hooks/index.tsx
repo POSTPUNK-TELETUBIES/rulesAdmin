@@ -1,6 +1,5 @@
 import {
   type Dispatch,
-  useMemo,
   type SetStateAction,
   useRef,
   useEffect,
@@ -50,6 +49,8 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const totalRef = useRef(0);
 
+  const [flatedData, setFlatedData] = useState([]);
+
   const isAvailabletoShow = Boolean(lang_id && qualityProfile_id);
 
   const { data, isFetching } = useQuery({
@@ -88,24 +89,45 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     keepPreviousData: true,
   });
 
-  //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
-  const flatedResults = useMemo(
-    () =>
-      !isAvailabletoShow
-        ? []
-        : data?.map(({ rules, ...rest }) => ({ ...rules, ...rest })),
-    [data, isAvailabletoShow]
-  );
-
   useEffect(() => {
     setPage(1);
   }, [type, severity, isActiveSonar, qualityProfile_id]);
+
+  //TODO: el parse de data no es responsabildiad de este componente, cambiar a como viene la data
+  const parseFlatedData = useCallback(async () => {
+    if (!isAvailabletoShow) return;
+
+    const parsedData = data?.map(({ rules, ...rest }) => ({
+      ...rules,
+      ...rest,
+    }));
+
+    const cache = await syncroIndexedDb.getLocalRules(
+      parsedData.map(({ id }) => Number(id))
+    );
+
+    const cacheBy = cache.reduce((acumPojo, { id, newStatus }) => {
+      acumPojo[id] = newStatus;
+      return acumPojo;
+    }, {});
+
+    const flatedData = parsedData.map((parsedItem) => ({
+      ...parsedItem,
+      isActive: cacheBy[parsedItem.id] ?? parsedItem.isActive,
+    }));
+
+    setFlatedData(flatedData);
+  }, [data, isAvailabletoShow]);
+
+  useEffect(() => {
+    parseFlatedData();
+  }, [data, page, parseFlatedData]);
 
   return [
     setPage,
     setRowsPerPage,
     {
-      data: flatedResults,
+      data: flatedData,
       isLoading: isFetching,
       total: totalRef.current,
       page,
