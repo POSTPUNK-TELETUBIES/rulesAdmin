@@ -15,6 +15,11 @@ For more information:
 
 1. [Features](#features)
 2. [Installation](#installation)
+3. [Troubleshooting](#troubleshooting)
+  3.1. [Fetch client](#why-is-there-a-vite_type_client-env)
+  3.2. [Supabase integration](#i-dont-have-a-supabase-server-to-fetch-data-from)
+4. [Credits]
+5. [Road map](#road-map)
 
 ## Features
 
@@ -68,3 +73,26 @@ In the meantime, there is a [collection of scripts](./doc/TABLES.md) to run into
 Till we finish the backend needed project, you should migrate data by your own to supabase.
 
 Supabase, when creating the tables via the scripts, doesn't recognizee camel case fields, you may tweak them manually.
+
+## Credits
+
+This was created and maintained by [Piero](https://github.com/Shadowrunner11)
+
+## License
+
+This project is under MIT License
+
+## Contributing
+
+Anyone can contribute by forking and sending a pr, a reviewer would take care of it and respond in 48 hours, tops
+
+## Road map
+
+- [] Translate documentation to locale es-ES
+- [] Finish backend ETLs
+- [] Add actions to auto check prs
+- [] Write unit tests
+- [] Write procedural documentation (wiki)
+- [] Add support for real time
+- [] Add support for diff check before sync
+- [] Add support for PWA install
