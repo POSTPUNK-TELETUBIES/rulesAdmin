@@ -49,7 +49,7 @@ After that, tho start the project in development mode:
 yarn dev
 ```
 
-Vite should now prompt into your terminal a message about the url (something like <http://localhost:1234>) to acces the main view
+Vite should now prompt into your terminal a message about the url (something like <http://localhost:1234>) to access the main view
 
 ## Troubleshooting
 
