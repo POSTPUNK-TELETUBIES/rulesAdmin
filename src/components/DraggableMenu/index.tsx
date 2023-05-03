@@ -1,16 +1,11 @@
-import { Menu as MenuIcon, Sync } from "@mui/icons-material";
-import {
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
+import { IconButton, Menu } from "@mui/material";
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useSynchro } from "../../hooks";
 import { DownloadButton } from "../ActionButtons";
 import { useSetOpenMenu } from "../../lib/observers";
+import { SynchroButton } from "../SynchroButton";
 
 // TODO: menu ref observable should pipe to be a toggle
 export const DraggableMenu = () => {
@@ -57,12 +52,7 @@ export const DraggableMenu = () => {
         open={!!refMenu}
         onClose={_handleClose}
       >
-        <MenuItem onClick={_handleClickSyncro}>
-          <ListItemIcon>
-            <Sync fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Sincronizar</ListItemText>
-        </MenuItem>
+        <SynchroButton />
         <DownloadButton cb={_handleClickSyncro} />
       </Menu>
     </>

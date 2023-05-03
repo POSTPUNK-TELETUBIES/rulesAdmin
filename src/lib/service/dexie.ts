@@ -4,6 +4,8 @@ export interface LocalRulesStatus {
   id: number;
   updated_at: Date;
   newStatus: boolean;
+  languageId: string;
+  qualityProfileId: string;
 }
 
 export class SyncroIndexedDb extends Dexie {
@@ -19,7 +21,7 @@ export class SyncroIndexedDb extends Dexie {
   private constructor() {
     super("syncro");
     this.version(1).stores({
-      rulesStatus: "id, updated_at, newStatus",
+      rulesStatus: "id, updated_at, newStatus, language, qualityProfile",
     });
   }
 

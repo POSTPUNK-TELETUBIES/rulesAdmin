@@ -49,5 +49,12 @@ export const EspecialConfigCell = ({
       <Typography align="left">--</Typography>
     );
 
-  return <UncontrolledSwitch initialStatus={Boolean(value)} id={result.id} />;
+  return (
+    <UncontrolledSwitch
+      initialStatus={Boolean(value)}
+      id={result.id}
+      language_id={result.lang_id}
+      qualityProfile_id={result.qualityProfile_id}
+    />
+  );
 };
