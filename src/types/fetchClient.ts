@@ -18,6 +18,11 @@ export interface RulesFilter {
   isActiveSonar: boolean | string;
 }
 
+export interface PaginationResult {
+  data: RulesResponse[] | null;
+  count: number;
+}
+
 export interface FetchClientSingleton {
   getQualityProfilesByLanguage(
     languageId: string
@@ -28,7 +33,7 @@ export interface FetchClientSingleton {
   getPaginatedRulesByFilter(
     filter: RulesFilter,
     pagination?: PaginationParams
-  ): Promise<{ data: RulesResponse[] | null; count: number }>;
+  ): Promise<PaginationResult>;
 
   getTotalCountByTable(tableName: string): Promise<number>;
 
@@ -38,4 +43,10 @@ export interface FetchClientSingleton {
     filter: Partial<RulesFilter>,
     toUpdate?: boolean
   ): Promise<void>;
+
+  getByRuleName(
+    rule: string,
+    filter: RulesFilter,
+    pagination: PaginationParams
+  ): Promise<PaginationResult>;
 }
