@@ -181,6 +181,26 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   private getRange({ page, limit = 10 }: PaginationParams): [number, number] {
     return [(page - 1) * limit, page * limit - 1];
   }
+
+  // TODO: Should be using text search and not like
+  // TODO: There are no tests, this methods should be tested
+  async getByRuleName(
+    rule: string,
+    filter: RulesFilter,
+    pagination: PaginationParams
+  ) {
+    const { data, count } = await this.prepareFilteredQuery(filter)
+      .ilike("rules.name", `%${rule}%`)
+      // TODO: code duplicated, search for an abstraction
+      .range(...this.getRange(pagination))
+      .order("id", { ascending: true })
+      .throwOnError();
+
+    return {
+      data: data as RulesResponse[],
+      count,
+    };
+  }
 }
 
 export default LocalSupabaseClient.getInstance;

@@ -14,6 +14,7 @@ import {
   useQualityProfileFilter,
   useRuleTypeFilter,
   useSetPage,
+  useSetTextmatchFilter,
   useSeverityFilter,
 } from "../lib/observers";
 import { useQuery } from "@tanstack/react-query";
@@ -44,6 +45,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
   const page = useSetPage();
+  const textMatchFilter = useSetTextmatchFilter();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -63,21 +65,26 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
       severity,
       page,
       rowsPerPage,
+      textMatchFilter,
     ],
     async queryFn() {
-      const { data, count } = await fetchClient.getPaginatedRulesByFilter(
-        {
-          severity,
-          lang_id,
-          isActiveSonar,
-          qualityProfile_id,
-          type,
-        },
-        {
-          page,
-          limit: rowsPerPage,
-        }
-      );
+      const filter = {
+        severity,
+        lang_id,
+        isActiveSonar,
+        qualityProfile_id,
+        type,
+      };
+
+      const pagination = {
+        page,
+        limit: rowsPerPage,
+      };
+
+      // TODO: abstract to generalize new text match filter instead of having two separated methods
+      const { data, count } = textMatchFilter
+        ? await fetchClient.getByRuleName(textMatchFilter, filter, pagination)
+        : await fetchClient.getPaginatedRulesByFilter(filter, pagination);
 
       totalRef.current = count;
 
@@ -91,7 +98,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   useEffect(() => {
     setPage(1);
-  }, [type, severity, isActiveSonar, qualityProfile_id]);
+  }, [type, severity, isActiveSonar, qualityProfile_id, textMatchFilter]);
 
   //TODO: el parse de data no es responsabilidad de este component, cambiar a como viene la data
   const parseFlattedData = useCallback(async () => {

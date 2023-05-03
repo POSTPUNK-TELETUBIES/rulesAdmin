@@ -10,6 +10,11 @@ const clientsContainer: Record<string, () => FetchClientSingleton> = {
 
 export const fetchClient: FetchClientSingleton = clientsContainer[clientType]();
 
+/**This is for exposing into global window fetchClient just in dev mode
+ * @example
+ * in dev tools you just can
+ * fetchClient.getRules(...)
+ */
 import.meta.env.DEV &&
   (() => {
     window.fetchClient = fetchClient;

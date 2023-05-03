@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   FetchClientSingleton,
   PaginationParams,
+  PaginationResult,
   RulesFilter,
 } from "../../types/fetchClient";
 import { LanguageDTO, QualityProfileDTO } from "../../types/supabase";
@@ -11,6 +12,13 @@ import { LocalRulesStatus } from "./dexie";
 export class AxiosFetchData implements FetchClientSingleton {
   private static instance: AxiosFetchData;
   private constructor(private client: AxiosInstance) {}
+  getByRuleName(
+    _rule: string,
+    _filter: RulesFilter,
+    _pagination: PaginationParams
+  ): Promise<PaginationResult> {
+    throw new Error("Method not implemented.");
+  }
   downloadReport(_filter: RulesFilter): Promise<void> {
     throw new Error("Method not implemented.");
   }
