@@ -1,39 +1,23 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
-import { Severity } from "../../types/supabase";
 import { useCallback } from "react";
+import { Severity } from "../../types/supabase";
 import { setSeverityFilterChange } from "../../lib/observers";
+import { FilterPopover } from "../../layout/FilterPopover";
 
-const severityValues = Object.freeze(Object.values(Severity));
+const filterConfig = [
+  { value: "all", label: "Todos" },
+  ...Object.values(Severity).map((value) => ({ value, label: value })),
+];
 
 export const SeverityProfileFilter = () => {
-  const _handleChange = useCallback((event: SelectChangeEvent) => {
-    setSeverityFilterChange(event.target.value);
+  const _handleChange = useCallback((value: string) => {
+    setSeverityFilterChange(value);
   }, []);
 
   return (
-    <FormControl>
-      <InputLabel id="severity">Severidad</InputLabel>
-      <Select
-        label="Severidad"
-        labelId="severity"
-        onChange={_handleChange}
-        sx={{ width: 200 }}
-        defaultValue={"all"}
-        displayEmpty
-      >
-        {<MenuItem value={"all"}>TODOS</MenuItem>}
-        {severityValues.map((severity) => (
-          <MenuItem key={severity} value={severity}>
-            {severity}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <FilterPopover
+      filterConfig={filterConfig}
+      isClosingRecursive={true}
+      reactiveCallback={_handleChange}
+    />
   );
 };

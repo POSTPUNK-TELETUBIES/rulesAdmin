@@ -1,70 +1,17 @@
-import { FolderOff, Visibility } from "@mui/icons-material";
-import dayjs from "dayjs";
-import {
-  Box,
-  CircularProgress,
-  TableCell,
-  TablePagination,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Box, TableCell, TablePagination, TableRow } from "@mui/material";
 
 import GenericTable from "../../layout/GenericTable";
 
-import GenericPopover from "../../layout/GenericPopover";
-import { UncontrolledSwitch } from "../Switch/uncontrolledIndexed";
 import { columns } from "./config";
 
 import { useGetRulesStatus } from "../../hooks";
 import { GenericHeader } from "../GenericHeader";
-import { Info } from "../../layout/Info";
 import { MouseEvent, useCallback } from "react";
-import { TimeAgo } from "../TimeAgo";
-import { PopOverDetails } from "../PopOverDetails";
-import { RuleDTO, RulesStatus } from "../../types/supabase";
+import { EspecialConfigCell } from "./especialConfig";
+import { LoadingContentTable } from "./loadingContent";
+import { NoDataContent } from "./noData";
 
-interface ExpecialConfigCell {
-  resource: string;
-  value: unknown;
-  result: RulesStatus & RuleDTO;
-  secondaryValue?: string | Date;
-}
-
-// TODO: check another abstraction for especial cases
-const EspecialConfigCell = ({
-  resource,
-  value,
-  result,
-  secondaryValue,
-}: ExpecialConfigCell) => {
-  if (resource === "isActiveSonar")
-    return <Typography>{value ? "Activo" : "Inactivo"}</Typography>;
-
-  if (resource === "htmlDesc")
-    return (
-      <GenericPopover
-        icon={<Visibility />}
-        popoverBody={
-          <PopOverDetails
-            tags={[result.severity, result.type]}
-            isActive={result.isActive}
-            ruleTitle={result.name}
-            ruleDescription={result.htmlDesc}
-          />
-        }
-      />
-    );
-
-  if (resource === "updated_at")
-    return Math.abs(dayjs(String(value)).diff(secondaryValue, "hours")) > 6 ? (
-      <TimeAgo date={String(value)} />
-    ) : (
-      <Typography align="left">--</Typography>
-    );
-
-  return <UncontrolledSwitch initialStatus={Boolean(value)} id={result.id} />;
-};
-
+// TODO: Abstract table and config
 export function RulesTable() {
   const [
     setPage,
@@ -94,29 +41,28 @@ export function RulesTable() {
     <>
       <GenericTable
         body={
-          <>
-            {isLoading ? (
-              <TableCell colSpan={columns.length}>
-                <Box
-                  display="grid"
-                  sx={{ placeContent: "center", minHeight: 400 }}
-                >
-                  <CircularProgress />
-                </Box>
-              </TableCell>
-            ) : data?.length ? (
-              data?.map((result) => (
+          isLoading ? (
+            <LoadingContentTable colSpan={columns.length} />
+          ) : (
+            <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
+              {data?.map((result) => (
                 <TableRow key={result.id}>
-                  {columns.map(({ resource, especialConfig }) => {
+                  {columns.map(({ resource, especialConfig, textAlign }) => {
                     if (!especialConfig)
                       return (
-                        <TableCell key={resource + result.id}>
+                        <TableCell
+                          sx={{ textAlign: textAlign ?? "center" }}
+                          key={resource + result.id}
+                        >
                           {String(result[resource] ?? "--")}
                         </TableCell>
                       );
 
                     return (
-                      <TableCell key={resource + result.id}>
+                      <TableCell
+                        key={resource + result.id}
+                        sx={{ textAlign: "center" }}
+                      >
                         <EspecialConfigCell
                           result={result}
                           resource={resource}
@@ -127,19 +73,9 @@ export function RulesTable() {
                     );
                   })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length}>
-                  <Info
-                    icon={<FolderOff color="disabled" fontSize="inherit" />}
-                    primaryText="Sin datos"
-                    secondaryText="Selecciona filtros"
-                  />
-                </TableCell>
-              </TableRow>
-            )}
-          </>
+              ))}
+            </NoDataContent>
+          )
         }
         header={<GenericHeader data={columns} />}
       />

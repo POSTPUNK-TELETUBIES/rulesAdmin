@@ -1,6 +1,6 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { ChangeEvent, useCallback } from "react";
+import { useCallback } from "react";
 import { setActivateFilterChange } from "../../lib/observers";
+import { FilterPopover } from "../../layout/FilterPopover";
 
 const parsedValues = Object.freeze({
   all: null,
@@ -8,26 +8,22 @@ const parsedValues = Object.freeze({
   deactive: false,
 });
 
+const filterConfig = [
+  { value: "all", label: "Todos" },
+  { value: "active", label: "Activo" },
+  { value: "deactive", label: "Inactivo" },
+];
+
 export const ActivateFilter = () => {
-  const _handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setActivateFilterChange(parsedValues[event.target.value]);
+  const _handleChange = useCallback((value: string) => {
+    setActivateFilterChange(parsedValues[value]);
   }, []);
 
   return (
-    <FormControl>
-      <InputLabel id="sonarStatus">Estado actual Sonar</InputLabel>
-      <Select
-        labelId="sonarStatus"
-        onChange={_handleChange}
-        sx={{ width: 200 }}
-        defaultValue="all"
-        displayEmpty
-        label="Estado actual sonar"
-      >
-        <MenuItem value="all">Todos</MenuItem>
-        <MenuItem value="active">Activo</MenuItem>
-        <MenuItem value="deactive">Inactivo</MenuItem>
-      </Select>
-    </FormControl>
+    <FilterPopover
+      filterConfig={filterConfig}
+      isClosingRecursive={true}
+      reactiveCallback={_handleChange}
+    />
   );
 };

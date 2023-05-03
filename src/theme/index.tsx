@@ -8,7 +8,7 @@ export enum ColorPalletes {
   LIGTH = "light",
 }
 
-const globals = {
+const typographyGlobals = {
   fontFamily: ["Foco"].join(","),
 };
 
@@ -16,7 +16,9 @@ const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
-  ...globals,
+  typography: {
+    ...typographyGlobals,
+  },
 });
 
 const lightTheme = createTheme({
@@ -29,7 +31,9 @@ const lightTheme = createTheme({
       main: "#EE2C70",
     },
   },
-  ...globals,
+  typography: {
+    ...typographyGlobals,
+  },
 });
 
 export const ColorModeContext = createContext({

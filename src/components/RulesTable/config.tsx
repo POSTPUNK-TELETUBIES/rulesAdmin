@@ -1,5 +1,8 @@
 import { Schedule } from "@mui/icons-material";
 import type { RuleDTO, RulesResponse } from "../../types/supabase";
+import { ActivateFilter } from "../Filters/activate.filter";
+import { SeverityProfileFilter } from "../Filters/severities.filter";
+import { TypesFilter } from "../Filters/types.filter";
 
 export interface ColumnConfig {
   label: string;
@@ -7,19 +10,26 @@ export interface ColumnConfig {
   especialConfig?: boolean;
   icon?: JSX.Element;
   className?: string;
+  filter?: JSX.Element;
+  textAlign?: string;
 }
 
 export const columns: ColumnConfig[] = [
-  { label: "Código", resource: "key" },
-  { label: "Regla", resource: "name" },
-  { label: "Tipo", resource: "type" },
-  { label: "Severidad", resource: "severity" },
+  { label: "Código", resource: "key", textAlign: "left" },
+  { label: "Regla", resource: "name", textAlign: "left" },
+  { label: "Tipo", resource: "type", filter: <TypesFilter /> },
+  {
+    label: "Severidad",
+    resource: "severity",
+    filter: <SeverityProfileFilter />,
+  },
   { label: "Detalle", especialConfig: true, resource: "htmlDesc" },
   {
     label: "Estado Actual",
     resource: "isActiveSonar",
     especialConfig: true,
     className: "actualState",
+    filter: <ActivateFilter />,
   },
   {
     label: "Estado Propuesto",

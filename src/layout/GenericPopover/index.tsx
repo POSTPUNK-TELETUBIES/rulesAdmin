@@ -10,18 +10,18 @@ interface GenericPopoverProps {
 }
 
 const defaultSxProps: SxProps = {
-  width: "50vh",
+  width: "80vh",
   maxWidth: 600,
   minWidth: 400,
-  height: "50vh",
+  height: "80vh",
   minHeight: 400,
+  borderRadius: 50,
 };
 
 const memoizedGenericPopOver = memo(function ({
   popoverBody,
   icon,
   sxProps,
-  isLeft,
 }: GenericPopoverProps) {
   const [popOverRef, setPopOverRef] = useState<HTMLButtonElement | null>(null);
 
@@ -52,12 +52,13 @@ const memoizedGenericPopOver = memo(function ({
         onClose={_handleClose}
         anchorEl={popOverRef}
       >
-        <Box display="flex" justifyContent={isLeft ? "flex-start" : "flex-end"}>
-          <IconButton onClick={_handleClose}>
-            <Close />
-          </IconButton>
-        </Box>
-        <Box margin={2}>{popoverBody}</Box>
+        <IconButton
+          onClick={_handleClose}
+          sx={{ position: "absolute", top: 0, right: 0 }}
+        >
+          <Close sx={{ fontSize: "medium" }} />
+        </IconButton>
+        <Box margin={1}>{popoverBody}</Box>
       </Popover>
     </>
   );

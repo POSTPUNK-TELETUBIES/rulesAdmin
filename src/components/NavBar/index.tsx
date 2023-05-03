@@ -38,7 +38,10 @@ export const NavBar = () => {
               gap: 1,
             }}
           >
-            <Typography variant="body2">Sonardash - Reglas</Typography>
+            <Typography variant="h6" fontWeight={900}>
+              Sonardash
+            </Typography>
+            <Typography variant="body1">/ Gestión de Reglas</Typography>
           </Box>
           <Stack direction="row" justifyContent="center" alignItems="center">
             {palette?.mode === ColorPalletes.DARK ? (
