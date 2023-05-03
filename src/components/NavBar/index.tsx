@@ -39,10 +39,6 @@ export const NavBar = () => {
             }}
           >
             <Typography variant="body2">Sonardash - Reglas</Typography>
-            <img
-              src="https://www.pacifico.com.pe/image/layout_set_logo?img_id=26556784&t=1682438787127"
-              alt="logo de pacifico seguros"
-            />
           </Box>
           <Stack direction="row" justifyContent="center" alignItems="center">
             {palette?.mode === ColorPalletes.DARK ? (
@@ -51,6 +47,10 @@ export const NavBar = () => {
               <LightMode />
             )}
             <Switch color="warning" onChange={_handleChange} />
+            <img
+              src="https://www.pacifico.com.pe/image/layout_set_logo?img_id=26556784&t=1682438787127"
+              alt="logo de pacifico seguros"
+            />
           </Stack>
         </Toolbar>
       </Container>

@@ -21,9 +21,6 @@ function App() {
           <NavBar />
           <Container sx={{ paddingTop: 12 }}>
             <Stack gap={3}>
-              <Typography variant="h4" component="h1">
-                Sistema de activación e inspección de reglas
-              </Typography>
               <Typography>
                 <QuestionAnswer /> Activa o desactiva los switches dependiendo
                 si deseas habilitar la regla o no
