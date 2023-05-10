@@ -33,3 +33,8 @@ export const [useSetPage] = bind(page$, 1);
 
 export const [openMenu$, setOpenMenu] = createSignal<boolean>();
 export const [useSetOpenMenu] = bind(openMenu$, false);
+
+export const [textmatchFilter$, setTextmatchFilter] = createSignal<
+  string | null
+>();
+export const [useSetTextmatchFilter] = bind(textmatchFilter$, null);

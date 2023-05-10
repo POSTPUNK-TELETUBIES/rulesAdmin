@@ -53,7 +53,7 @@ export const NavBar = () => {
             )}
             <Switch color="warning" onChange={_handleChange} />
             <img
-              src="https://www.pacifico.com.pe/image/layout_set_logo?img_id=26556784&t=1682438787127"
+              src="https://www.pacifico.com.pe/image/layout_set_logo?img_id=86311733&t=1683695027672"
               alt="logo de pacifico seguros"
             />
           </Stack>

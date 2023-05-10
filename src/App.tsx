@@ -9,6 +9,7 @@ import { NavBar } from "./components/NavBar";
 
 import { DraggableMenu } from "./components/DraggableMenu";
 import { Sticky } from "./layout/Sticky";
+import { Search } from "./components/Search";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Box display="flex" gap={4}>
                 <LanguageFilter />
                 <QualityProfileFilter />
+                <Search />
               </Box>
             </Stack>
             <RulesTable />
