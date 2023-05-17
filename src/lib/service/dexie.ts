@@ -1,11 +1,12 @@
 import Dexie, { type Table } from "dexie";
+import { RuleDTO, RulesStatus } from "../../types/supabase";
 
 export interface LocalRulesStatus {
   id: number;
   updated_at?: Date;
   newStatus?: boolean;
   languageId?: string;
-  qualityProfileId?: string;
+  qualityProfileId?: number;
   description?: string;
 }
 
@@ -21,9 +22,9 @@ export class SynchroIndexedDb extends Dexie {
 
   private constructor() {
     super("syncro");
-    this.version(2).stores({
+    this.version(3).stores({
       rulesStatus:
-        "id, updated_at, newStatus, language, qualityProfile, description",
+        "id, updated_at, newStatus, language, qualityProfileId, description",
     });
   }
 
@@ -35,9 +36,17 @@ export class SynchroIndexedDb extends Dexie {
     return await this.rulesStatus.count();
   }
 
-  async saveDescription(id: number, description: string) {
+  // TODO: 💩 bad abstraction , refactor since we are getting al data in a bad way
+  async saveDescription(data: RuleDTO & RulesStatus, description: string) {
+    const previuosData = await this.rulesStatus.get(data.id);
+
     return await this.rulesStatus.put({
-      id,
+      id: Number(data.id),
+      languageId: data.lang_id,
+      newStatus: data.isActive,
+      qualityProfileId: Number(data.qualityProfile_id),
+      ...previuosData,
+      updated_at: new Date(),
       description,
     });
   }

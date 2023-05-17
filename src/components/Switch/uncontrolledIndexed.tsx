@@ -24,14 +24,18 @@ export function UncontrolledSwitch({
       .then((data) => setIsInIndexedDb(!!data));
   }, [id]);
 
+  // TODO: 💩 bad abstraction , refactor since we are getting al data in a bad way, duplciated code in Dexie service
   const _handleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const prevData = await synchroDb.rulesStatus.get(Number(id));
+
       synchroDb.rulesStatus.put({
+        ...prevData,
         id: Number(id),
         newStatus: event.target.checked,
         updated_at: new Date(),
         languageId: language_id,
-        qualityProfileId: qualityProfile_id,
+        qualityProfileId: Number(qualityProfile_id),
       });
       setIsInIndexedDb(true);
     },
