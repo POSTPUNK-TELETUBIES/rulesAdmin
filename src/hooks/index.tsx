@@ -14,14 +14,14 @@ import {
   useQualityProfileFilter,
   useRuleTypeFilter,
   useSetPage,
-  useSetTextmatchFilter,
+  useSetTextmatchFilter as useSetTextMatchFilter,
   useSeverityFilter,
 } from "../lib/observers";
 import { useQuery } from "@tanstack/react-query";
 import { fetchClient } from "../lib/modules/fetchClient";
 import { RuleDTO, type RulesStatus } from "../types/supabase";
 
-import synchroIndexedDb from "../lib/service/dexie";
+import synchroIndexedDb, { LocalRulesStatus } from "../lib/service/dexie";
 import { reactQueryClient } from "../lib/modules/reactQuery";
 
 interface UseGetRulesStatusData {
@@ -45,7 +45,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
   const page = useSetPage();
-  const textMatchFilter = useSetTextmatchFilter();
+  const textMatchFilter = useSetTextMatchFilter();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -115,14 +115,20 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
         )
       : [];
 
-    const cacheBy = cache.reduce((acmPojo, { id, newStatus }) => {
-      acmPojo[id] = newStatus;
-      return acmPojo;
-    }, {});
+    const cacheBy: Record<string | number, LocalRulesStatus> = cache.reduce(
+      (acmPojo, cacheItem) => {
+        acmPojo[cacheItem.id] = cacheItem;
+
+        return acmPojo;
+      },
+      {}
+    );
 
     const flattedData = parsedData?.map((parsedItem) => ({
       ...parsedItem,
-      isActive: cacheBy[parsedItem.id] ?? parsedItem.isActive,
+      isActive: cacheBy[parsedItem.id]?.newStatus ?? parsedItem.isActive,
+      description:
+        cacheBy[parsedItem.id]?.description ?? parsedItem.description,
     }));
 
     setFlattedData(flattedData);

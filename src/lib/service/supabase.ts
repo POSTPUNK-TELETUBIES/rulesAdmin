@@ -72,13 +72,28 @@ export class LocalSupabaseClient implements FetchClientSingleton {
         .throwOnError();
   }
 
+  private async bulkUpdateDescription(data: LocalRulesStatus[]) {
+    if (data.length)
+      return await this.client
+        .from("status")
+        .upsert(
+          data.map(({ id, description }) => ({
+            id,
+            description,
+          }))
+        )
+        .throwOnError();
+  }
+
   async postNewStatus(updateInfo: LocalRulesStatus[]) {
     const toFalse = updateInfo.filter(({ newStatus }) => !newStatus);
     const toTrue = updateInfo.filter(({ newStatus }) => newStatus);
+    const description = updateInfo.filter(({ description }) => !!description);
 
     await Promise.all([
       this.changeIsActive(toFalse, false),
       this.changeIsActive(toTrue, true),
+      this.bulkUpdateDescription(description),
     ]);
   }
 
