@@ -19,18 +19,18 @@ export const Status = () => {
   // TODO: Use live query is a reactive observable
   const rulesStatus = useLiveQuery(() => syncroDB.rulesStatus.toArray());
 
-  const { data: languagesdata } = useQuery({
+  const { data: languagesData } = useQuery({
     queryKey: ["languages"],
     queryFn: () => fetchClient.getAllLanguages(),
   });
 
   const languageBy = useMemo(
     () =>
-      languagesdata?.reduce((acmPojo, { id, name }) => {
+      languagesData?.reduce((acmPojo, { id, name }) => {
         acmPojo[id] = name;
         return acmPojo;
       }, {}),
-    [languagesdata]
+    [languagesData]
   );
 
   return (
@@ -52,7 +52,7 @@ export const Status = () => {
       buttonProps={{ variant: "contained" }}
       popoverBody={
         <Card>
-          {languagesdata && (
+          {languagesData && (
             <CardContent>
               {rulesStatus
                 ?.filter(

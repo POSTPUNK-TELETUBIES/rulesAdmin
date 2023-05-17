@@ -1,5 +1,5 @@
 import { Box, Switch } from "@mui/material";
-import syncroDb from "../../lib/service/dexie";
+import synchroDb from "../../lib/service/dexie";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 interface UncontrolledSwitchProps {
@@ -19,14 +19,14 @@ export function UncontrolledSwitch({
   const [isInIndexedDb, setIsInIndexedDb] = useState(false);
 
   useEffect(() => {
-    syncroDb.rulesStatus
+    synchroDb.rulesStatus
       .get(Number(id))
       .then((data) => setIsInIndexedDb(!!data));
   }, [id]);
 
   const _handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      syncroDb.rulesStatus.put({
+      synchroDb.rulesStatus.put({
         id: Number(id),
         newStatus: event.target.checked,
         updated_at: new Date(),

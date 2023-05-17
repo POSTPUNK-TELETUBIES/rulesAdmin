@@ -1,15 +1,94 @@
-import { Box, TableCell, TablePagination, TableRow } from "@mui/material";
+import {
+  ChangeEvent,
+  MouseEvent,
+  PropsWithChildren,
+  useCallback,
+  useState,
+} from "react";
+import {
+  Box,
+  Collapse,
+  TableCell,
+  TablePagination,
+  TableRow,
+} from "@mui/material";
+import { useDebouncedCallback } from "use-debounce";
 
 import GenericTable from "../../layout/GenericTable";
 
 import { columns } from "./config";
 
+import synchroDB from "../../lib/service/dexie";
+
 import { useGetRulesStatus } from "../../hooks";
 import { GenericHeader } from "../GenericHeader";
-import { MouseEvent, useCallback } from "react";
 import { EspecialConfigCell } from "./especialConfig";
 import { LoadingContentTable } from "./loadingContent";
 import { NoDataContent } from "./noData";
+
+interface WithCollapsibleProps {
+  collapseContent: JSX.Element;
+  colSpan?: number;
+}
+
+const WithCollapsible = ({
+  children,
+  collapseContent,
+  colSpan,
+}: PropsWithChildren<WithCollapsibleProps>) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <TableRow
+        sx={{
+          cursor: "pointer",
+          ":hover": {
+            backgroundColor: ({ palette }) => palette.grey[400],
+          },
+        }}
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+        }}
+      >
+        {children}
+      </TableRow>
+      <TableRow>
+        <TableCell colSpan={colSpan} padding={isOpen ? "normal" : "none"}>
+          <Collapse
+            in={isOpen}
+            unmountOnExit
+            sx={{ "& .MuiCollapse-wrapperInner": { display: "flex" } }}
+          >
+            {collapseContent}
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
+interface EditableCommentProps {
+  id: string | number;
+  title: string;
+}
+
+const EditableComment = ({ id, title }: EditableCommentProps) => {
+  // TODO: add waiter
+  const _handleChange = useDebouncedCallback(
+    async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
+      return await synchroDB.saveDescription(Number(id), target.value);
+    },
+    500
+  );
+  return (
+    <textarea
+      title={title}
+      placeholder="Ingresa el porqué del cambio"
+      onChange={_handleChange}
+      style={{ resize: "none", width: "90%", margin: "auto" }}
+    ></textarea>
+  );
+};
 
 // TODO: Abstract table and config
 export function RulesTable() {
@@ -36,7 +115,7 @@ export function RulesTable() {
     [setPage, setRowsPerPage]
   );
 
-  // TODO: refactor this spagetti 💩,
+  // TODO: refactor this spaghetti 💩,
   return (
     <>
       <GenericTable
@@ -46,7 +125,16 @@ export function RulesTable() {
           ) : (
             <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
               {data?.map((result) => (
-                <TableRow key={result.id}>
+                <WithCollapsible
+                  key={result.id}
+                  colSpan={columns.length}
+                  collapseContent={
+                    <EditableComment
+                      id={result.id}
+                      title={`${result.id}-comments`}
+                    />
+                  }
+                >
                   {columns.map(({ resource, especialConfig, textAlign }) => {
                     if (!especialConfig)
                       return (
@@ -72,7 +160,7 @@ export function RulesTable() {
                       </TableCell>
                     );
                   })}
-                </TableRow>
+                </WithCollapsible>
               ))}
             </NoDataContent>
           )
@@ -86,7 +174,7 @@ export function RulesTable() {
           page={page - 1}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filas por pagina"
+          labelRowsPerPage="Filas por página"
         />
       </Box>
     </>

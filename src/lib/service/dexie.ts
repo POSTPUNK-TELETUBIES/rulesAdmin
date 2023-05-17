@@ -2,26 +2,28 @@ import Dexie, { type Table } from "dexie";
 
 export interface LocalRulesStatus {
   id: number;
-  updated_at: Date;
-  newStatus: boolean;
-  languageId: string;
-  qualityProfileId: string;
+  updated_at?: Date;
+  newStatus?: boolean;
+  languageId?: string;
+  qualityProfileId?: string;
+  description?: string;
 }
 
-export class SyncroIndexedDb extends Dexie {
-  private static instace: SyncroIndexedDb;
+export class SynchroIndexedDb extends Dexie {
+  private static instace: SynchroIndexedDb;
   rulesStatus!: Table<LocalRulesStatus>;
 
   static getInstance() {
-    SyncroIndexedDb.instace ??= new SyncroIndexedDb();
+    SynchroIndexedDb.instace ??= new SynchroIndexedDb();
 
-    return SyncroIndexedDb.instace;
+    return SynchroIndexedDb.instace;
   }
 
   private constructor() {
     super("syncro");
-    this.version(1).stores({
-      rulesStatus: "id, updated_at, newStatus, language, qualityProfile",
+    this.version(2).stores({
+      rulesStatus:
+        "id, updated_at, newStatus, language, qualityProfile, description",
     });
   }
 
@@ -32,6 +34,14 @@ export class SyncroIndexedDb extends Dexie {
   async countAllRules() {
     return await this.rulesStatus.count();
   }
+
+  async saveDescription(id: number, description: string) {
+    console.log(id, description);
+    return await this.rulesStatus.put({
+      id,
+      description,
+    });
+  }
 }
 
-export default SyncroIndexedDb.getInstance();
+export default SynchroIndexedDb.getInstance();

@@ -13,7 +13,7 @@ export const DraggableMenu = () => {
   const menuRef = useRef<HTMLButtonElement>(null);
   const isMenuOpen = useSetOpenMenu();
 
-  const [_handleClickSyncro] = useSynchro();
+  const [_handleClickSynchro] = useSynchro();
 
   const _handleClose = useCallback(() => {
     setRefMenu(null);
@@ -30,6 +30,8 @@ export const DraggableMenu = () => {
     },
     []
   );
+
+  // TODO: this classnames should be in a enum
 
   return (
     <>
@@ -53,7 +55,7 @@ export const DraggableMenu = () => {
         onClose={_handleClose}
       >
         <SynchroButton />
-        <DownloadButton cb={_handleClickSyncro} />
+        <DownloadButton cb={_handleClickSynchro} />
       </Menu>
     </>
   );
