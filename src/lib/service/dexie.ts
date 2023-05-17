@@ -10,13 +10,13 @@ export interface LocalRulesStatus {
 }
 
 export class SynchroIndexedDb extends Dexie {
-  private static instace: SynchroIndexedDb;
+  private static instance: SynchroIndexedDb;
   rulesStatus!: Table<LocalRulesStatus>;
 
   static getInstance() {
-    SynchroIndexedDb.instace ??= new SynchroIndexedDb();
+    SynchroIndexedDb.instance ??= new SynchroIndexedDb();
 
-    return SynchroIndexedDb.instace;
+    return SynchroIndexedDb.instance;
   }
 
   private constructor() {
@@ -36,7 +36,6 @@ export class SynchroIndexedDb extends Dexie {
   }
 
   async saveDescription(id: number, description: string) {
-    console.log(id, description);
     return await this.rulesStatus.put({
       id,
       description,
