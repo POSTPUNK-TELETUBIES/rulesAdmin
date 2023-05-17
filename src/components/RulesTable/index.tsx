@@ -70,9 +70,10 @@ const WithCollapsible = ({
 interface EditableCommentProps {
   id: string | number;
   title: string;
+  description: string;
 }
 
-const EditableComment = ({ id, title }: EditableCommentProps) => {
+const EditableComment = ({ id, title, description }: EditableCommentProps) => {
   // TODO: add waiter
   const _handleChange = useDebouncedCallback(
     async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
@@ -82,6 +83,7 @@ const EditableComment = ({ id, title }: EditableCommentProps) => {
   );
   return (
     <textarea
+      defaultValue={description}
       title={title}
       placeholder="Ingresa el porqué del cambio"
       onChange={_handleChange}
@@ -130,6 +132,7 @@ export function RulesTable() {
                   colSpan={columns.length}
                   collapseContent={
                     <EditableComment
+                      description={result.description}
                       id={result.id}
                       title={`${result.id}-comments`}
                     />

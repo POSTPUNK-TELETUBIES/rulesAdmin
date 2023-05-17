@@ -20,6 +20,7 @@ export interface RulesCreateDTO {
   htmlDesc?: string;
   severity?: Severity;
   type?: Type;
+  description?: string;
 }
 
 export interface RuleDTO extends RulesCreateDTO {
