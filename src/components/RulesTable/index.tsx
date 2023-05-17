@@ -56,7 +56,7 @@ const WithCollapsible = ({
         <TableCell colSpan={colSpan} padding={isOpen ? "normal" : "none"}>
           <Collapse
             in={isOpen}
-            unmountOnExit
+            // Warning: considerar que puede no estar optimizado
             sx={{ "& .MuiCollapse-wrapperInner": { display: "flex" } }}
           >
             {collapseContent}
