@@ -109,16 +109,18 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
       ...rest,
     }));
 
-    const cache = await synchroIndexedDb.getLocalRules(
-      parsedData.map(({ id }) => Number(id))
-    );
+    const cache = parsedData
+      ? await synchroIndexedDb.getLocalRules(
+          parsedData.map(({ id }) => Number(id))
+        )
+      : [];
 
     const cacheBy = cache.reduce((acmPojo, { id, newStatus }) => {
       acmPojo[id] = newStatus;
       return acmPojo;
     }, {});
 
-    const flattedData = parsedData.map((parsedItem) => ({
+    const flattedData = parsedData?.map((parsedItem) => ({
       ...parsedItem,
       isActive: cacheBy[parsedItem.id] ?? parsedItem.isActive,
     }));

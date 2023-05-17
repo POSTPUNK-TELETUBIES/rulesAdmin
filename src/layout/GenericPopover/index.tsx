@@ -1,12 +1,22 @@
 import { Close } from "@mui/icons-material";
-import { Box, IconButton, Popover, SxProps, Theme } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonProps,
+  IconButton,
+  Popover,
+  SxProps,
+  Theme,
+} from "@mui/material";
 import { MouseEvent, memo, useCallback, useState } from "react";
 
 interface GenericPopoverProps {
   popoverBody: JSX.Element;
-  icon: JSX.Element;
+  icon?: JSX.Element;
   sxProps?: SxProps<Theme>;
   isLeft?: boolean;
+  textButton?: JSX.Element;
+  buttonProps?: ButtonProps;
 }
 
 const defaultSxProps: SxProps = {
@@ -22,6 +32,8 @@ const memoizedGenericPopOver = memo(function ({
   popoverBody,
   icon,
   sxProps,
+  textButton,
+  buttonProps,
 }: GenericPopoverProps) {
   const [popOverRef, setPopOverRef] = useState<HTMLButtonElement | null>(null);
 
@@ -35,9 +47,15 @@ const memoizedGenericPopOver = memo(function ({
 
   return (
     <>
-      <IconButton onClick={_handleClick} sx={{ margin: "auto" }}>
-        {icon}
-      </IconButton>
+      {!textButton ? (
+        <IconButton onClick={_handleClick} sx={{ margin: "auto" }}>
+          {icon}
+        </IconButton>
+      ) : (
+        <Button startIcon={icon} onClick={_handleClick} {...buttonProps}>
+          {textButton}
+        </Button>
+      )}
       <Popover
         anchorOrigin={{
           vertical: "center",
