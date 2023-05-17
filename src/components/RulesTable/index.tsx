@@ -25,6 +25,7 @@ import { GenericHeader } from "../GenericHeader";
 import { EspecialConfigCell } from "./especialConfig";
 import { LoadingContentTable } from "./loadingContent";
 import { NoDataContent } from "./noData";
+import { RuleDTO, RulesStatus } from "../../types/supabase";
 
 interface WithCollapsibleProps {
   collapseContent: JSX.Element;
@@ -68,22 +69,21 @@ const WithCollapsible = ({
 };
 
 interface EditableCommentProps {
-  id: string | number;
   title: string;
-  description: string;
+  result: RulesStatus & RuleDTO;
 }
 
-const EditableComment = ({ id, title, description }: EditableCommentProps) => {
+const EditableComment = ({ title, result }: EditableCommentProps) => {
   // TODO: add waiter
   const _handleChange = useDebouncedCallback(
     async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-      return await synchroDB.saveDescription(Number(id), target.value);
+      return await synchroDB.saveDescription(result, target.value);
     },
     500
   );
   return (
     <textarea
-      defaultValue={description}
+      defaultValue={result.description}
       title={title}
       placeholder="Ingresa el porqué del cambio"
       onChange={_handleChange}
@@ -132,8 +132,7 @@ export function RulesTable() {
                   colSpan={columns.length}
                   collapseContent={
                     <EditableComment
-                      description={result.description}
-                      id={result.id}
+                      result={result}
                       title={`${result.id}-comments`}
                     />
                   }
