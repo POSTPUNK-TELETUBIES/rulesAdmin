@@ -52,9 +52,8 @@ export const EspecialConfigCell = ({
   return (
     <UncontrolledSwitch
       initialStatus={Boolean(value)}
+      result={result}
       id={result.id}
-      language_id={result.lang_id}
-      qualityProfile_id={result.qualityProfile_id}
     />
   );
 };

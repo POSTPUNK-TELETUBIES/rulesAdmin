@@ -129,44 +129,48 @@ export function RulesTable() {
             <LoadingContentTable colSpan={columns.length} />
           ) : (
             <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
-              {data?.map((result) => (
-                <WithCollapsible
-                  key={result.id}
-                  colSpan={columns.length}
-                  collapseContent={
-                    <EditableComment
-                      result={result}
-                      title={`${result.id}-comments`}
-                    />
-                  }
-                >
-                  {columns.map(({ resource, especialConfig, textAlign }) => {
-                    if (!especialConfig)
-                      return (
-                        <TableCell
-                          sx={{ textAlign: textAlign ?? "center" }}
-                          key={resource + result.id}
-                        >
-                          {String(result[resource] ?? "--")}
-                        </TableCell>
-                      );
-
-                    return (
-                      <TableCell
-                        key={resource + result.id}
-                        sx={{ textAlign: "center" }}
-                      >
-                        <EspecialConfigCell
+              {isLoading
+                ? []
+                : data?.map((result) => (
+                    <WithCollapsible
+                      key={result.id}
+                      colSpan={columns.length}
+                      collapseContent={
+                        <EditableComment
                           result={result}
-                          resource={resource}
-                          secondaryValue={result.created_at}
-                          value={result[resource] ?? "--"}
+                          title={`${result.id}-comments`}
                         />
-                      </TableCell>
-                    );
-                  })}
-                </WithCollapsible>
-              ))}
+                      }
+                    >
+                      {columns.map(
+                        ({ resource, especialConfig, textAlign }) => {
+                          if (!especialConfig)
+                            return (
+                              <TableCell
+                                sx={{ textAlign: textAlign ?? "center" }}
+                                key={resource + result.id}
+                              >
+                                {String(result[resource] ?? "--")}
+                              </TableCell>
+                            );
+
+                          return (
+                            <TableCell
+                              key={resource + result.id}
+                              sx={{ textAlign: "center" }}
+                            >
+                              <EspecialConfigCell
+                                result={result}
+                                resource={resource}
+                                secondaryValue={result.created_at}
+                                value={result[resource] ?? "--"}
+                              />
+                            </TableCell>
+                          );
+                        }
+                      )}
+                    </WithCollapsible>
+                  ))}
             </NoDataContent>
           )
         }

@@ -55,7 +55,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const isAvailableToShow = Boolean(lang_id && qualityProfile_id);
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, isLoading } = useQuery({
     queryKey: [
       "rules",
       lang_id,
