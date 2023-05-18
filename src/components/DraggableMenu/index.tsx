@@ -6,6 +6,7 @@ import { useSynchro } from "../../hooks";
 import { DownloadButton } from "../ActionButtons";
 import { useSetOpenMenu } from "../../lib/observers";
 import { SynchroButton } from "../SynchroButton";
+import { RestartButton } from "../RestartButton";
 
 // TODO: menu ref observable should pipe to be a toggle
 export const DraggableMenu = () => {
@@ -56,6 +57,7 @@ export const DraggableMenu = () => {
       >
         <SynchroButton />
         <DownloadButton />
+        <RestartButton />
       </Menu>
     </>
   );
