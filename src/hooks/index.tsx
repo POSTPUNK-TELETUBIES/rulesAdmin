@@ -96,8 +96,6 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     keepPreviousData: true,
   });
 
-  console.log(data, isLoading, isFetching);
-
   useEffect(() => {
     setPage(1);
   }, [type, severity, isActiveSonar, qualityProfile_id, textMatchFilter]);
