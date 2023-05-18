@@ -171,3 +171,17 @@ export const useSynchro = (): [() => Promise<void>, boolean] => {
 
   return [synchroStatus, isProcessing];
 };
+
+export const useDeleteChanges = (): [() => Promise<void>, boolean] => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const deleteChanges = useCallback(async () => {
+    setIsDeleting(true);
+
+    await synchroIndexedDb.rulesStatus.clear();
+
+    setIsDeleting(false);
+  }, []);
+
+  return [deleteChanges, isDeleting];
+};
