@@ -55,7 +55,7 @@ export const DraggableMenu = () => {
         onClose={_handleClose}
       >
         <SynchroButton />
-        <DownloadButton cb={_handleClickSynchro} />
+        <DownloadButton />
       </Menu>
     </>
   );
