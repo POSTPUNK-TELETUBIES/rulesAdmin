@@ -38,10 +38,12 @@ const memoizedGenericPopOver = memo(function ({
   const [popOverRef, setPopOverRef] = useState<HTMLButtonElement | null>(null);
 
   const _handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     setPopOverRef(event.currentTarget);
   }, []);
 
-  const _handleClose = useCallback(() => {
+  const _handleClose = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     setPopOverRef(null);
   }, []);
 
