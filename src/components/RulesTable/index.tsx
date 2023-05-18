@@ -11,6 +11,7 @@ import {
   TableCell,
   TablePagination,
   TableRow,
+  TextField,
 } from "@mui/material";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -82,13 +83,15 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
     500
   );
   return (
-    <textarea
+    <TextField
+      multiline
+      fullWidth
+      sx={{ ml: 12, mr: 3, minHeight: "initial", height: "auto" }}
       defaultValue={result.description}
       title={title}
       placeholder="Ingresa el porqué del cambio"
       onChange={_handleChange}
-      style={{ resize: "none", width: "90%", margin: "auto" }}
-    ></textarea>
+    />
   );
 };
 
