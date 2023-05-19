@@ -1,8 +1,11 @@
 import {
+  Divider,
   Drawer,
   FormControl,
   FormControlLabel,
   InputLabel,
+  List,
+  ListItem,
   ListItemIcon,
   ListItemText,
   MenuItem,
@@ -48,33 +51,42 @@ export const DownloadButton = () => {
         onClose={_handleClose}
         anchor="right"
         open={isOpen}
-        sx={{ width: "300px" }}
+        sx={{ minWidth: "300px" }}
       >
-        <FormControlLabel
-          control={<Switch defaultChecked onChange={_handleChange} />}
-          label="Completo"
-        />
-        <FormControl
-          sx={{ width: 200 }}
-          className="type"
-          onChange={_handleFilterChange}
-        >
-          <InputLabel id="type">Lenguaje</InputLabel>
-          <Select
-            labelId="type"
-            label="type"
-            onChange={_handleChange}
-            sx={{ width: 200 }}
-            defaultValue={""}
-            displayEmpty
-          >
-            {filterConfig?.map(({ value, label }) => (
-              <MenuItem key={label} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <List>
+          <ListItem disablePadding>
+            <FormControlLabel
+              control={<Switch defaultChecked onChange={_handleChange} />}
+              label="Completo"
+            />
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem disablePadding>
+            <FormControl
+              sx={{ width: 200 }}
+              className="type"
+              onChange={_handleFilterChange}
+            >
+              <InputLabel id="type">Type</InputLabel>
+              <Select
+                labelId="type"
+                label="type"
+                onChange={_handleChange}
+                sx={{ width: 200 }}
+                defaultValue={""}
+                displayEmpty
+              >
+                {filterConfig?.map(({ value, label }) => (
+                  <MenuItem key={label} value={value}>
+                    {value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </ListItem>
+        </List>
       </Drawer>
     </>
   );
