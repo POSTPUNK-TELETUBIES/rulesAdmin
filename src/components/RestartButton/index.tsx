@@ -1,4 +1,4 @@
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { Delete } from "@mui/icons-material";
 import { ListItemIcon, ListItemText, MenuItem } from "@mui/material";
 import { useDeleteChanges } from "../../hooks";
 
@@ -8,7 +8,7 @@ export const RestartButton = () => {
   return (
     <MenuItem onClick={_handleClickRestart}>
       <ListItemIcon>
-        <RestartAltIcon fontSize="small" />
+        <Delete fontSize="small" />
       </ListItemIcon>
       <ListItemText>Restaurar</ListItemText>
     </MenuItem>
