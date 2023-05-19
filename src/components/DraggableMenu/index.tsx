@@ -2,7 +2,6 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 import { IconButton, Menu } from "@mui/material";
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { useSynchro } from "../../hooks";
 import { DownloadButton } from "../ActionButtons";
 import { useSetOpenMenu } from "../../lib/observers";
 import { SynchroButton } from "../SynchroButton";
@@ -13,8 +12,6 @@ export const DraggableMenu = () => {
   const [refMenu, setRefMenu] = useState(null);
   const menuRef = useRef<HTMLButtonElement>(null);
   const isMenuOpen = useSetOpenMenu();
-
-  const [_handleClickSynchro] = useSynchro();
 
   const _handleClose = useCallback(() => {
     setRefMenu(null);
@@ -56,7 +53,7 @@ export const DraggableMenu = () => {
         onClose={_handleClose}
       >
         <SynchroButton />
-        <DownloadButton cb={_handleClickSynchro} />
+        <DownloadButton />
         <RestartButton />
       </Menu>
     </>

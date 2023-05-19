@@ -1,74 +1,83 @@
-import { ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
 import {
-  useActiveFilter,
-  useQualityProfileFilter,
-  useRuleTypeFilter,
-  useSeverityFilter,
-} from "../../lib/observers";
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Select,
+  Switch,
+} from "@mui/material";
+
 import { Download } from "@mui/icons-material";
-import { fetchClient } from "../../lib/modules/fetchClient";
-import { MouseEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { filterConfig } from "../../lib/config/filters";
 
-//TODO: abstraer, generalizar
-export const DownloadButton = ({ cb }: { cb?: () => Promise<void> }) => {
-  const severity = useSeverityFilter();
-  const isActiveSonar = useActiveFilter();
-  const qualityProfile_id = useQualityProfileFilter();
-  const type = useRuleTypeFilter();
+export const DownloadButton = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isCompleteRef = useRef<boolean | null>();
+  const typeFilter = useRef<string | "">();
 
-  const [elementRef, setElemenRef] = useState<HTMLElement>(null);
-
-  const _handleClose = useCallback(() => {
-    setElemenRef(null);
+  const _handleClick = useCallback(() => {
+    setIsOpen(true);
   }, []);
 
-  const _handleClick = useCallback(
-    async ({ currentTarget }: MouseEvent<HTMLElement>) => {
-      if (!qualityProfile_id) return;
+  const _handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
-      setElemenRef(currentTarget);
-    },
-    [qualityProfile_id]
-  );
+  const _handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    isCompleteRef.current = event.target.checked;
+  };
 
-  const _handleDownloadDiff = useCallback(async () => {
-    if (cb) await cb();
-
-    await fetchClient.downloadReport({ qualityProfile_id });
-  }, [cb, qualityProfile_id]);
-
-  const _handleDownloadFiltered = useCallback(async () => {
-    if (cb) await cb();
-
-    await fetchClient.downloadReport(
-      {
-        isActiveSonar,
-        qualityProfile_id,
-        severity,
-        type,
-      },
-      false
-    );
-  }, [isActiveSonar, qualityProfile_id, severity, type, cb]);
+  const _handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    typeFilter.current = event.target.value;
+  };
 
   return (
     <>
-      <MenuItem disabled={!qualityProfile_id} onClick={_handleClick}>
+      <MenuItem onClick={_handleClick}>
         <ListItemIcon>
           <Download />
         </ListItemIcon>
         <ListItemText>Descarga Personalizada</ListItemText>
       </MenuItem>
-      <Menu
-        anchorEl={elementRef}
+      <Drawer
+        variant="persistent"
         onClose={_handleClose}
-        open={Boolean(elementRef)}
+        anchor="right"
+        open={isOpen}
+        sx={{ width: "300px" }}
       >
-        <MenuItem onClick={_handleDownloadDiff}>
-          Reporte de Actualizables
-        </MenuItem>
-        <MenuItem onClick={_handleDownloadFiltered}>Reporte Completo</MenuItem>
-      </Menu>
+        <FormControlLabel
+          control={<Switch defaultChecked onChange={_handleChange} />}
+          label="Completo"
+        />
+        <FormControl
+          sx={{ width: 200 }}
+          className="type"
+          onChange={_handleFilterChange}
+        >
+          <InputLabel id="type">Lenguaje</InputLabel>
+          <Select
+            labelId="type"
+            label="type"
+            onChange={_handleChange}
+            sx={{ width: 200 }}
+            defaultValue={""}
+            displayEmpty
+          >
+            {filterConfig?.map(({ value, label }) => (
+              <MenuItem key={label} value={value}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Drawer>
     </>
   );
 };
+
+//TODO: abstraer, generalizar
