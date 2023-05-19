@@ -180,6 +180,10 @@ export const useDeleteChanges = (): [() => Promise<void>, boolean] => {
 
     await synchroIndexedDb.rulesStatus.clear();
 
+    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+
+    setPage(1);
+
     setIsDeleting(false);
   }, []);
 
