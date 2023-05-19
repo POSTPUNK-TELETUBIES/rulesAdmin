@@ -1,18 +1,13 @@
 import { useCallback } from "react";
 import { setActivateFilterChange } from "../../lib/observers";
 import { FilterPopover } from "../../layout/FilterPopover";
+import { filterStateConfig } from "../../lib/config/filters";
 
 const parsedValues = Object.freeze({
   all: null,
   active: true,
   deactive: false,
 });
-
-const filterConfig = [
-  { value: "all", label: "Todos" },
-  { value: "active", label: "Activo" },
-  { value: "deactive", label: "Inactivo" },
-];
 
 export const ActivateFilter = () => {
   const _handleChange = useCallback((value: string) => {
@@ -21,7 +16,7 @@ export const ActivateFilter = () => {
 
   return (
     <FilterPopover
-      filterConfig={filterConfig}
+      filterConfig={filterStateConfig}
       isClosingRecursive={true}
       reactiveCallback={_handleChange}
     />
