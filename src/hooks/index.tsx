@@ -55,7 +55,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const isAvailableToShow = Boolean(lang_id && qualityProfile_id);
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, isLoading } = useQuery({
     queryKey: [
       "rules",
       lang_id,
@@ -170,4 +170,18 @@ export const useSynchro = (): [() => Promise<void>, boolean] => {
   }, []);
 
   return [synchroStatus, isProcessing];
+};
+
+export const useDeleteChanges = (): [() => Promise<void>, boolean] => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const deleteChanges = useCallback(async () => {
+    setIsDeleting(true);
+
+    await synchroIndexedDb.rulesStatus.clear();
+
+    setIsDeleting(false);
+  }, []);
+
+  return [deleteChanges, isDeleting];
 };

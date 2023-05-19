@@ -1,56 +1,63 @@
-import { Box, Switch } from "@mui/material";
+import { Stack, Switch } from "@mui/material";
 import synchroDb from "../../lib/service/dexie";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { Sync } from "@mui/icons-material";
+import { RuleDTO, RulesStatus } from "../../types/supabase";
 
 interface UncontrolledSwitchProps {
   initialStatus: boolean;
+  result: RuleDTO & RulesStatus;
   id: string;
-  language_id: string;
-  qualityProfile_id: string;
 }
 
 //TODO: try to abstract this component to work with labels too
 export function UncontrolledSwitch({
   initialStatus,
+  result,
   id,
-  language_id,
-  qualityProfile_id,
 }: UncontrolledSwitchProps) {
   const [isInIndexedDb, setIsInIndexedDb] = useState(false);
+  const [isChecked, setIsChecked] = useState(initialStatus);
 
+  useEffect(() => {
+    setIsChecked(initialStatus);
+  }, [initialStatus]);
+
+  // TODO: this use effect should not be necessary but Switch is not re rendering when parent re renders
+  // and initial status is persisting
   useEffect(() => {
     synchroDb.rulesStatus
       .get(Number(id))
       .then((data) => setIsInIndexedDb(!!data));
   }, [id]);
 
+  const isUpdating = result.isActiveSonar !== isChecked;
+
   // TODO: 💩 bad abstraction , refactor since we are getting al data in a bad way, duplciated code in Dexie service
+  // TODO: bad code, mutation of indexed db is a side effect
   const _handleChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
+      setIsChecked(event.target.checked);
+
       const prevData = await synchroDb.rulesStatus.get(Number(id));
 
-      synchroDb.rulesStatus.put({
+      await synchroDb.rulesStatus.put({
         ...prevData,
         id: Number(id),
         newStatus: event.target.checked,
         updated_at: new Date(),
-        languageId: language_id,
-        qualityProfileId: Number(qualityProfile_id),
+        languageId: result.lang_id,
+        qualityProfileId: Number(result.qualityProfile_id),
       });
       setIsInIndexedDb(true);
     },
-    [id, qualityProfile_id, language_id]
+    [id, result.lang_id, result.qualityProfile_id]
   );
 
   return (
-    <Box color="red">
-      <Switch
-        color={isInIndexedDb ? "warning" : "primary"}
-        onChange={_handleChange}
-        defaultChecked={initialStatus}
-      />
-
-      {isInIndexedDb ? "C" : ""}
-    </Box>
+    <Stack color="red" direction="row">
+      <Switch onChange={_handleChange} checked={isChecked} />
+      {isInIndexedDb && isUpdating ? <Sync /> : ""}
+    </Stack>
   );
 }
