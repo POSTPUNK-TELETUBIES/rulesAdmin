@@ -120,8 +120,6 @@ export function RulesTable() {
     };
   }, []);
 
-  console.log(payload);
-
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
       if (!event) return;
