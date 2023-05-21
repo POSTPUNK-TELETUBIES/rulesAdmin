@@ -1,22 +1,14 @@
-import {
-  Box,
-  Stack,
-  Typography,
-  Button,
-  SwipeableDrawer,
-  Container,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Stack, Typography, Button } from "@mui/material";
 import admin from "/admin.svg";
 import { useCallback, useState } from "react";
-import { Login } from "../components/Login";
-import { useTheme } from "@mui/material/styles";
+
+import { SxProps } from "@mui/material/styles";
+
+import styles from "./home.module.css";
+import { LoginDrawer } from "../components/LoginDrawer";
 
 export const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const theme = useTheme();
-
-  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   const _handleOpen = useCallback(() => {
     setIsOpen(true);
@@ -36,44 +28,21 @@ export const Home = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Box
-          sx={{
-            width: {
-              xs: "0%",
-              md: "50%",
-            },
-            display: {
-              xs: "none",
-              md: "block",
-            },
-          }}
-        >
+        <Box sx={BoxStyles}>
           <img
-            style={{ width: "100%" }}
+            className={styles.heroImage}
             src={admin}
             alt="admin configuring panel"
           />
         </Box>
-        <Stack
-          spacing={1}
-          width={{
-            sm: "100%",
-            md: "50%",
-          }}
-        >
+        <Stack spacing={1} width={{ sm: "100%", md: "50%" }}>
           <Typography variant="h3" component="h1">
             Ace config and simplify SonarQube rule administration
           </Typography>
           <Typography variant="body1">
             Effortlessly Customize SonarQube Rules for Optimal Code Quality
           </Typography>
-          <Stack
-            spacing={2}
-            direction={{
-              sm: "column",
-              md: "row",
-            }}
-          >
+          <Stack spacing={2} direction={{ sm: "column", md: "row" }}>
             <Button variant="contained">Sing up</Button>
             <Button variant="outlined" onClick={_handleOpen}>
               Log in
@@ -81,31 +50,22 @@ export const Home = () => {
           </Stack>
         </Stack>
       </Stack>
-      <SwipeableDrawer
-        PaperProps={{
-          sx: {
-            justifyContent: "center",
-          },
-        }}
-        onOpen={_handleOpen}
-        onClose={_handleClose}
-        open={isOpen}
-        anchor={matches ? "right" : "bottom"}
-      >
-        <Container
-          sx={{
-            maxWidth: 500,
-            width: {
-              md: "50vw",
-            },
-            minHeight: "50vh",
-            display: "grid",
-            placeContent: "center",
-          }}
-        >
-          <Login />
-        </Container>
-      </SwipeableDrawer>
+      <LoginDrawer
+        handleClose={_handleClose}
+        handleOpen={_handleOpen}
+        isOpen={isOpen}
+      />
     </>
   );
+};
+
+const BoxStyles: SxProps = {
+  width: {
+    xs: "0%",
+    md: "50%",
+  },
+  display: {
+    xs: "none",
+    md: "block",
+  },
 };
