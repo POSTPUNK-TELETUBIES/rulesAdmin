@@ -3,6 +3,7 @@ import { AuthClient } from "../../types/fetchClient";
 import { Database } from "../../types/supabase";
 import { supabaseURL, supbaseToken } from "../config/supabase";
 import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
+import { SingUpFields } from "../../types/auth";
 
 interface TokenDataI {
   token: string;
@@ -48,6 +49,30 @@ export class SupabaseAuthSingleton implements AuthClient {
     private client: SupabaseAuthClient,
     private authStorage: AuthStorage = AuthLocalStorageSingleton.getInstance()
   ) {}
+
+  async singUp({
+    email,
+    firstName,
+    lastName,
+    password,
+    username,
+  }: SingUpFields) {
+    const { data, error } = await this.client.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+          username,
+        },
+      },
+    });
+
+    if (error) throw error;
+
+    return data;
+  }
 
   public static getInstance(client?: SupabaseAuthClient) {
     SupabaseAuthSingleton.instance ??= new SupabaseAuthSingleton(

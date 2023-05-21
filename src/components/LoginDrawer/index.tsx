@@ -4,19 +4,21 @@ import {
   SxProps,
   useMediaQuery,
 } from "@mui/material";
-import { Login } from "../Login";
+
 import { useTheme } from "@mui/material/styles";
 
 interface LoginDrawer {
   handleOpen: () => void;
   handleClose: () => void;
   isOpen: boolean;
+  content: JSX.Element;
 }
 
 export const LoginDrawer = ({
   handleClose: _handleClose,
   handleOpen: _handleOpen,
   isOpen,
+  content,
 }: LoginDrawer) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -31,9 +33,7 @@ export const LoginDrawer = ({
       open={isOpen}
       anchor={matches ? "right" : "bottom"}
     >
-      <Container sx={containerStyles}>
-        <Login />
-      </Container>
+      <Container sx={containerStyles}>{content}</Container>
     </SwipeableDrawer>
   );
 };

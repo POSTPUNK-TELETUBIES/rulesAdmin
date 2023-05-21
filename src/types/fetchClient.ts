@@ -1,4 +1,5 @@
 import { LocalRulesStatus } from "../lib/service/dexie";
+import { SingUpFields } from "./auth";
 import { LanguageDTO, QualityProfileDTO, RulesResponse } from "./supabase";
 
 export interface PaginationParams {
@@ -58,4 +59,5 @@ export interface AuthClient {
   logOut?(token: string, extraData?: unknown): Promise<unknown>;
   getPermissions?(token?: string, extraData?: unknown): Promise<unknown>;
   checkAuth(token?: string, refreshToken?: string): Promise<any>;
+  singUp(data: SingUpFields): Promise<unknown>;
 }

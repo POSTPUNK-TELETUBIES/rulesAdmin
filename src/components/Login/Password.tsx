@@ -12,9 +12,16 @@ import { useCallback, useState } from "react";
 interface PasswordProps {
   inputProps?: InputBaseComponentProps;
   disabled?: boolean;
+  id?: string;
+  label?: string;
 }
 
-export const Password = ({ inputProps, disabled }: PasswordProps) => {
+export const Password = ({
+  inputProps,
+  disabled,
+  id = "password",
+  label = "Password",
+}: PasswordProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const _handleClick = useCallback(() => {
@@ -23,9 +30,9 @@ export const Password = ({ inputProps, disabled }: PasswordProps) => {
 
   return (
     <FormControl disabled={disabled}>
-      <InputLabel htmlFor={"password"}>Password</InputLabel>
+      <InputLabel htmlFor={id}>{label}</InputLabel>
       <OutlinedInput
-        id="password"
+        id={id}
         type={isVisible ? "text" : "password"}
         inputProps={inputProps}
         endAdornment={
@@ -40,7 +47,7 @@ export const Password = ({ inputProps, disabled }: PasswordProps) => {
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
+        label={label}
       />
     </FormControl>
   );

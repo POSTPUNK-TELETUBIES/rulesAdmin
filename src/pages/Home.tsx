@@ -6,16 +6,32 @@ import { SxProps } from "@mui/material/styles";
 
 import styles from "./home.module.css";
 import { LoginDrawer } from "../components/LoginDrawer";
+import { Login } from "../components/Login";
+import { SingUp } from "../components/SingUp";
 
 export const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
-  const _handleOpen = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  const _handleOpenLogin = useCallback(
+    (state = true) =>
+      () => {
+        setIsOpen(true);
+        setIsLogin(state);
+      },
+    []
+  );
 
   const _handleClose = useCallback(() => {
     setIsOpen(false);
+  }, []);
+
+  const _handleSingUpClick = useCallback(() => {
+    setIsLogin(false);
+  }, []);
+
+  const _handleLogInClick = useCallback(() => {
+    setIsLogin(true);
   }, []);
 
   return (
@@ -43,16 +59,25 @@ export const Home = () => {
             Effortlessly Customize SonarQube Rules for Optimal Code Quality
           </Typography>
           <Stack spacing={2} direction={{ sm: "column", md: "row" }}>
-            <Button variant="contained">Sing up</Button>
-            <Button variant="outlined" onClick={_handleOpen}>
+            <Button variant="contained" onClick={_handleOpenLogin(false)}>
+              Sing up
+            </Button>
+            <Button variant="outlined" onClick={_handleOpenLogin()}>
               Log in
             </Button>
           </Stack>
         </Stack>
       </Stack>
       <LoginDrawer
+        content={
+          isLogin ? (
+            <Login singUpClick={_handleSingUpClick} />
+          ) : (
+            <SingUp handleLoginClick={_handleLogInClick} />
+          )
+        }
         handleClose={_handleClose}
-        handleOpen={_handleOpen}
+        handleOpen={_handleOpenLogin}
         isOpen={isOpen}
       />
     </>
