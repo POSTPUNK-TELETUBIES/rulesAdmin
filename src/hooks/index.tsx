@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useContext,
 } from "react";
 import {
   setPage,
@@ -23,6 +24,7 @@ import { RuleDTO, type RulesStatus } from "../types/supabase";
 
 import synchroIndexedDb, { LocalRulesStatus } from "../lib/service/dexie";
 import { reactQueryClient } from "../lib/modules/reactQuery";
+import { AuthContext } from "../context/auth";
 
 interface UseGetRulesStatusData {
   data?: (RulesStatus & RuleDTO)[];
@@ -188,4 +190,27 @@ export const useDeleteChanges = (): [() => Promise<void>, boolean] => {
   }, []);
 
   return [deleteChanges, isDeleting];
+};
+
+export const useAuth = () => {
+  const authClient = useContext(AuthContext);
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    authClient.checkAuth().then((data) => setIsLogged(!!data?.user?.id));
+  }, [authClient]);
+
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const data = await authClient.login(email, password);
+
+      setIsLogged(true);
+
+      return data;
+    },
+    [authClient]
+  );
+
+  return { isLogged, authClient, login };
 };

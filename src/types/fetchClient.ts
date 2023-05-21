@@ -50,3 +50,12 @@ export interface FetchClientSingleton {
     pagination: PaginationParams
   ): Promise<PaginationResult>;
 }
+
+export interface AuthClient {
+  isLogged: boolean;
+  login(email: string, password: string): Promise<any>;
+  verifyAuth?(token?: string, extraData?: unknown): Promise<unknown>;
+  logOut?(token: string, extraData?: unknown): Promise<unknown>;
+  getPermissions?(token?: string, extraData?: unknown): Promise<unknown>;
+  checkAuth(token?: string, refreshToken?: string): Promise<any>;
+}
