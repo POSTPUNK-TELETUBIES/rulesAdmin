@@ -3,8 +3,9 @@ import { supabaseClient } from "../lib/modules/supabase";
 import { SupabaseAuthSingleton } from "../lib/service/supabaseAuth";
 import { AuthClient } from "../types/fetchClient";
 
-export const defaultValue: AuthClient = SupabaseAuthSingleton.getInstance(
-  supabaseClient.auth
+export const defaultValue: AuthClient & { isLoading?: boolean } = Object.assign(
+  SupabaseAuthSingleton.getInstance(supabaseClient.auth),
+  { isLoading: true }
 );
 
 export const AuthContext = createContext(defaultValue);

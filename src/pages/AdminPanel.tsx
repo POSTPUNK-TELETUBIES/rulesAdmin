@@ -1,10 +1,11 @@
-import { Info, QuestionAnswer, Search } from "@mui/icons-material";
+import { Info, QuestionAnswer } from "@mui/icons-material";
 import { Box, Stack, Typography } from "@mui/material";
 import { LanguageFilter } from "../components/Filters/languages.filter";
 import { QualityProfileFilter } from "../components/Filters/qualityprofiles.filter";
 import { RulesTable } from "../components/RulesTable";
 import { Sticky } from "../layout/Sticky";
 import { DraggableMenu } from "../components/DraggableMenu";
+import { Search } from "../components/Search";
 
 export default function AdminPanel() {
   return (

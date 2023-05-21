@@ -11,7 +11,7 @@ import { CustomSkeleton } from "./components/CustomSkeleton";
 const LazyAdminPanel = lazy(() => import("./pages/AdminPanel"));
 
 function App() {
-  const { isLogged } = useContext(AuthContext);
+  const { isLogged, isLoading } = useContext(AuthContext);
 
   return (
     <ColorModeWrapper
@@ -19,7 +19,8 @@ function App() {
         <>
           <NavBar />
           <Container sx={{ paddingTop: 12, minHeight: "100vh" }}>
-            {!isLogged ? (
+            {isLoading && <CustomSkeleton />}
+            {!isLogged && !isLoading ? (
               <Home />
             ) : (
               <Suspense fallback={<CustomSkeleton />}>

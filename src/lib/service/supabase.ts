@@ -1,4 +1,8 @@
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import {
+  RealtimePostgresUpdatePayload,
+  SupabaseClient,
+  createClient,
+} from "@supabase/supabase-js";
 import type { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import { supabaseURL, supbaseToken } from "../config/supabase";
 import {
@@ -6,6 +10,7 @@ import {
   LanguageDTO,
   QualityProfileDTO,
   RulesResponse,
+  RulesStatus,
 } from "../../types/supabase";
 import {
   FetchClientSingleton,
@@ -75,6 +80,8 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   private async bulkUpdateDescription(data: LocalRulesStatus[]) {
     if (!data.length) return;
 
+    const { data: userData } = await this.client.auth.getUser();
+
     return await this.client
       .from("status")
       .upsert(
@@ -82,6 +89,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
           id,
           description,
           qualityProfile_id: qualityProfileId,
+          user_id: userData.user.id,
         }))
       )
       .select()
@@ -218,6 +226,23 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       data: data as RulesResponse[],
       count,
     };
+  }
+
+  subscribeChanges(
+    cb: (payload: RealtimePostgresUpdatePayload<RulesStatus>) => void
+  ) {
+    return this.client
+      .channel("changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "status",
+        },
+        cb
+      )
+      .subscribe();
   }
 }
 

@@ -8,6 +8,8 @@ export interface LocalRulesStatus {
   languageId?: string;
   qualityProfileId?: number;
   description?: string;
+  // TODO: add to model
+  user_id?: string;
 }
 
 export class SynchroIndexedDb extends Dexie {
