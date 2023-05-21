@@ -12,11 +12,13 @@ import { ColorModeContext, ColorPalletes } from "../../theme";
 import { useTheme } from "@mui/material/styles";
 import { LightMode, ModeNight } from "@mui/icons-material";
 import { Status } from "./status";
+import { AuthContext } from "../../context/auth";
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
   const { palette } = useTheme();
   const colorMode = useContext(ColorModeContext);
+  const { isLogged } = useContext(AuthContext);
 
   const _handleChange = useCallback(() => {
     colorMode.toggleColorMode();
@@ -44,7 +46,7 @@ export const NavBar = () => {
             </Typography>
             <Typography variant="body1">/ Gestión de Reglas</Typography>
           </Box>
-          <Status />
+          {isLogged && <Status />}
           <Stack direction="row" justifyContent="center" alignItems="center">
             {palette?.mode === ColorPalletes.DARK ? (
               <ModeNight />

@@ -188,9 +188,9 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     );
   }
 
-  static getInstance() {
+  static getInstance(client?: SupabaseClient) {
     LocalSupabaseClient.instance ??= new LocalSupabaseClient(
-      createClient<Database>(supabaseURL, supbaseToken)
+      client ?? createClient<Database>(supabaseURL, supbaseToken)
     );
 
     return LocalSupabaseClient.instance;
