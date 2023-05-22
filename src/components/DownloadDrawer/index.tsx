@@ -127,7 +127,7 @@ export const DownloadDrawer = ({
           <Divider />
           <ListItem>
             <FormControlLabel
-              control={<Switch inputProps={register('toUpdate')} />}
+              control={<Switch {...register('showOnlyIsActiveDifferences')} />}
               label='Solo diferencias'
             />
           </ListItem>
