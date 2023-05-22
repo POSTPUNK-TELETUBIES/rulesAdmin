@@ -3,7 +3,6 @@ import {
   MouseEvent,
   PropsWithChildren,
   useCallback,
-  useEffect,
   useState,
 } from 'react';
 import {
@@ -30,8 +29,8 @@ import { EspecialConfigCell } from './especialConfig';
 import { LoadingContentTable } from './loadingContent';
 import { NoDataContent } from './noData';
 import { RuleDTO, RulesStatus } from '../../types/supabase';
-import supabase from '../../lib/service/supabase';
-import { RealtimePostgresUpdatePayload } from '@supabase/supabase-js';
+
+import { parseConditionallySonarKey } from '../../tools';
 
 interface WithCollapsibleProps {
   collapseContent: JSX.Element;
@@ -105,22 +104,8 @@ export function RulesTable() {
   const [
     setPage,
     setRowsPerPage,
-    { data, isLoading, total, page, rowsPerPage },
+    { data, isFetching, total, page, rowsPerPage },
   ] = useGetRulesStatus();
-
-  const [payload, setPayload] =
-    useState<RealtimePostgresUpdatePayload<RulesStatus> | null>(null);
-
-  // TODO: update cache too
-  useEffect(() => {
-    const channel = supabase().subscribeChanges((payload) =>
-      setPayload({ ...payload })
-    );
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
 
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -144,11 +129,11 @@ export function RulesTable() {
     <>
       <GenericTable
         body={
-          isLoading ? (
+          isFetching ? (
             <LoadingContentTable colSpan={columns.length} />
           ) : (
             <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
-              {isLoading
+              {isFetching
                 ? []
                 : data?.map((result) => (
                     <WithCollapsible
@@ -156,12 +141,7 @@ export function RulesTable() {
                       colSpan={columns.length}
                       collapseContent={
                         <EditableComment
-                          result={{
-                            ...result,
-                            ...(Number(payload?.new.id) !== Number(result.id)
-                              ? {}
-                              : payload?.new),
-                          }}
+                          result={result}
                           title={`${result.id}-comments`}
                         />
                       }
@@ -180,8 +160,18 @@ export function RulesTable() {
                                 <Tooltip
                                   title={String(result[resource] ?? '--')}
                                 >
-                                  <Typography noWrap>
-                                    {String(result[resource] ?? '--')}
+                                  <Typography
+                                    noWrap
+                                    sx={{
+                                      ...(resource === 'key'
+                                        ? { width: 60 }
+                                        : {}),
+                                    }}
+                                  >
+                                    {parseConditionallySonarKey(
+                                      String(result[resource] ?? '--'),
+                                      resource === 'key'
+                                    )}
                                   </Typography>
                                 </Tooltip>
                               </TableCell>
@@ -190,27 +180,13 @@ export function RulesTable() {
                           return (
                             <TableCell
                               key={resource + result.id}
-                              sx={{ textAlign: 'center' }}
+                              sx={{ textAlign: textAlign ?? 'center' }}
                             >
                               <EspecialConfigCell
-                                result={{
-                                  ...result,
-                                  ...(Number(payload?.new.id) !==
-                                  Number(result.id)
-                                    ? {}
-                                    : payload?.new),
-                                }}
+                                result={result}
                                 resource={resource}
                                 secondaryValue={result.created_at}
-                                value={
-                                  {
-                                    ...result,
-                                    ...(Number(payload?.new.id) !==
-                                    Number(result.id)
-                                      ? {}
-                                      : payload?.new),
-                                  }[resource] ?? '--'
-                                }
+                                value={result[resource] ?? '--'}
                               />
                             </TableCell>
                           );

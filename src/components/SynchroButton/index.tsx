@@ -1,4 +1,4 @@
-import { Sync } from "@mui/icons-material";
+import { Sync } from '@mui/icons-material';
 import {
   ListItemIcon,
   ListItemText,
@@ -7,18 +7,17 @@ import {
   Modal,
   Typography,
   Box,
-} from "@mui/material";
-import { useSynchro } from "../../hooks";
-import { useState } from "react";
+} from '@mui/material';
+import { useSynchro } from '../../hooks';
+import { useState } from 'react';
 
 const style = {
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
   pt: 2,
   px: 4,
@@ -46,7 +45,7 @@ export const SynchroButton = () => {
     <>
       <MenuItem onClick={handleOpenModal}>
         <ListItemIcon>
-          <Sync fontSize="small" />
+          <Sync fontSize='small' />
         </ListItemIcon>
         <ListItemText>Sincronizar</ListItemText>
       </MenuItem>
@@ -54,18 +53,18 @@ export const SynchroButton = () => {
       <Modal
         open={open}
         onClose={handleCloseModal}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
+        aria-labelledby='child-modal-title'
+        aria-describedby='child-modal-description'
       >
-        <Box sx={{ ...style, width: 350 }}>
-          <Typography variant="h6">Confirmar sincronización</Typography>
+        <Box sx={{ ...style }}>
+          <Typography variant='h6'>Confirmar sincronización</Typography>
           <Typography>
             ¿Estás seguro de que deseas sincronizar los datos?
           </Typography>
-          <Button onClick={handleCloseModal} color="primary">
+          <Button onClick={handleCloseModal} color='primary'>
             Cancelar
           </Button>
-          <Button onClick={handleSyncro} color="primary" autoFocus>
+          <Button onClick={handleSyncro} color='primary' autoFocus>
             Sincronizar
           </Button>
         </Box>

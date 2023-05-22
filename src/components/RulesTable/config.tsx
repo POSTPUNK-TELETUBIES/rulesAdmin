@@ -35,6 +35,7 @@ export const columns: ColumnConfig[] = [
     resource: 'isActiveSonar',
     especialConfig: true,
     className: 'actualState',
+    textAlign: 'left',
     filter: <ActivateFilter />,
   },
   {

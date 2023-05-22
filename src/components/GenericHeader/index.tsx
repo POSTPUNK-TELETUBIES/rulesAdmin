@@ -1,4 +1,4 @@
-import { TableCell, TableRow, Typography, Stack, Box } from '@mui/material';
+import { TableCell, TableRow, Typography, Stack } from '@mui/material';
 import { ColumnConfig } from '../RulesTable/config';
 import { memo } from 'react';
 
@@ -10,13 +10,11 @@ export const GenericHeader = memo(({ data }: GenericHeaderProps) => {
   return (
     <>
       <TableRow>
-        {data.map(({ label, icon, className }) => (
+        {data.map(({ label, icon, filter, className }) => (
           <TableCell
             variant='head'
             className={className}
             sx={{
-              paddingTop: 1,
-              paddingBottom: 0,
               background: (theme) => `${theme.palette.grey[900]} !important`,
             }}
             key={label}
@@ -25,7 +23,7 @@ export const GenericHeader = memo(({ data }: GenericHeaderProps) => {
               direction='row'
               gap={0.5}
               alignItems='center'
-              justifyContent='center'
+              justifyContent='space-between'
             >
               {icon}
               <Typography
@@ -34,24 +32,8 @@ export const GenericHeader = memo(({ data }: GenericHeaderProps) => {
               >
                 {label}
               </Typography>
-            </Stack>
-          </TableCell>
-        ))}
-      </TableRow>
-      <TableRow>
-        {data.map(({ filter, label }, index) => (
-          <TableCell
-            variant='head'
-            sx={{
-              paddingTop: 0,
-              paddingBottom: 1,
-              background: (theme) => `${theme.palette.grey[900]} !important`,
-            }}
-            key={label + index}
-          >
-            <Box display='grid' sx={{ placeContent: 'center' }}>
               {filter}
-            </Box>
+            </Stack>
           </TableCell>
         ))}
       </TableRow>

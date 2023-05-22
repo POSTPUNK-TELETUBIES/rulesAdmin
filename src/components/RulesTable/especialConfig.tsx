@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 interface ExpecialConfigCell {
   resource: string;
   value: unknown;
-  result: RulesStatus & RuleDTO;
+  result: RulesStatus & RuleDTO & { isActiveOriginal: boolean };
   secondaryValue?: string | Date;
 }
 

@@ -1,4 +1,4 @@
-import syncroDB from "../../lib/service/dexie";
+import syncroDB from '../../lib/service/dexie';
 import {
   Card,
   CardActions,
@@ -6,21 +6,21 @@ import {
   Chip,
   Stack,
   Typography,
-} from "@mui/material";
-import { CloudDone, SyncProblem } from "@mui/icons-material";
-import { useLiveQuery } from "dexie-react-hooks";
-import GenericPopover from "../../layout/GenericPopover";
-import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "../../lib/modules/fetchClient";
-import { useMemo } from "react";
-import { SynchroButton } from "../SynchroButton";
+} from '@mui/material';
+import { CloudDone, SyncProblem } from '@mui/icons-material';
+import { useLiveQuery } from 'dexie-react-hooks';
+import GenericPopover from '../../layout/GenericPopover';
+import { useQuery } from '@tanstack/react-query';
+import { fetchClient } from '../../lib/modules/fetchClient';
+import { useMemo } from 'react';
+import { SynchroButton } from '../SynchroButton';
 
 export const Status = () => {
   // TODO: Use live query is a reactive observable
   const rulesStatus = useLiveQuery(() => syncroDB.rulesStatus.toArray());
 
   const { data: languagesData } = useQuery({
-    queryKey: ["languages"],
+    queryKey: ['languages'],
     queryFn: () => fetchClient.getAllLanguages(),
   });
 
@@ -37,19 +37,19 @@ export const Status = () => {
     <GenericPopover
       icon={
         rulesStatus?.length ? (
-          <SyncProblem color="warning" />
+          <SyncProblem color='warning' />
         ) : (
-          <CloudDone color="success" />
+          <CloudDone color='success' />
         )
       }
       textButton={
         <Typography>
           {rulesStatus?.length
-            ? "Tienes cambios sin sincronizar"
-            : "No hay cambios sin sincronizar"}
+            ? 'Tienes cambios sin sincronizar'
+            : 'No hay cambios sin sincronizar'}
         </Typography>
       }
-      buttonProps={{ variant: "contained" }}
+      buttonProps={{ variant: 'contained' }}
       popoverBody={
         <Card>
           {languagesData && (
@@ -63,7 +63,7 @@ export const Status = () => {
                     ) === index
                 )
                 ?.map(({ languageId }, index) => (
-                  <Stack key={index} direction="row">
+                  <Stack key={index} direction='row'>
                     <Chip label={languageBy[languageId]} />
                   </Stack>
                 ))}

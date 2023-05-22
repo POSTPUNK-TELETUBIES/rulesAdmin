@@ -1,6 +1,6 @@
-import { Delete } from "@mui/icons-material";
-import { ListItemIcon, ListItemText, MenuItem } from "@mui/material";
-import { useDeleteChanges } from "../../hooks";
+import { Delete } from '@mui/icons-material';
+import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
+import { useDeleteChanges } from '../../hooks';
 
 export const RestartButton = () => {
   const [_handleClickRestart] = useDeleteChanges();
@@ -8,7 +8,7 @@ export const RestartButton = () => {
   return (
     <MenuItem onClick={_handleClickRestart}>
       <ListItemIcon>
-        <Delete fontSize="small" />
+        <Delete fontSize='small' />
       </ListItemIcon>
       <ListItemText>Restaurar</ListItemText>
     </MenuItem>

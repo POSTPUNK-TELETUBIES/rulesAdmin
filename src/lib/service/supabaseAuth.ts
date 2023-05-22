@@ -1,4 +1,4 @@
-import { Session, createClient } from '@supabase/supabase-js';
+import { Session, User, createClient } from '@supabase/supabase-js';
 import { AuthClient } from '../../types/fetchClient';
 import { Database } from '../../types/supabase';
 import { supabaseURL, supbaseToken } from '../config/supabase';
@@ -44,6 +44,7 @@ export class AuthLocalStorageSingleton implements AuthStorage {
 export class SupabaseAuthSingleton implements AuthClient {
   private static instance: SupabaseAuthSingleton;
   public isLogged: boolean;
+  user: User;
 
   private constructor(
     private client: SupabaseAuthClient,
@@ -101,6 +102,8 @@ export class SupabaseAuthSingleton implements AuthClient {
 
     this.isLogged = true;
 
+    this.user = data.user;
+
     return data;
   }
 
@@ -116,6 +119,8 @@ export class SupabaseAuthSingleton implements AuthClient {
     const { error } = await this.client.signOut();
 
     if (error) throw error;
+
+    this.user = null;
 
     return extraData;
   }
@@ -146,6 +151,8 @@ export class SupabaseAuthSingleton implements AuthClient {
     this.setToken(data.session);
 
     this.isLogged = true;
+
+    this.user = data.user;
 
     return data;
   }

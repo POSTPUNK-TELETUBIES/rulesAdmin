@@ -1,4 +1,4 @@
-import { Close } from "@mui/icons-material";
+import { Close } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -7,8 +7,8 @@ import {
   Popover,
   SxProps,
   Theme,
-} from "@mui/material";
-import { MouseEvent, memo, useCallback, useState } from "react";
+} from '@mui/material';
+import { MouseEvent, memo, useCallback, useState } from 'react';
 
 interface GenericPopoverProps {
   popoverBody: JSX.Element;
@@ -20,10 +20,10 @@ interface GenericPopoverProps {
 }
 
 const defaultSxProps: SxProps = {
-  width: "80vh",
+  width: '80vh',
   maxWidth: 600,
   minWidth: 400,
-  height: "80vh",
+  height: '80vh',
   minHeight: 400,
   borderRadius: 50,
 };
@@ -50,7 +50,7 @@ const memoizedGenericPopOver = memo(function ({
   return (
     <>
       {!textButton ? (
-        <IconButton onClick={_handleClick} sx={{ margin: "auto" }}>
+        <IconButton onClick={_handleClick} sx={{ margin: 'auto' }}>
           {icon}
         </IconButton>
       ) : (
@@ -60,12 +60,12 @@ const memoizedGenericPopOver = memo(function ({
       )}
       <Popover
         anchorOrigin={{
-          vertical: "center",
-          horizontal: "left",
+          vertical: 'center',
+          horizontal: 'left',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
+          vertical: 'top',
+          horizontal: 'left',
         }}
         sx={sxProps ?? defaultSxProps}
         open={Boolean(popOverRef)}
@@ -74,9 +74,9 @@ const memoizedGenericPopOver = memo(function ({
       >
         <IconButton
           onClick={_handleClose}
-          sx={{ position: "absolute", top: 0, right: 0 }}
+          sx={{ position: 'absolute', top: 0, right: 0 }}
         >
-          <Close sx={{ fontSize: "medium" }} />
+          <Close sx={{ fontSize: 'medium' }} />
         </IconButton>
         <Box margin={1}>{popoverBody}</Box>
       </Popover>

@@ -6,7 +6,7 @@ import {
   useState,
   useCallback,
   useContext,
-} from "react";
+} from 'react';
 import {
   setPage,
   setTotalStatus$,
@@ -17,21 +17,27 @@ import {
   useSetPage,
   useSetTextmatchFilter as useSetTextMatchFilter,
   useSeverityFilter,
-} from "../lib/observers";
-import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "../lib/modules/fetchClient";
-import { RuleDTO, type RulesStatus } from "../types/supabase";
+} from '../lib/observers';
+import { useQuery } from '@tanstack/react-query';
+import { fetchClient } from '../lib/modules/fetchClient';
+import { RuleDTO, type RulesStatus } from '../types/supabase';
 
-import synchroIndexedDb, { LocalRulesStatus } from "../lib/service/dexie";
-import { reactQueryClient } from "../lib/modules/reactQuery";
-import { AuthContext } from "../context/auth";
+import synchroIndexedDb, { LocalRulesStatus } from '../lib/service/dexie';
+import { reactQueryClient } from '../lib/modules/reactQuery';
+import { AuthContext } from '../context/auth';
+
+import supabase from '../lib/service/supabase';
+import { RealtimePostgresUpdatePayload } from '@supabase/supabase-js';
 
 interface UseGetRulesStatusData {
-  data?: (RulesStatus & RuleDTO)[];
+  data?: (RulesStatus & RuleDTO & { isActiveOriginal: boolean })[];
   isLoading: boolean;
+  isFetching: boolean;
   total?: number;
   page: number;
   rowsPerPage: number;
+  isRefetching?: boolean;
+  isFetched?: boolean;
 }
 
 type UseGetRulesStatusResults = [
@@ -77,11 +83,14 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const [flattedData, setFlattedData] = useState([]);
 
+  const [payload, setPayload] =
+    useState<RealtimePostgresUpdatePayload<RulesStatus> | null>(null);
+
   const isAvailableToShow = Boolean(lang_id && qualityProfile_id);
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, isLoading, isRefetching, isFetched } = useQuery({
     queryKey: [
-      "rules",
+      'rules',
       lang_id,
       qualityProfile_id,
       type,
@@ -131,6 +140,8 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     const parsedData = data?.map(({ rules, ...rest }) => ({
       ...rules,
       ...rest,
+      ...(Number(payload?.new?.id) === Number(rest.id) ? payload?.new : {}),
+      isActiveOriginal: rest.isActive,
     }));
 
     const cache = parsedData
@@ -156,21 +167,35 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     }));
 
     setFlattedData(flattedData);
-  }, [data, isAvailableToShow]);
+  }, [data, isAvailableToShow, payload]);
 
   useEffect(() => {
     parseFlattedData();
   }, [data, page, parseFlattedData]);
+
+  // TODO: update cache too
+  useEffect(() => {
+    const channel = supabase().subscribeChanges((payload) =>
+      setPayload({ ...payload })
+    );
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   return [
     setPage,
     setRowsPerPage,
     {
       data: flattedData,
-      isLoading: isFetching,
+      isFetching,
+      isLoading,
       total: totalRef.current,
       page,
+      isFetched,
       rowsPerPage,
+      isRefetching,
     },
   ];
 };
@@ -187,7 +212,7 @@ export const useSynchro = (): [() => Promise<void>, boolean] => {
 
     await synchroIndexedDb.rulesStatus.clear();
 
-    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+    await reactQueryClient.invalidateQueries({ queryKey: ['rules'] });
 
     setPage(1);
     setIsProcessing(false);
@@ -204,7 +229,7 @@ export const useDeleteChanges = (): [() => Promise<void>, boolean] => {
 
     await synchroIndexedDb.rulesStatus.clear();
 
-    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+    await reactQueryClient.invalidateQueries({ queryKey: ['rules'] });
 
     setPage(1);
 

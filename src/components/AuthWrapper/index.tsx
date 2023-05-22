@@ -21,6 +21,7 @@ export const AuthWrapper = ({ children }: PropsWithChildren) => {
     () => ({
       isLogged,
       isLoading,
+      user: defaultValue.user,
       async login(email, password) {
         const data = await defaultValue.login(email, password);
         setIsLogged(true);
@@ -31,6 +32,9 @@ export const AuthWrapper = ({ children }: PropsWithChildren) => {
       },
       async singUp(data) {
         await defaultValue.singUp(data);
+      },
+      async logOut() {
+        await defaultValue.logOut();
       },
     }),
     [isLogged, isLoading]

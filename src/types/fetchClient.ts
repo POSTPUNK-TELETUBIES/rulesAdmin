@@ -1,3 +1,4 @@
+import { User } from '@supabase/supabase-js';
 import { LocalRulesStatus } from '../lib/service/dexie';
 import { SingUpFields } from './auth';
 import { LanguageDTO, QualityProfileDTO, RulesResponse } from './supabase';
@@ -54,9 +55,10 @@ export interface FetchClientSingleton {
 
 export interface AuthClient {
   isLogged: boolean;
+  user: User;
   login(email: string, password: string): Promise<any>;
   verifyAuth?(token?: string, extraData?: unknown): Promise<unknown>;
-  logOut?(token: string, extraData?: unknown): Promise<unknown>;
+  logOut(token?: string, extraData?: unknown): Promise<unknown>;
   getPermissions?(token?: string, extraData?: unknown): Promise<unknown>;
   checkAuth(token?: string, refreshToken?: string): Promise<any>;
   singUp(data: SingUpFields): Promise<unknown>;
