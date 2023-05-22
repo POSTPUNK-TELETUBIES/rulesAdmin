@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { LocalStorageVisit } from '../types/constants';
 
 export const getEnvOrThorw = (envName: string) => {
@@ -84,3 +85,20 @@ export const parseConditionallySonarKey = (
   needsParse: boolean,
   blackList?: Record<string, number | boolean>
 ) => (!needsParse ? text : parseSonarKey(text, blackList));
+
+export const renderConditional = <T extends ReactNode = ReactNode>(
+  isRender: boolean,
+  falseValue: T,
+  trueValue: T
+) => (isRender ? falseValue : trueValue);
+
+export const keyBy = <T = unknown, R = T>(
+  array: T[],
+  key: string,
+  value?: string
+): Record<string, R> =>
+  array?.reduce((acmPojo, nextData) => {
+    acmPojo[String(nextData[key])] = value ? nextData[value] : nextData;
+
+    return acmPojo;
+  }, {});
