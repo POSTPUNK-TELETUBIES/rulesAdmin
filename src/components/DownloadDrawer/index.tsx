@@ -33,7 +33,7 @@ interface FilterFields {
   state?: string;
   language_id?: string;
   qualityProfile_id?: string;
-  toUpdate: boolean;
+  showOnlyIsActiveDifferences: boolean;
 }
 
 export const DownloadDrawer = ({
@@ -55,7 +55,7 @@ export const DownloadDrawer = ({
           type: data.type,
           isActiveSonar: data.state,
         },
-        data.toUpdate
+        data.showOnlyIsActiveDifferences
       );
     },
     []
