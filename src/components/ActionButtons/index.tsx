@@ -1,8 +1,8 @@
-import { ListItemIcon, ListItemText, MenuItem } from "@mui/material";
+import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 
-import { Download } from "@mui/icons-material";
-import { useCallback, useState } from "react";
-import { DownloadDrawer } from "../DownloadDrawer";
+import { Download } from '@mui/icons-material';
+import { useCallback, useState } from 'react';
+import { DownloadDrawer } from '../DownloadDrawer';
 
 export const DownloadButton = () => {
   const [isOpen, setIsOpen] = useState(false);

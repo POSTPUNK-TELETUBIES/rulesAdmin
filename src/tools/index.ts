@@ -59,3 +59,28 @@ export const visitHandler = () => {
 
 // eslint-disable-next-line eqeqeq
 export const isNill = (data: unknown) => data != null;
+
+const sonaKeyLangaugesBlackList: Record<string, number | boolean> = {
+  css: 1,
+  java: 1,
+  web: 1,
+  Web: 1,
+  javascript: 1,
+  typescript: 1,
+};
+
+export const parseSonarKey = (
+  text: string,
+  blackList = sonaKeyLangaugesBlackList
+) => {
+  const [match] = text.match(/^.+:/);
+  if (!blackList[match.substring(0, match.length - 1)]) return text;
+
+  return text.replace(match, '');
+};
+
+export const parseConditionallySonarKey = (
+  text: string,
+  needsParse: boolean,
+  blackList?: Record<string, number | boolean>
+) => (!needsParse ? text : parseSonarKey(text, blackList));

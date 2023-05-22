@@ -75,7 +75,6 @@ export const DownloadDrawer = ({
       onClose={_handleClose}
       anchor='right'
       open={isOpen}
-      sx={{ minWidth: 400 }}
     >
       <Stack
         sx={{ minWidth: 400 }}

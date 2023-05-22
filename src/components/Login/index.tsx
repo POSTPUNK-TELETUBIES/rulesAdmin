@@ -24,6 +24,7 @@ interface LoginFields {
 
 interface LoginProps {
   singUpClick?: () => void;
+  isSingUpAvailable?: boolean;
 }
 
 function useLogin() {
@@ -46,7 +47,7 @@ function useLogin() {
   return login;
 }
 
-export function Login({ singUpClick }: LoginProps) {
+export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
   const { handleSubmit, register, resetField } = useForm();
   const login = useLogin();
   const [isLoading, setIsLoading] = useState(false);
@@ -94,9 +95,11 @@ export function Login({ singUpClick }: LoginProps) {
       >
         Login
       </LoadingButton>
-      <Typography align='center'>
-        ¿Aún no te registras? <Link onClick={singUpClick}>Sing up</Link>{' '}
-      </Typography>
+      {isSingUpAvailable && (
+        <Typography align='center'>
+          ¿Aún no te registras? <Link onClick={singUpClick}>Sing up</Link>{' '}
+        </Typography>
+      )}
     </Stack>
   );
 }

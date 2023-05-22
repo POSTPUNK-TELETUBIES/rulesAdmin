@@ -3,9 +3,8 @@ import {
   MouseEvent,
   PropsWithChildren,
   useCallback,
-  useEffect,
   useState,
-} from "react";
+} from 'react';
 import {
   Box,
   Collapse,
@@ -13,23 +12,25 @@ import {
   TablePagination,
   TableRow,
   TextField,
-} from "@mui/material";
-import { useDebouncedCallback } from "use-debounce";
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { useDebouncedCallback } from 'use-debounce';
 
-import GenericTable from "../../layout/GenericTable";
+import GenericTable from '../../layout/GenericTable';
 
-import { columns } from "./config";
+import { columns } from './config';
 
-import synchroDB from "../../lib/service/dexie";
+import synchroDB from '../../lib/service/dexie';
 
-import { useGetRulesStatus } from "../../hooks";
-import { GenericHeader } from "../GenericHeader";
-import { EspecialConfigCell } from "./especialConfig";
-import { LoadingContentTable } from "./loadingContent";
-import { NoDataContent } from "./noData";
-import { RuleDTO, RulesStatus } from "../../types/supabase";
-import supabase from "../../lib/service/supabase";
-import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
+import { useGetRulesStatus } from '../../hooks';
+import { GenericHeader } from '../GenericHeader';
+import { EspecialConfigCell } from './especialConfig';
+import { LoadingContentTable } from './loadingContent';
+import { NoDataContent } from './noData';
+import { RuleDTO, RulesStatus } from '../../types/supabase';
+
+import { parseConditionallySonarKey } from '../../tools';
 
 interface WithCollapsibleProps {
   collapseContent: JSX.Element;
@@ -46,8 +47,8 @@ const WithCollapsible = ({
     <>
       <TableRow
         sx={{
-          cursor: "pointer",
-          ":hover": {
+          cursor: 'pointer',
+          ':hover': {
             backgroundColor: ({ palette }) => palette.grey[400],
           },
         }}
@@ -58,11 +59,11 @@ const WithCollapsible = ({
         {children}
       </TableRow>
       <TableRow>
-        <TableCell colSpan={colSpan} padding={isOpen ? "normal" : "none"}>
+        <TableCell colSpan={colSpan} padding={isOpen ? 'normal' : 'none'}>
           <Collapse
             in={isOpen}
             // Warning: considerar que puede no estar optimizado
-            sx={{ "& .MuiCollapse-wrapperInner": { display: "flex" } }}
+            sx={{ '& .MuiCollapse-wrapperInner': { display: 'flex' } }}
           >
             {collapseContent}
           </Collapse>
@@ -89,10 +90,10 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
     <TextField
       multiline
       fullWidth
-      sx={{ ml: 12, mr: 3, minHeight: "initial", height: "auto" }}
+      sx={{ ml: 12, mr: 3, minHeight: 'initial', height: 'auto' }}
       defaultValue={result.description}
       title={title}
-      placeholder="Ingresa el porqué del cambio"
+      placeholder='Ingresa el porqué del cambio'
       onChange={_handleChange}
     />
   );
@@ -103,22 +104,8 @@ export function RulesTable() {
   const [
     setPage,
     setRowsPerPage,
-    { data, isLoading, total, page, rowsPerPage },
+    { data, isFetching, total, page, rowsPerPage },
   ] = useGetRulesStatus();
-
-  const [payload, setPayload] =
-    useState<RealtimePostgresUpdatePayload<RulesStatus> | null>(null);
-
-  // TODO: update cache too
-  useEffect(() => {
-    const channel = supabase().subscribeChanges((payload) =>
-      setPayload({ ...payload })
-    );
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
 
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -142,11 +129,11 @@ export function RulesTable() {
     <>
       <GenericTable
         body={
-          isLoading ? (
+          isFetching ? (
             <LoadingContentTable colSpan={columns.length} />
           ) : (
             <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
-              {isLoading
+              {isFetching
                 ? []
                 : data?.map((result) => (
                     <WithCollapsible
@@ -154,12 +141,7 @@ export function RulesTable() {
                       colSpan={columns.length}
                       collapseContent={
                         <EditableComment
-                          result={{
-                            ...result,
-                            ...(Number(payload?.new.id) !== Number(result.id)
-                              ? {}
-                              : payload?.new),
-                          }}
+                          result={result}
                           title={`${result.id}-comments`}
                         />
                       }
@@ -169,37 +151,42 @@ export function RulesTable() {
                           if (!especialConfig)
                             return (
                               <TableCell
-                                sx={{ textAlign: textAlign ?? "center" }}
+                                sx={{
+                                  textAlign: textAlign ?? 'center',
+                                  maxWidth: 140,
+                                }}
                                 key={resource + result.id}
                               >
-                                {String(result[resource] ?? "--")}
+                                <Tooltip
+                                  title={String(result[resource] ?? '--')}
+                                >
+                                  <Typography
+                                    noWrap
+                                    sx={{
+                                      ...(resource === 'key'
+                                        ? { width: 60 }
+                                        : {}),
+                                    }}
+                                  >
+                                    {parseConditionallySonarKey(
+                                      String(result[resource] ?? '--'),
+                                      resource === 'key'
+                                    )}
+                                  </Typography>
+                                </Tooltip>
                               </TableCell>
                             );
 
                           return (
                             <TableCell
                               key={resource + result.id}
-                              sx={{ textAlign: "center" }}
+                              sx={{ textAlign: textAlign ?? 'center' }}
                             >
                               <EspecialConfigCell
-                                result={{
-                                  ...result,
-                                  ...(Number(payload?.new.id) !==
-                                  Number(result.id)
-                                    ? {}
-                                    : payload?.new),
-                                }}
+                                result={result}
                                 resource={resource}
                                 secondaryValue={result.created_at}
-                                value={
-                                  {
-                                    ...result,
-                                    ...(Number(payload?.new.id) !==
-                                    Number(result.id)
-                                      ? {}
-                                      : payload?.new),
-                                  }[resource] ?? "--"
-                                }
+                                value={result[resource] ?? '--'}
                               />
                             </TableCell>
                           );
@@ -212,14 +199,14 @@ export function RulesTable() {
         }
         header={<GenericHeader data={columns} />}
       />
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <TablePagination
           rowsPerPage={rowsPerPage}
           count={total ?? 1000}
           page={page - 1}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filas por página"
+          labelRowsPerPage='Filas por página'
         />
       </Box>
     </>

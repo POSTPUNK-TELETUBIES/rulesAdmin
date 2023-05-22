@@ -1,7 +1,7 @@
-import { FilterList } from "@mui/icons-material";
-import { Badge, IconButton, Menu } from "@mui/material";
-import { MouseEvent, useCallback, useState } from "react";
-import { MenuItemReactive } from "../../components/MenuItemReactive";
+import { FilterList } from '@mui/icons-material';
+import { Badge, IconButton, Menu } from '@mui/material';
+import { MouseEvent, useCallback, useState } from 'react';
+import { MenuItemReactive } from '../../components/MenuItemReactive';
 
 interface FilterConfig {
   value: string;
@@ -25,7 +25,7 @@ export const FilterPopover = ({
   const _handleReactive = useCallback(
     (value: unknown) => {
       reactiveCallback(value);
-      setInvisible(value === "all");
+      setInvisible(value === 'all');
       isClosingRecursive && setMenuRef(null);
     },
     [isClosingRecursive, reactiveCallback]
@@ -43,9 +43,9 @@ export const FilterPopover = ({
 
   return (
     <>
-      <IconButton onClick={_handleClick} sx={{ padding: "1px !important" }}>
-        <Badge variant="dot" invisible={invisible} color="secondary">
-          <FilterList sx={{ color: "white" }} />
+      <IconButton onClick={_handleClick} sx={{ padding: '1px !important' }}>
+        <Badge variant='dot' invisible={invisible} color='secondary'>
+          <FilterList sx={{ color: '#e4a010' }} />
         </Badge>
       </IconButton>
       <Menu anchorEl={menuRef} onClose={_handleClose} open={Boolean(menuRef)}>
