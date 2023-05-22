@@ -140,6 +140,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     query: PostgrestFilterBuilder<any, any, Pojo[]>,
     filter: Partial<RulesFilter>
   ) {
+    console.log({ query });
     for (const key in filter) {
       if (!Object.prototype.hasOwnProperty.call(filter, key)) continue;
 
@@ -153,6 +154,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   }
 
   private prepareFilteredQuery(filter: RulesFilter) {
+    console.log({ filter });
     delete filter.lang_id;
 
     const query = this.client.from("status").select(

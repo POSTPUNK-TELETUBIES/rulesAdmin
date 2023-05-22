@@ -2,26 +2,38 @@ import {
   Button,
   Divider,
   Drawer,
-  FormControl,
   FormControlLabel,
-  InputLabel,
   List,
   ListItem,
-  MenuItem,
-  Select,
+  SelectChangeEvent,
+  Stack,
   Switch,
 } from "@mui/material";
-import {
-  filterTypeConfig,
-  filterSeverityConfig,
-  filterStateConfig,
-} from "../../lib/config/filters";
-import { ChangeEvent, useRef, useState } from "react";
+
+import { useForm, type SubmitHandler } from "react-hook-form";
+
+import { useCallback, useState } from "react";
 import { Download } from "@mui/icons-material";
+import { BasicInput } from "../../layout/Inputs/BasicInput";
+import { UncontrolledSelect } from "../Filters/UncontrolledSelect";
+import { uncontrolledLocalFilters } from "./config";
+import { LanguageGenericFilter } from "../Filters/LanguageGenericFilter";
+import { QualityProfilesGenericProfiles } from "../Filters/QualityProfilesGenericFilter";
+
+import supabaseClient from "../../lib/service/supabase";
 
 interface DownloadDrawerInterface {
   handleClose: () => void;
   isOpen: boolean;
+}
+
+interface FilterFields {
+  type?: string;
+  severity?: string;
+  state?: string;
+  language_id?: string;
+  qualityProfile_id?: string;
+  toUpdate: boolean;
 }
 
 export const DownloadDrawer = ({
@@ -29,27 +41,33 @@ export const DownloadDrawer = ({
   isOpen,
 }: DownloadDrawerInterface) => {
   const [isActive, setIsActive] = useState(false);
-  const typeFilter = useRef<string | "">();
-  const severityFilter = useRef<string | "">();
-  const stateFilter = useRef<string | "">();
+  const { register, handleSubmit } = useForm();
 
-  const _handleStateChange = () => {
-    setIsActive(!isActive);
-  };
+  const [language, setLanguage] = useState<string>();
 
-  const _handleFilterTypeChange = (event: ChangeEvent<HTMLInputElement>) => {
-    typeFilter.current = event.target.value;
-  };
+  const _handleSubmit: SubmitHandler<FilterFields> = useCallback(
+    async (data) => {
+      return await supabaseClient().downloadReport(
+        {
+          lang_id: data.language_id,
+          qualityProfile_id: data.qualityProfile_id,
+          severity: data.severity,
+          type: data.type,
+          isActiveSonar: data.state,
+        },
+        data.toUpdate
+      );
+    },
+    []
+  );
 
-  const _handleFilterSeverityChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    severityFilter.current = event.target.value;
-  };
+  const _handleStateChange = useCallback(() => {
+    setIsActive((prev) => !prev);
+  }, []);
 
-  const _handleFilterStateChange = (event: ChangeEvent<HTMLInputElement>) => {
-    stateFilter.current = event.target.value;
-  };
+  const _handleChangeLanguage = useCallback((event: SelectChangeEvent) => {
+    setLanguage(event.target.value);
+  }, []);
 
   return (
     <Drawer
@@ -57,113 +75,75 @@ export const DownloadDrawer = ({
       onClose={_handleClose}
       anchor="right"
       open={isOpen}
-      sx={{ minWidth: 300 }}
+      sx={{ minWidth: 400 }}
     >
-      <List>
-        <ListItem>
-          <FormControlLabel
-            control={<Switch onClick={_handleStateChange} />}
-            label="Filtros"
-          />
-        </ListItem>
-      </List>
-      <Divider />
-
-      <List>
-        <ListItem>
-          <FormControl
-            sx={{ width: 200 }}
-            className="type"
-            onChange={_handleFilterTypeChange}
-          >
-            <InputLabel id="type">Type</InputLabel>
-            <Select
-              labelId="type"
-              label="Type"
-              sx={{ width: 200 }}
-              defaultValue={""}
-              disabled={!isActive}
-              displayEmpty
+      <Stack
+        sx={{ minWidth: 400 }}
+        component="form"
+        onSubmit={handleSubmit(_handleSubmit)}
+      >
+        <List>
+          <ListItem>
+            <FormControlLabel
+              control={<Switch onClick={_handleStateChange} />}
+              label="Filtros"
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <LanguageGenericFilter
+              includeAllOption
+              inputProps={register("language_id")}
+              className="generic-filter-uncontrolled"
+              handleChange={_handleChangeLanguage}
+            />
+          </ListItem>
+          <ListItem>
+            <QualityProfilesGenericProfiles
+              text={language}
+              inputProps={register("qualityProfile_id")}
+            />
+          </ListItem>
+          <Divider />
+          {uncontrolledLocalFilters.map(
+            ({ id, label, registerField, config }) => (
+              <ListItem>
+                <BasicInput
+                  label={label}
+                  id={id}
+                  input={
+                    <UncontrolledSelect
+                      config={config}
+                      label={label}
+                      labelId={id}
+                      inputProps={register(registerField)}
+                      isActive={isActive}
+                    />
+                  }
+                />
+              </ListItem>
+            )
+          )}
+          <Divider />
+          <ListItem>
+            <FormControlLabel
+              control={<Switch inputProps={register("toUpdate")} />}
+              label="Solo diferencias"
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<Download />}
+              sx={{ width: "100%" }}
             >
-              {filterTypeConfig?.map(({ value, label }) => (
-                <MenuItem key={label} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem>
-          <FormControl
-            sx={{ width: 200 }}
-            className="severity"
-            onChange={_handleFilterSeverityChange}
-          >
-            <InputLabel id="severity">Severity</InputLabel>
-            <Select
-              labelId="severity"
-              label="Severity"
-              sx={{ width: 200 }}
-              defaultValue={""}
-              disabled={!isActive}
-              displayEmpty
-            >
-              {filterSeverityConfig?.map(({ value, label }) => (
-                <MenuItem key={label} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem>
-          <FormControl
-            sx={{ width: 200 }}
-            className="state"
-            onChange={_handleFilterStateChange}
-          >
-            <InputLabel id="state">State</InputLabel>
-            <Select
-              labelId="state"
-              label="State"
-              sx={{ width: 200 }}
-              defaultValue={""}
-              disabled={!isActive}
-              displayEmpty
-            >
-              {filterStateConfig?.map(({ value, label }) => (
-                <MenuItem key={label} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem>
-          <FormControlLabel control={<Switch />} label="Solo diferencias" />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem>
-          <Button
-            variant="contained"
-            startIcon={<Download />}
-            sx={{ width: 200 }}
-          >
-            Download
-          </Button>
-        </ListItem>
-      </List>
+              Download
+            </Button>
+          </ListItem>
+        </List>
+      </Stack>
     </Drawer>
   );
 };

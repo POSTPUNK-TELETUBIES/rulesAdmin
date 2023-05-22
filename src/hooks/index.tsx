@@ -40,7 +40,7 @@ type UseGetRulesStatusResults = [
   UseGetRulesStatusData
 ];
 
-export const useGetRulesStatus = (): UseGetRulesStatusResults => {
+export const useGetAllFilters = () => {
   const severity = useSeverityFilter();
   const lang_id = useLanguageFilter();
   const isActiveSonar = useActiveFilter();
@@ -48,6 +48,28 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   const type = useRuleTypeFilter();
   const page = useSetPage();
   const textMatchFilter = useSetTextMatchFilter();
+
+  return {
+    severity,
+    lang_id,
+    isActiveSonar,
+    qualityProfile_id,
+    type,
+    page,
+    textMatchFilter,
+  };
+};
+
+export const useGetRulesStatus = (): UseGetRulesStatusResults => {
+  const {
+    isActiveSonar,
+    lang_id,
+    page,
+    qualityProfile_id,
+    severity,
+    textMatchFilter,
+    type,
+  } = useGetAllFilters();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
