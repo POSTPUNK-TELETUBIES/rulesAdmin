@@ -1,16 +1,20 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
-import { AuthContext, defaultValue } from "../../context/auth";
-import { AuthClient } from "../../types/fetchClient";
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { AuthContext, defaultValue } from '../../context/auth';
+import { AuthClient } from '../../types/fetchClient';
 
 export const AuthWrapper = ({ children }: PropsWithChildren) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    defaultValue.checkAuth().then((data) => {
-      setIsLogged(!!data?.user?.id);
-      setIsLoading(false);
-    });
+    defaultValue
+      .checkAuth()
+      .then((data) => {
+        setIsLogged(!!data?.user?.id);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const value: AuthClient = useMemo(

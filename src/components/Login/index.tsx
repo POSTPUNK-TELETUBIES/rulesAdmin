@@ -6,16 +6,16 @@ import {
   OutlinedInput,
   Stack,
   Typography,
-} from "@mui/material";
-import { useCallback, useContext, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { AuthContext } from "../../context/auth";
-import { Password } from "./Password";
-import { Person } from "@mui/icons-material";
+} from '@mui/material';
+import { useCallback, useContext, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { AuthContext } from '../../context/auth';
+import { Password } from './Password';
+import { Person } from '@mui/icons-material';
 
-import { LoadingButton } from "@mui/lab";
-import { AuthError } from "@supabase/supabase-js";
-import { useSnackbar } from "notistack";
+import { LoadingButton } from '@mui/lab';
+import { AuthError } from '@supabase/supabase-js';
+import { useSnackbar } from 'notistack';
 
 interface LoginFields {
   email: string;
@@ -35,8 +35,8 @@ function useLogin() {
       await authClient.login(email, password);
     } catch (error) {
       const { message } = error as AuthError;
-      enqueueSnackbar("Credenciales inválidas", {
-        variant: "error",
+      enqueueSnackbar('Credenciales inválidas', {
+        variant: 'error',
         autoHideDuration: 3000,
       });
       return message;
@@ -54,7 +54,7 @@ export function Login({ singUpClick }: LoginProps) {
   const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
     async ({ email, password }) => {
       setIsLoading(true);
-      resetField("password");
+      resetField('password');
       login(email, password);
       setIsLoading(false);
     },
@@ -63,39 +63,39 @@ export function Login({ singUpClick }: LoginProps) {
 
   return (
     <Stack
-      component={"form"}
+      component={'form'}
       onSubmit={handleSubmit(_handleSubmit)}
       spacing={2}
       p={2}
     >
-      <Box display="flex" justifyContent="center">
+      <Box display='flex' justifyContent='center'>
         <Person
           sx={{
-            fontSize: "10vh",
-            borderRadius: "50%",
-            border: "2px solid gray",
+            fontSize: '10vh',
+            borderRadius: '50%',
+            border: '2px solid gray',
           }}
         />
       </Box>
       <FormControl disabled={isLoading}>
-        <InputLabel htmlFor={"email"}>Email</InputLabel>
+        <InputLabel htmlFor={'email'}>Email</InputLabel>
         <OutlinedInput
-          id="email"
-          label="Email"
-          inputProps={register("email")}
+          id='email'
+          label='Email'
+          inputProps={register('email')}
         />
       </FormControl>
-      <Password disabled={isLoading} inputProps={register("password")} />
+      <Password disabled={isLoading} inputProps={register('password')} />
       <LoadingButton
-        type="submit"
-        variant="contained"
+        type='submit'
+        variant='contained'
         disabled={isLoading}
         loading={isLoading}
       >
         Login
       </LoadingButton>
-      <Typography align="center">
-        ¿Aún no te registras? <Link onClick={singUpClick}>Sing up</Link>{" "}
+      <Typography align='center'>
+        ¿Aún no te registras? <Link onClick={singUpClick}>Sing up</Link>{' '}
       </Typography>
     </Stack>
   );

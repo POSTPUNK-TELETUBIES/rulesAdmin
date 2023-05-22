@@ -1,5 +1,5 @@
-import Dexie, { type Table } from "dexie";
-import { RuleDTO, RulesStatus } from "../../types/supabase";
+import Dexie, { type Table } from 'dexie';
+import { RuleDTO, RulesStatus } from '../../types/supabase';
 
 export interface LocalRulesStatus {
   id: number;
@@ -23,15 +23,15 @@ export class SynchroIndexedDb extends Dexie {
   }
 
   private constructor() {
-    super("syncro");
+    super('syncro');
     this.version(3).stores({
       rulesStatus:
-        "id, updated_at, newStatus, language, qualityProfileId, description",
+        'id, updated_at, newStatus, language, qualityProfileId, description',
     });
   }
 
   async getLocalRules(ids: number[]) {
-    return await this.rulesStatus.where("id").anyOf(ids).toArray();
+    return await this.rulesStatus.where('id').anyOf(ids).toArray();
   }
 
   async countAllRules() {

@@ -1,6 +1,6 @@
-import { LocalRulesStatus } from "../lib/service/dexie";
-import { SingUpFields } from "./auth";
-import { LanguageDTO, QualityProfileDTO, RulesResponse } from "./supabase";
+import { LocalRulesStatus } from '../lib/service/dexie';
+import { SingUpFields } from './auth';
+import { LanguageDTO, QualityProfileDTO, RulesResponse } from './supabase';
 
 export interface PaginationParams {
   page: number;
