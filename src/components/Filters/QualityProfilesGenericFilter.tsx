@@ -20,7 +20,7 @@ export const QualityProfilesGenericProfiles = ({
   text,
   inputProps,
 }: QualityProfilesGenericProfilesProps) => {
-  const { data, isFetching } = useQualityProfiles(text);
+  const { data, isFetching } = useQualityProfiles(text === 'all' ? '' : text);
 
   if (isFetching) return <CircularProgress />;
 
