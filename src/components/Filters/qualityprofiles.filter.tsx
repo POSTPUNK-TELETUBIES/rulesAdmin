@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef } from 'react';
 import {
   setQualityProfileFilterChange,
   useLanguageFilter,
-} from "../../lib/observers";
-import { fetchClient } from "../../lib/modules/fetchClient";
+} from '../../lib/observers';
 import {
   CircularProgress,
   FormControl,
@@ -12,20 +10,17 @@ import {
   MenuItem,
   Select,
   type SelectChangeEvent,
-} from "@mui/material";
+} from '@mui/material';
+import { useQualityProfiles } from '../../hooks/filters';
 
 export const QualityProfileFilter = () => {
   const text = useLanguageFilter();
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  const { data, isFetching } = useQuery({
-    queryKey: ["qualityprofile", text],
-    queryFn: () => fetchClient.getQualityProfilesByLanguage(text),
-    enabled: !!text,
-  });
+  const { data, isFetching } = useQualityProfiles(text);
 
   useEffect(() => {
-    setQualityProfileFilterChange(selectRef.current?.value ?? "");
+    setQualityProfileFilterChange(selectRef.current?.value ?? '');
   }, [text]);
 
   const _handleChange = useCallback((event: SelectChangeEvent) => {
@@ -35,14 +30,14 @@ export const QualityProfileFilter = () => {
   if (isFetching) return <CircularProgress />;
 
   return (
-    <FormControl className="mainFilters" sx={{ width: 200 }}>
-      <InputLabel id="qualityprofile">Quality Profile</InputLabel>
+    <FormControl className='mainFilters' sx={{ width: 200 }}>
+      <InputLabel id='qualityprofile'>Quality Profile</InputLabel>
       <Select
         ref={selectRef}
         onChange={_handleChange}
-        label="Quality Profile"
-        labelId="qualityprofile"
-        defaultValue={""}
+        label='Quality Profile'
+        labelId='qualityprofile'
+        defaultValue={''}
         displayEmpty
       >
         {data?.map(({ id, name }) => (

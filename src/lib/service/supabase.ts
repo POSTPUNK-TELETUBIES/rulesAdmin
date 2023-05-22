@@ -1,19 +1,29 @@
-import { SupabaseClient, createClient } from "@supabase/supabase-js";
-import type { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { supabaseURL, supbaseToken } from "../config/supabase";
+import {
+  RealtimePostgresUpdatePayload,
+  SupabaseClient,
+  createClient,
+} from '@supabase/supabase-js';
+
+import type { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import { supabaseURL, supbaseToken } from '../config/supabase';
+
 import {
   Database,
   LanguageDTO,
   QualityProfileDTO,
   RulesResponse,
-} from "../../types/supabase";
+  RulesStatus,
+} from '../../types/supabase';
+
 import {
   FetchClientSingleton,
   PaginationParams,
   Pojo,
   RulesFilter,
-} from "../../types/fetchClient";
-import { LocalRulesStatus } from "./dexie";
+} from '../../types/fetchClient';
+import { LocalRulesStatus } from './dexie';
+import { isNill } from '../../tools';
+import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
 export class LocalSupabaseClient implements FetchClientSingleton {
   private static instance: LocalSupabaseClient;
@@ -29,8 +39,8 @@ export class LocalSupabaseClient implements FetchClientSingleton {
 
   private async getCSVReportUpdatables(qualityProfileId: number) {
     return await this.client
-      .rpc("get_changed_q", { quality_id: Number(qualityProfileId) })
-      .select("*")
+      .rpc('get_changed_q', { quality_id: Number(qualityProfileId) })
+      .select('*')
       .csv()
       .throwOnError();
   }
@@ -40,16 +50,24 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   }
 
   //TODO: evaluar pasar a un servio aparte
-  async downloadReport(filter: RulesFilter, toUpdate = true) {
-    const { data } = toUpdate
+  /**
+   *
+   * @param showOnlyIsActiveDifferences If true will only include data that need to be updated in Sonar Qube
+   * @param toUpdate
+   */
+  async downloadReport(
+    filter: RulesFilter,
+    showOnlyIsActiveDifferences = true
+  ) {
+    const { data } = showOnlyIsActiveDifferences
       ? await this.getCSVReportUpdatables(Number(filter.qualityProfile_id))
       : await this.getCSVCompletFiltered(filter);
 
     // TODO: create an element and get wiht querySelector
     // TODO: or investigate how to pipe with rxjs
-    const downloader = document.createElement("a");
-    downloader.download = "report";
-    const url = URL.createObjectURL(new Blob([data], { type: "text/csv" }));
+    const downloader = document.createElement('a');
+    downloader.download = 'report';
+    const url = URL.createObjectURL(new Blob([data], { type: 'text/csv' }));
     downloader.href = url;
 
     downloader.click();
@@ -60,13 +78,13 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   private changeIsActive(data: LocalRulesStatus[], newStatus = true) {
     if (data.length)
       return this.client
-        .from("status")
+        .from('status')
         .update({
           isActive: newStatus,
           updated_at: new Date(),
         })
         .in(
-          "id",
+          'id',
           data.map(({ id }) => id)
         )
         .throwOnError();
@@ -75,13 +93,16 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   private async bulkUpdateDescription(data: LocalRulesStatus[]) {
     if (!data.length) return;
 
+    const { data: userData } = await this.client.auth.getUser();
+
     return await this.client
-      .from("status")
+      .from('status')
       .upsert(
         data.map(({ id, description, qualityProfileId }) => ({
           id,
           description,
           qualityProfile_id: qualityProfileId,
+          user_id: userData.user.id,
         }))
       )
       .select()
@@ -103,7 +124,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   async getTotalCountByTable(tableName: string): Promise<number> {
     const { count } = await this.client
       .from(tableName)
-      .select("*", { count: "exact", head: true })
+      .select('*', { count: 'exact', head: true })
       .throwOnError();
 
     return count ?? 0;
@@ -113,23 +134,27 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     languageId: string
   ): Promise<QualityProfileDTO[] | null> {
     const { data } = await this.client
-      .from("qualityprofiles")
+      .from('qualityprofiles')
       .select()
-      .eq("language_id", languageId)
+      .eq('language_id', languageId)
       .throwOnError();
 
     return data as QualityProfileDTO[];
   }
 
   private static queryBuilderColumns = {
-    severity: "rules.severity",
-    type: "rules.type",
-    isActiveSonar: "isActiveSonar",
-    qualityProfile_id: "qualityProfile_id",
+    severity: 'rules.severity',
+    type: 'rules.type',
+    isActiveSonar: 'isActiveSonar',
+    qualityProfile_id: 'qualityProfile_id',
   };
 
   private buildQuery(
-    query: PostgrestFilterBuilder<any, any, Pojo[]>,
+    query: PostgrestFilterBuilder<
+      GenericSchema,
+      Record<string, unknown>,
+      Pojo[]
+    >,
     filter: Partial<RulesFilter>
   ) {
     for (const key in filter) {
@@ -137,7 +162,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
 
       const element = filter[key];
 
-      if (element !== "all" && element != null)
+      if (element !== 'all' && isNill(element))
         query = query.eq(LocalSupabaseClient.queryBuilderColumns[key], element);
     }
 
@@ -147,7 +172,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   private prepareFilteredQuery(filter: RulesFilter) {
     delete filter.lang_id;
 
-    const query = this.client.from("status").select(
+    const query = this.client.from('status').select(
       `
         *,
         qualityprofiles(
@@ -157,7 +182,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
           *
         )
       `,
-      { count: "exact" }
+      { count: 'exact' }
     );
 
     return this.buildQuery(query, filter);
@@ -171,7 +196,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
 
     const { data, count } = await query
       .range(...this.getRange(pagination))
-      .order("id", { ascending: true })
+      .order('id', { ascending: true })
       .throwOnError();
 
     return { data: data as RulesResponse[], count };
@@ -179,7 +204,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
 
   async getAllLanguages(): Promise<LanguageDTO[] | null> {
     const { data } = await this.client
-      .from("languages")
+      .from('languages')
       .select()
       .throwOnError();
 
@@ -188,9 +213,9 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     );
   }
 
-  static getInstance() {
+  static getInstance(client?: SupabaseClient) {
     LocalSupabaseClient.instance ??= new LocalSupabaseClient(
-      createClient<Database>(supabaseURL, supbaseToken)
+      client ?? createClient<Database>(supabaseURL, supbaseToken)
     );
 
     return LocalSupabaseClient.instance;
@@ -208,16 +233,33 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     pagination: PaginationParams
   ) {
     const { data, count } = await this.prepareFilteredQuery(filter)
-      .ilike("rules.name", `%${rule}%`)
+      .ilike('rules.name', `%${rule}%`)
       // TODO: code duplicated, search for an abstraction
       .range(...this.getRange(pagination))
-      .order("id", { ascending: true })
+      .order('id', { ascending: true })
       .throwOnError();
 
     return {
       data: data as RulesResponse[],
       count,
     };
+  }
+
+  subscribeChanges(
+    cb: (payload: RealtimePostgresUpdatePayload<RulesStatus>) => void
+  ) {
+    return this.client
+      .channel('changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'status',
+        },
+        cb
+      )
+      .subscribe();
   }
 }
 

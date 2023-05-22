@@ -3,6 +3,7 @@ import {
   MouseEvent,
   PropsWithChildren,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import {
@@ -27,6 +28,8 @@ import { EspecialConfigCell } from "./especialConfig";
 import { LoadingContentTable } from "./loadingContent";
 import { NoDataContent } from "./noData";
 import { RuleDTO, RulesStatus } from "../../types/supabase";
+import supabase from "../../lib/service/supabase";
+import { RealtimePostgresUpdatePayload } from "@supabase/supabase-js";
 
 interface WithCollapsibleProps {
   collapseContent: JSX.Element;
@@ -103,6 +106,20 @@ export function RulesTable() {
     { data, isLoading, total, page, rowsPerPage },
   ] = useGetRulesStatus();
 
+  const [payload, setPayload] =
+    useState<RealtimePostgresUpdatePayload<RulesStatus> | null>(null);
+
+  // TODO: update cache too
+  useEffect(() => {
+    const channel = supabase().subscribeChanges((payload) =>
+      setPayload({ ...payload })
+    );
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
+
   const handleChangePage = useCallback(
     (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
       if (!event) return;
@@ -137,7 +154,12 @@ export function RulesTable() {
                       colSpan={columns.length}
                       collapseContent={
                         <EditableComment
-                          result={result}
+                          result={{
+                            ...result,
+                            ...(Number(payload?.new.id) !== Number(result.id)
+                              ? {}
+                              : payload?.new),
+                          }}
                           title={`${result.id}-comments`}
                         />
                       }
@@ -160,10 +182,24 @@ export function RulesTable() {
                               sx={{ textAlign: "center" }}
                             >
                               <EspecialConfigCell
-                                result={result}
+                                result={{
+                                  ...result,
+                                  ...(Number(payload?.new.id) !==
+                                  Number(result.id)
+                                    ? {}
+                                    : payload?.new),
+                                }}
                                 resource={resource}
                                 secondaryValue={result.created_at}
-                                value={result[resource] ?? "--"}
+                                value={
+                                  {
+                                    ...result,
+                                    ...(Number(payload?.new.id) !==
+                                    Number(result.id)
+                                      ? {}
+                                      : payload?.new),
+                                  }[resource] ?? "--"
+                                }
                               />
                             </TableCell>
                           );

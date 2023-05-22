@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { setRuleTypeFilterChange } from "../../lib/observers";
 import { FilterPopover } from "../../layout/FilterPopover";
-import { filterConfig } from "../../lib/config/filters";
+import { filterTypeConfig } from "../../lib/config/filters";
 
 export const TypesFilter = () => {
   const _handleChange = useCallback(
@@ -11,7 +11,7 @@ export const TypesFilter = () => {
 
   return (
     <FilterPopover
-      filterConfig={filterConfig}
+      filterConfig={filterTypeConfig}
       isClosingRecursive={true}
       reactiveCallback={_handleChange}
     />
