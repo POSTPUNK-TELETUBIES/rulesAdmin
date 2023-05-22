@@ -13,13 +13,7 @@ export const useLanguages = () => {
 export const useQualityProfiles = (text: string) => {
   const { data, isFetching } = useQuery({
     queryKey: ['qualityprofile', text],
-    queryFn: () => {
-      if (text === 'all') {
-        // If text is "all", return an empty response
-        return Promise.resolve([]);
-      }
-      return fetchClient.getQualityProfilesByLanguage(text);
-    },
+    queryFn: () => fetchClient.getQualityProfilesByLanguage(text),
     enabled: !!text,
   });
 
