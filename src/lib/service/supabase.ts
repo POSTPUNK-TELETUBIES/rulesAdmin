@@ -45,8 +45,16 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   }
 
   //TODO: evaluar pasar a un servio aparte
-  async downloadReport(filter: RulesFilter, toUpdate = true) {
-    const { data } = toUpdate
+  /**
+   *
+   * @param showOnlyIsActiveDifferences If true will only include data that need to be updated in Sonar Qube
+   * @param toUpdate
+   */
+  async downloadReport(
+    filter: RulesFilter,
+    showOnlyIsActiveDifferences = true
+  ) {
+    const { data } = showOnlyIsActiveDifferences
       ? await this.getCSVReportUpdatables(Number(filter.qualityProfile_id))
       : await this.getCSVCompletFiltered(filter);
 

@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   setQualityProfileFilterChange,
   useLanguageFilter,
 } from "../../lib/observers";
-import { fetchClient } from "../../lib/modules/fetchClient";
 import {
   CircularProgress,
   FormControl,
@@ -13,16 +11,13 @@ import {
   Select,
   type SelectChangeEvent,
 } from "@mui/material";
+import { useQualityProfiles } from "../../hooks/filters";
 
 export const QualityProfileFilter = () => {
   const text = useLanguageFilter();
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  const { data, isFetching } = useQuery({
-    queryKey: ["qualityprofile", text],
-    queryFn: () => fetchClient.getQualityProfilesByLanguage(text),
-    enabled: !!text,
-  });
+  const { data, isFetching } = useQualityProfiles(text);
 
   useEffect(() => {
     setQualityProfileFilterChange(selectRef.current?.value ?? "");

@@ -12,11 +12,11 @@ export interface Pojo {
 }
 
 export interface RulesFilter {
-  lang_id: string;
-  qualityProfile_id: string;
+  lang_id: string | number;
+  qualityProfile_id: string | number;
   severity: string;
   type: string;
-  isActiveSonar: boolean | string;
+  isActiveSonar?: boolean | string;
 }
 
 export interface PaginationResult {
