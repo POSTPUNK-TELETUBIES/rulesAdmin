@@ -1,15 +1,19 @@
-import { Box, Stack, Typography, Button } from "@mui/material";
-import admin from "/admin.svg";
-import { useCallback, useState } from "react";
+import { Box, Stack, Typography, Button } from '@mui/material';
+import admin from '/admin.svg';
+import { useCallback, useState } from 'react';
 
-import { SxProps } from "@mui/material/styles";
+import { SxProps } from '@mui/material/styles';
 
-import styles from "./home.module.css";
-import { LoginDrawer } from "../components/LoginDrawer";
-import { Login } from "../components/Login";
-import { SingUp } from "../components/SingUp";
+import styles from './home.module.css';
+import { LoginDrawer } from '../components/LoginDrawer';
+import { Login } from '../components/Login';
+import { SingUp } from '../components/SingUp';
 
-export const Home = () => {
+interface HomeProps {
+  isSingUpAvailable?: boolean;
+}
+
+export const Home = ({ isSingUpAvailable }: HomeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
@@ -37,32 +41,34 @@ export const Home = () => {
   return (
     <>
       <Stack
-        direction="row"
-        height={"80vh"}
+        direction='row'
+        height={'80vh'}
         spacing={2}
         gap={2}
-        alignItems="center"
-        justifyContent="center"
+        alignItems='center'
+        justifyContent='center'
       >
         <Box sx={BoxStyles}>
           <img
             className={styles.heroImage}
             src={admin}
-            alt="admin configuring panel"
+            alt='admin configuring panel'
           />
         </Box>
-        <Stack spacing={1} width={{ sm: "100%", md: "50%" }}>
-          <Typography variant="h3" component="h1">
+        <Stack spacing={1} width={{ sm: '100%', md: '50%' }}>
+          <Typography variant='h3' component='h1'>
             Ace config and simplify SonarQube rule administration
           </Typography>
-          <Typography variant="body1">
+          <Typography variant='body1'>
             Effortlessly Customize SonarQube Rules for Optimal Code Quality
           </Typography>
-          <Stack spacing={2} direction={{ sm: "column", md: "row" }}>
-            <Button variant="contained" onClick={_handleOpenLogin(false)}>
-              Sing up
-            </Button>
-            <Button variant="outlined" onClick={_handleOpenLogin()}>
+          <Stack spacing={2} direction={{ sm: 'column', md: 'row' }}>
+            {isSingUpAvailable && (
+              <Button variant='contained' onClick={_handleOpenLogin(false)}>
+                Sing up
+              </Button>
+            )}
+            <Button variant='outlined' onClick={_handleOpenLogin()}>
               Log in
             </Button>
           </Stack>
@@ -86,11 +92,11 @@ export const Home = () => {
 
 const BoxStyles: SxProps = {
   width: {
-    xs: "0%",
-    md: "50%",
+    xs: '0%',
+    md: '50%',
   },
   display: {
-    xs: "none",
-    md: "block",
+    xs: 'none',
+    md: 'block',
   },
 };

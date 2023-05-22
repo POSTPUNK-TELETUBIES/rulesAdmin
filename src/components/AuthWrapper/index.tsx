@@ -35,6 +35,7 @@ export const AuthWrapper = ({ children }: PropsWithChildren) => {
       },
       async logOut() {
         await defaultValue.logOut();
+        setIsLogged(false);
       },
     }),
     [isLogged, isLoading]

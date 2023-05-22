@@ -37,11 +37,6 @@ export function StatusSwitch({
    * This side effect is intend to delete data that does not need updating
    */
   useEffect(() => {
-    console.log(
-      'asdasdsa',
-      isInIndexedDb && result.isActiveOriginal === isChecked,
-      id
-    );
     if (isInIndexedDb && result.isActiveOriginal === isChecked)
       synchroDb.rulesStatus.delete(Number(id));
   }, [isChecked, id, isInIndexedDb, result.isActiveOriginal]);

@@ -12,6 +12,7 @@ interface TokenDataI {
 
 interface AuthStorage {
   tokenData: TokenDataI;
+  clean(token?: string): void;
 }
 
 export class AuthLocalStorageSingleton implements AuthStorage {
@@ -38,6 +39,11 @@ export class AuthLocalStorageSingleton implements AuthStorage {
     Object.keys(data).forEach((dataKey) =>
       localStorage.setItem(dataKey, data[dataKey])
     );
+  }
+
+  public clean() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
   }
 }
 
@@ -121,6 +127,8 @@ export class SupabaseAuthSingleton implements AuthClient {
     if (error) throw error;
 
     this.user = null;
+
+    this.authStorage.clean();
 
     return extraData;
   }

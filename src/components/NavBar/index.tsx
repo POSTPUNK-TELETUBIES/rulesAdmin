@@ -5,10 +5,10 @@ import {
   Button,
   Container,
   List,
-  ListItem,
   ListItemIcon,
   ListItemText,
   Menu,
+  MenuItem,
   Stack,
   Switch,
   Toolbar,
@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { MouseEvent, useCallback, useContext, useState } from 'react';
 import { ColorModeContext, ColorPalletes } from '../../theme';
-import { useTheme } from '@mui/material/styles';
+import { SxProps, useTheme } from '@mui/material/styles';
 import { LightMode, Logout, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
 import { AuthContext } from '../../context/auth';
@@ -27,6 +27,7 @@ export const NavBar = () => {
   const colorMode = useContext(ColorModeContext);
   const { isLogged, user } = useContext(AuthContext);
   const [anchorRef, setAnchorRef] = useState(null);
+  const authClient = useContext(AuthContext);
 
   const _handleChange = useCallback(
     () => colorMode.toggleColorMode(),
@@ -54,14 +55,7 @@ export const NavBar = () => {
       >
         <Container>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
+            <Box sx={boxStyles}>
               <Typography variant='h6' fontWeight={900}>
                 Sonardash
               </Typography>
@@ -75,27 +69,34 @@ export const NavBar = () => {
                 <LightMode />
               )}
               <Switch color='warning' onChange={_handleChange} />
-              <Avatar
-                variant='circular'
-                component={Button}
-                onClick={_handleClick}
-              >
-                {user.email[0]}
-              </Avatar>
+              {isLogged && (
+                <Button sx={{ borderRadius: '50%' }} onClick={_handleClick}>
+                  <Avatar sx={{ width: 40, height: 40 }} variant='circular'>
+                    {user?.email[0]}
+                  </Avatar>
+                </Button>
+              )}
             </Stack>
           </Toolbar>
         </Container>
       </AppBar>
       <Menu open={!!anchorRef} anchorEl={anchorRef} onClose={_handleClose}>
         <List>
-          <ListItem>
+          <MenuItem onClick={() => authClient.logOut()}>
             <ListItemIcon>
               <Logout />
             </ListItemIcon>
             <ListItemText>Log out</ListItemText>
-          </ListItem>
+          </MenuItem>
         </List>
       </Menu>
     </>
   );
+};
+
+const boxStyles: SxProps = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 1,
 };
