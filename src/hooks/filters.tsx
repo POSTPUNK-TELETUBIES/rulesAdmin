@@ -1,9 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "../lib/modules/fetchClient";
+import { useQuery } from '@tanstack/react-query';
+import { fetchClient } from '../lib/modules/fetchClient';
 
 export const useLanguages = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ["languages"],
+    queryKey: ['languages'],
     queryFn: () => fetchClient.getAllLanguages(),
   });
 
@@ -12,8 +12,14 @@ export const useLanguages = () => {
 
 export const useQualityProfiles = (text: string) => {
   const { data, isFetching } = useQuery({
-    queryKey: ["qualityprofile", text],
-    queryFn: () => fetchClient.getQualityProfilesByLanguage(text),
+    queryKey: ['qualityprofile', text],
+    queryFn: () => {
+      if (text === 'all') {
+        // If text is "all", return an empty response
+        return Promise.resolve([]);
+      }
+      return fetchClient.getQualityProfilesByLanguage(text);
+    },
     enabled: !!text,
   });
 
