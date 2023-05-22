@@ -1,10 +1,10 @@
-import { SelectChangeEvent } from "@mui/material";
-import { useCallback, useEffect } from "react";
-import { setLanguageFilter } from "../../lib/observers";
+import { SelectChangeEvent } from '@mui/material';
+import { useCallback, useEffect } from 'react';
+import { setLanguageFilter } from '../../lib/observers';
 
-import { useTour } from "@reactour/tour";
-import { LanguageGenericFilter } from "./LanguageGenericFilter";
-import { DOMHideOverflow, visitHandler } from "../../tools";
+import { useTour } from '@reactour/tour';
+import { LanguageGenericFilter } from './LanguageGenericFilter';
+import { DOMHideOverflow, visitHandler } from '../../tools';
 
 export const LanguageFilter = () => {
   const { setIsOpen, isOpen } = useTour();
@@ -21,12 +21,12 @@ export const LanguageFilter = () => {
   }, [setIsOpen]);
 
   useEffect(() => {
-    DOMHideOverflow("body", isOpen.valueOf());
+    DOMHideOverflow('body', isOpen?.valueOf());
   }, [isOpen]);
 
   return (
     <LanguageGenericFilter
-      className="language"
+      className='language'
       handleChange={_handleChange}
       displayEmpty
     />

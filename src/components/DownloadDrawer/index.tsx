@@ -8,19 +8,19 @@ import {
   SelectChangeEvent,
   Stack,
   Switch,
-} from "@mui/material";
+} from '@mui/material';
 
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from 'react-hook-form';
 
-import { useCallback, useState } from "react";
-import { Download } from "@mui/icons-material";
-import { BasicInput } from "../../layout/Inputs/BasicInput";
-import { UncontrolledSelect } from "../Filters/UncontrolledSelect";
-import { uncontrolledLocalFilters } from "./config";
-import { LanguageGenericFilter } from "../Filters/LanguageGenericFilter";
-import { QualityProfilesGenericProfiles } from "../Filters/QualityProfilesGenericFilter";
+import { useCallback, useState } from 'react';
+import { Download } from '@mui/icons-material';
+import { BasicInput } from '../../layout/Inputs/BasicInput';
+import { UncontrolledSelect } from '../Filters/UncontrolledSelect';
+import { uncontrolledLocalFilters } from './config';
+import { LanguageGenericFilter } from '../Filters/LanguageGenericFilter';
+import { QualityProfilesGenericProfiles } from '../Filters/QualityProfilesGenericFilter';
 
-import supabaseClient from "../../lib/service/supabase";
+import supabaseClient from '../../lib/service/supabase';
 
 interface DownloadDrawerInterface {
   handleClose: () => void;
@@ -71,37 +71,37 @@ export const DownloadDrawer = ({
 
   return (
     <Drawer
-      variant="persistent"
+      variant='persistent'
       onClose={_handleClose}
-      anchor="right"
+      anchor='right'
       open={isOpen}
       sx={{ minWidth: 400 }}
     >
       <Stack
         sx={{ minWidth: 400 }}
-        component="form"
+        component='form'
         onSubmit={handleSubmit(_handleSubmit)}
       >
         <List>
           <ListItem>
             <FormControlLabel
               control={<Switch onClick={_handleStateChange} />}
-              label="Filtros"
+              label='Filtros'
             />
           </ListItem>
           <Divider />
           <ListItem>
             <LanguageGenericFilter
               includeAllOption
-              inputProps={register("language_id")}
-              className="generic-filter-uncontrolled"
+              inputProps={register('language_id')}
+              className='generic-filter-uncontrolled'
               handleChange={_handleChangeLanguage}
             />
           </ListItem>
           <ListItem>
             <QualityProfilesGenericProfiles
               text={language}
-              inputProps={register("qualityProfile_id")}
+              inputProps={register('qualityProfile_id')}
             />
           </ListItem>
           <Divider />
@@ -127,17 +127,17 @@ export const DownloadDrawer = ({
           <Divider />
           <ListItem>
             <FormControlLabel
-              control={<Switch inputProps={register("toUpdate")} />}
-              label="Solo diferencias"
+              control={<Switch inputProps={register('toUpdate')} />}
+              label='Solo diferencias'
             />
           </ListItem>
           <Divider />
           <ListItem>
             <Button
-              type="submit"
-              variant="contained"
+              type='submit'
+              variant='contained'
               startIcon={<Download />}
-              sx={{ width: "100%" }}
+              sx={{ width: '100%' }}
             >
               Download
             </Button>

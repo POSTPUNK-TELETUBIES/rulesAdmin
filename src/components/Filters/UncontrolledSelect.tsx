@@ -1,4 +1,4 @@
-import { InputBaseComponentProps, MenuItem, Select } from "@mui/material";
+import { InputBaseComponentProps, MenuItem, Select } from '@mui/material';
 
 interface UncontrolledSelectProps {
   isActive?: boolean;
@@ -19,7 +19,7 @@ export const UncontrolledSelect = ({
     labelId={labelId}
     label={label}
     sx={{ width: 200 }}
-    defaultValue={"all"}
+    defaultValue={'all'}
     disabled={!isActive}
     displayEmpty
     inputProps={inputProps}

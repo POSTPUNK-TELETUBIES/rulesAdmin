@@ -13,6 +13,9 @@
     "no-console": "warn",
     "complexity": "error",
     "object-curly-spacing": ["error", "always"],
-    "arrow-spacing": "error"
+    "arrow-spacing": "error",
+    "eqeqeq": "error",
+    "jsx-quotes": ["error", "prefer-single"],
+    "quotes": ["error", "single"]
   }
 }

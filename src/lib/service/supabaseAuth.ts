@@ -1,9 +1,9 @@
-import { Session, createClient } from "@supabase/supabase-js";
-import { AuthClient } from "../../types/fetchClient";
-import { Database } from "../../types/supabase";
-import { supabaseURL, supbaseToken } from "../config/supabase";
-import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
-import { SingUpFields } from "../../types/auth";
+import { Session, createClient } from '@supabase/supabase-js';
+import { AuthClient } from '../../types/fetchClient';
+import { Database } from '../../types/supabase';
+import { supabaseURL, supbaseToken } from '../config/supabase';
+import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
+import { SingUpFields } from '../../types/auth';
 
 interface TokenDataI {
   token: string;
@@ -18,7 +18,7 @@ export class AuthLocalStorageSingleton implements AuthStorage {
   private static instance: AuthLocalStorageSingleton;
 
   private constructor() {
-    if (AuthLocalStorageSingleton.instance) throw new Error("Singleton");
+    if (AuthLocalStorageSingleton.instance) throw new Error('Singleton');
   }
 
   static getInstance() {
@@ -29,8 +29,8 @@ export class AuthLocalStorageSingleton implements AuthStorage {
 
   get tokenData() {
     return {
-      token: localStorage.getItem("token"),
-      refreshToken: localStorage.getItem("refreshToken"),
+      token: localStorage.getItem('token'),
+      refreshToken: localStorage.getItem('refreshToken'),
     };
   }
 

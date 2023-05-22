@@ -1,4 +1,4 @@
-import { LocalStorageVisit } from "../types/constants";
+import { LocalStorageVisit } from '../types/constants';
 
 export const getEnvOrThorw = (envName: string) => {
   const env = import.meta.env[envName];
@@ -11,7 +11,7 @@ export const getEnvOrThorw = (envName: string) => {
 export const rexifyObjectKeys = (
   pojo: Record<string, string>,
   flags?: string
-) => new RegExp(Object.keys(pojo).join(""), flags);
+) => new RegExp(Object.keys(pojo).join(''), flags);
 
 export const replaceByDict = (
   text: string,
@@ -28,7 +28,7 @@ export const DOMHideOverflow = (
 
   if (!element) return;
 
-  element.style.overflow = isOpen ? "hidden" : "auto";
+  element.style.overflow = isOpen ? 'hidden' : 'auto';
 };
 
 const shouldRepeatTour = (date: Date, times: number) => {
@@ -56,3 +56,6 @@ export const visitHandler = () => {
 
   return true;
 };
+
+// eslint-disable-next-line eqeqeq
+export const isNill = (data: unknown) => data != null;
