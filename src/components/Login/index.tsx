@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  CircularProgress,
   FormControl,
   InputLabel,
   Link,
@@ -15,6 +13,10 @@ import { AuthContext } from "../../context/auth";
 import { Password } from "./Password";
 import { Person } from "@mui/icons-material";
 
+import { LoadingButton } from "@mui/lab";
+import { AuthError } from "@supabase/supabase-js";
+import { useSnackbar } from "notistack";
+
 interface LoginFields {
   email: string;
   password: string;
@@ -24,19 +26,39 @@ interface LoginProps {
   singUpClick?: () => void;
 }
 
+function useLogin() {
+  const authClient = useContext(AuthContext);
+  const { enqueueSnackbar } = useSnackbar();
+
+  async function login(email: string, password: string) {
+    try {
+      await authClient.login(email, password);
+    } catch (error) {
+      const { message } = error as AuthError;
+      enqueueSnackbar("Credenciales inválidas", {
+        variant: "error",
+        autoHideDuration: 3000,
+      });
+      return message;
+    }
+  }
+
+  return login;
+}
+
 export function Login({ singUpClick }: LoginProps) {
   const { handleSubmit, register, resetField } = useForm();
-  const authClient = useContext(AuthContext);
+  const login = useLogin();
   const [isLoading, setIsLoading] = useState(false);
 
   const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
     async ({ email, password }) => {
       setIsLoading(true);
       resetField("password");
-      await authClient.login(email, password);
+      login(email, password);
       setIsLoading(false);
     },
-    [authClient, resetField]
+    [login, resetField]
   );
 
   return (
@@ -64,15 +86,14 @@ export function Login({ singUpClick }: LoginProps) {
         />
       </FormControl>
       <Password disabled={isLoading} inputProps={register("password")} />
-      {!isLoading ? (
-        <Button type="submit" variant="contained">
-          Login
-        </Button>
-      ) : (
-        <Box display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      )}
+      <LoadingButton
+        type="submit"
+        variant="contained"
+        disabled={isLoading}
+        loading={isLoading}
+      >
+        Login
+      </LoadingButton>
       <Typography align="center">
         ¿Aún no te registras? <Link onClick={singUpClick}>Sing up</Link>{" "}
       </Typography>
