@@ -13,6 +13,7 @@ export interface LocalRulesStatus {
 export class SynchroIndexedDb extends Dexie {
   private static instance: SynchroIndexedDb;
   rulesStatus!: Table<LocalRulesStatus>;
+  static rulesStatus: any;
 
   static getInstance() {
     SynchroIndexedDb.instance ??= new SynchroIndexedDb();

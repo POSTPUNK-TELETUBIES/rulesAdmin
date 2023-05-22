@@ -9,7 +9,8 @@ import {
   Box,
 } from "@mui/material";
 import { useSynchro } from "../../hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SynchroIndexedDb } from "../../lib/service/dexie";
 
 const style = {
   position: "absolute" as const,
@@ -25,9 +26,20 @@ const style = {
   pb: 3,
 };
 
+const obtenerContenidoDesdeIndexedDB = () => {
+  return SynchroIndexedDb.rulesStatus.toArray().then((data) => {
+    if (data && data.length > 0) {
+      return data[0].content;
+    } else {
+      return "";
+    }
+  });
+};
+
 export const SynchroButton = () => {
   const [_handleClickSyncro] = useSynchro();
   const [open, setOpen] = useState(false);
+  const [content, setContent] = useState("");
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -41,6 +53,11 @@ export const SynchroButton = () => {
     _handleClickSyncro();
     handleCloseModal();
   };
+
+  useEffect(() => {
+    const syncedContent = obtenerContenidoDesdeIndexedDB();
+    setContent(syncedContent);
+  }, []);
 
   return (
     <>
@@ -59,9 +76,7 @@ export const SynchroButton = () => {
       >
         <Box sx={{ ...style, width: 350 }}>
           <Typography variant="h6">Confirmar sincronización</Typography>
-          <Typography>
-            ¿Estás seguro de que deseas sincronizar los datos?
-          </Typography>
+          <Typography>{content}</Typography>
           <Button onClick={handleCloseModal} color="primary">
             Cancelar
           </Button>
