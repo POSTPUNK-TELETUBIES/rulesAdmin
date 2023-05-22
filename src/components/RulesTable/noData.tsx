@@ -1,7 +1,7 @@
-import { TableCell, TableRow } from "@mui/material";
-import { Info } from "../../layout/Info";
-import { FolderOff } from "@mui/icons-material";
-import { PropsWithChildren } from "react";
+import { TableCell, TableRow } from '@mui/material';
+import { Info } from '../../layout/Info';
+import { FolderOff } from '@mui/icons-material';
+import { PropsWithChildren } from 'react';
 
 interface NoDataContentProps {
   colSpan: number;
@@ -19,9 +19,9 @@ export const NoDataContent = ({
     <TableRow>
       <TableCell colSpan={colSpan}>
         <Info
-          icon={<FolderOff color="disabled" fontSize="inherit" />}
-          primaryText="Sin datos"
-          secondaryText="Selecciona filtros"
+          icon={<FolderOff color='disabled' fontSize='inherit' />}
+          primaryText='Sin datos'
+          secondaryText='Selecciona filtros'
         />
       </TableCell>
     </TableRow>

@@ -1,14 +1,14 @@
-import type { RuleDTO, RulesStatus } from "../../types/supabase";
+import type { RuleDTO, RulesStatus } from '../../types/supabase';
 
-import { TimeAgo } from "../TimeAgo";
-import { PopOverDetails } from "../PopOverDetails";
+import { TimeAgo } from '../TimeAgo';
+import { PopOverDetails } from '../PopOverDetails';
 
-import GenericPopover from "../../layout/GenericPopover";
-import { UncontrolledSwitch } from "../Switch/uncontrolledIndexed";
-import { Typography } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
+import GenericPopover from '../../layout/GenericPopover';
+import { StatusSwitch } from '../Switch/uncontrolledIndexed';
+import { Typography } from '@mui/material';
+import { Visibility } from '@mui/icons-material';
 
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 interface ExpecialConfigCell {
   resource: string;
@@ -24,10 +24,10 @@ export const EspecialConfigCell = ({
   result,
   secondaryValue,
 }: ExpecialConfigCell) => {
-  if (resource === "isActiveSonar")
-    return <Typography>{value ? "Activo" : "Inactivo"}</Typography>;
+  if (resource === 'isActiveSonar')
+    return <Typography>{value ? 'Activo' : 'Inactivo'}</Typography>;
 
-  if (resource === "htmlDesc")
+  if (resource === 'htmlDesc')
     return (
       <GenericPopover
         icon={<Visibility />}
@@ -42,15 +42,15 @@ export const EspecialConfigCell = ({
       />
     );
 
-  if (resource === "updated_at")
-    return Math.abs(dayjs(String(value)).diff(secondaryValue, "hours")) > 6 ? (
+  if (resource === 'updated_at')
+    return Math.abs(dayjs(String(value)).diff(secondaryValue, 'hours')) > 6 ? (
       <TimeAgo date={String(value)} />
     ) : (
-      <Typography align="left">--</Typography>
+      <Typography align='left'>--</Typography>
     );
 
   return (
-    <UncontrolledSwitch
+    <StatusSwitch
       initialStatus={Boolean(value)}
       result={result}
       id={result.id}

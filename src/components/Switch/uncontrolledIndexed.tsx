@@ -1,8 +1,8 @@
-import { Stack, Switch } from "@mui/material";
-import synchroDb from "../../lib/service/dexie";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { Sync } from "@mui/icons-material";
-import { RuleDTO, RulesStatus } from "../../types/supabase";
+import { Stack, Switch, Typography } from '@mui/material';
+import synchroDb from '../../lib/service/dexie';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { Sync } from '@mui/icons-material';
+import { RuleDTO, RulesStatus } from '../../types/supabase';
 
 interface UncontrolledSwitchProps {
   initialStatus: boolean;
@@ -11,7 +11,7 @@ interface UncontrolledSwitchProps {
 }
 
 //TODO: try to abstract this component to work with labels too
-export function UncontrolledSwitch({
+export function StatusSwitch({
   initialStatus,
   result,
   id,
@@ -55,9 +55,10 @@ export function UncontrolledSwitch({
   );
 
   return (
-    <Stack color="red" direction="row">
+    <Stack direction='row' alignItems='center'>
+      <Typography minWidth={60}>{isChecked ? 'Activo' : 'Inactivo'}</Typography>
       <Switch onChange={_handleChange} checked={isChecked} />
-      {isInIndexedDb && isUpdating ? <Sync /> : ""}
+      {isInIndexedDb && isUpdating ? <Sync /> : ''}
     </Stack>
   );
 }
