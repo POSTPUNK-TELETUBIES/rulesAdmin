@@ -1,5 +1,5 @@
-import { Box, Chip, Stack, Tooltip, Typography } from "@mui/material";
-import { ColorPalletes } from "../../theme";
+import { Box, Chip, Stack, Tooltip, Typography } from '@mui/material';
+import { ColorPalletes } from '../../theme';
 
 export interface DetailProps {
   tags: string[];
@@ -13,11 +13,11 @@ export function PopOverDetails(props: DetailProps) {
   const { tags, isActive, dateSonar, ruleTitle, ruleDescription } = props;
   return (
     <Box>
-      <Stack padding={2} direction="column" spacing={2}>
+      <Stack padding={2} direction='column' spacing={2}>
         <Stack
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
+          direction='row'
+          justifyContent='flex-start'
+          alignItems='center'
           spacing={2}
         >
           <Chip
@@ -26,16 +26,16 @@ export function PopOverDetails(props: DetailProps) {
                 palette.mode === ColorPalletes.DARK
                   ? palette.grey[900]
                   : palette.grey[800],
-              color: "white",
+              color: 'white',
             }}
-            label={`Regla ${isActive ? "activo" : "inactivo"} desde:`}
+            label={`Regla ${isActive ? 'activo' : 'inactivo'} desde:`}
           />
-          <Chip label={`${dateSonar ?? "Sin info"}`}></Chip>
+          <Chip label={`${dateSonar ?? 'Sin info'}`}></Chip>
         </Stack>
         <Stack
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
+          direction='row'
+          justifyContent='flex-start'
+          alignItems='center'
           spacing={2}
         >
           {tags.map((tag) => (
@@ -44,17 +44,17 @@ export function PopOverDetails(props: DetailProps) {
         </Stack>
       </Stack>
       <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center"
+        direction='row'
+        justifyContent='flex-start'
+        alignItems='center'
         padding={2}
         pb={0}
       >
         <Tooltip title={ruleTitle}>
           <Chip
-            color="secondary"
+            color='secondary'
             label={
-              <Typography noWrap variant="h5">
+              <Typography noWrap variant='h5'>
                 {ruleTitle}
               </Typography>
             }
@@ -62,16 +62,16 @@ export function PopOverDetails(props: DetailProps) {
         </Tooltip>
       </Stack>
 
-      <Stack direction="column" justifyContent="center" padding={2}>
-        <Stack direction="row" justifyContent="flex-start">
+      <Stack direction='column' justifyContent='center' padding={2}>
+        <Stack direction='row' justifyContent='flex-start'>
           <Chip
-            label={"Descripción de la Regla"}
+            label={'Descripción de la Regla'}
             sx={{
               backgroundColor: ({ palette }) =>
                 palette.mode === ColorPalletes.DARK
                   ? palette.grey[900]
                   : palette.grey[800],
-              color: "white",
+              color: 'white',
             }}
           ></Chip>
         </Stack>

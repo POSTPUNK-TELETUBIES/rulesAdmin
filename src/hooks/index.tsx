@@ -200,23 +200,33 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
   ];
 };
 
-export const useSynchro = (): [() => Promise<void>, boolean] => {
+export const useSynchro = (): [
+  (idsBy?: Record<number | string, number | boolean>) => Promise<void>,
+  boolean
+] => {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const synchroStatus = useCallback(async () => {
-    setIsProcessing(true);
+  const synchroStatus = useCallback(
+    async (idsBy?: Record<number | string, number | boolean>) => {
+      setIsProcessing(true);
 
-    const changes = await synchroIndexedDb.rulesStatus.toArray();
+      const changes = await synchroIndexedDb.rulesStatus.toArray();
 
-    await fetchClient.postNewStatus(changes);
+      const filteredChanges = idsBy
+        ? changes.filter(({ id }) => idsBy[Number(id)])
+        : changes;
 
-    await synchroIndexedDb.rulesStatus.clear();
+      await fetchClient.postNewStatus(filteredChanges);
 
-    await reactQueryClient.invalidateQueries({ queryKey: ['rules'] });
+      await synchroIndexedDb.rulesStatus.clear();
 
-    setPage(1);
-    setIsProcessing(false);
-  }, []);
+      await reactQueryClient.invalidateQueries({ queryKey: ['rules'] });
+
+      setPage(1);
+      setIsProcessing(false);
+    },
+    []
+  );
 
   return [synchroStatus, isProcessing];
 };
