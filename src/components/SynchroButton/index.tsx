@@ -4,42 +4,65 @@ import {
   ListItemText,
   MenuItem,
   Button,
-  Modal,
-  Typography,
-  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TableRow,
+  TableCell,
+  Checkbox,
+  DialogActions,
 } from '@mui/material';
 import { useSynchro } from '../../hooks';
-import { useState } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { fetchClient } from '../../lib/modules/fetchClient';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
+import GenericTable from '../../layout/GenericTable';
+
+import synchroDb, { LocalRulesStatus } from '../../lib/service/dexie';
+import { columns } from './config';
 
 export const SynchroButton = () => {
-  const [_handleClickSyncro] = useSynchro();
+  const [_handleClickSynchro] = useSynchro();
   const [open, setOpen] = useState(false);
+  const [conflictedData, setConflictedData] = useState<LocalRulesStatus[]>([]);
 
-  const handleOpenModal = () => {
+  const selectedRef = useRef({});
+
+  const [isSelectedAll, setIsSelectedAll] = useState(false);
+
+  const handleOpenModal = useCallback(async () => {
+    const dataFromIndexedDb = await synchroDb.getRulesToUpdate();
+    const conflictedData = await fetchClient.getConflicts(dataFromIndexedDb);
+
+    setConflictedData(conflictedData);
+
     setOpen(true);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
-  const handleSyncro = () => {
-    _handleClickSyncro();
+  const handleSynchro = useCallback(() => {
+    _handleClickSynchro();
     handleCloseModal();
-  };
+  }, [_handleClickSynchro, handleCloseModal]);
+
+  const _handleAtomicChange = useCallback(
+    (id: number, event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.checked) return (selectedRef.current[id] = true);
+
+      delete selectedRef.current[id];
+    },
+    []
+  );
+
+  const _handleMolecularChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setIsSelectedAll(event.target.checked);
+    },
+    []
+  );
 
   return (
     <>
@@ -49,26 +72,52 @@ export const SynchroButton = () => {
         </ListItemIcon>
         <ListItemText>Sincronizar</ListItemText>
       </MenuItem>
-
-      <Modal
-        open={open}
-        onClose={handleCloseModal}
-        aria-labelledby='child-modal-title'
-        aria-describedby='child-modal-description'
-      >
-        <Box sx={{ ...style }}>
-          <Typography variant='h6'>Confirmar sincronización</Typography>
-          <Typography>
-            ¿Estás seguro de que deseas sincronizar los datos?
-          </Typography>
-          <Button onClick={handleCloseModal} color='primary'>
-            Cancelar
-          </Button>
-          <Button onClick={handleSyncro} color='primary' autoFocus>
-            Sincronizar
-          </Button>
-        </Box>
-      </Modal>
+      <Dialog onClose={handleCloseModal} open={open}>
+        <DialogTitle>Hay conflictos</DialogTitle>
+        <DialogContent>
+          <GenericTable
+            header={
+              <TableRow>
+                <TableCell>
+                  <Checkbox
+                    checked={isSelectedAll}
+                    onChange={_handleMolecularChange}
+                  />
+                </TableCell>
+                {columns.map(({ label }) => (
+                  <TableCell key={label}>{label}</TableCell>
+                ))}
+              </TableRow>
+            }
+            body={
+              <>
+                {conflictedData?.map((result) => (
+                  <TableRow>
+                    <TableCell>
+                      <Checkbox
+                        disabled={isSelectedAll}
+                        onChange={(event) =>
+                          _handleAtomicChange(result.id, event)
+                        }
+                      />
+                    </TableCell>
+                    {columns.map((config) => (
+                      <TableCell id={`${result.id}-${config.label}`}>
+                        {result[config.resource]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
+            }
+          />
+          <DialogActions>
+            <Button onClick={handleSynchro} startIcon={<Sync />}>
+              Sincronizar
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
