@@ -30,23 +30,25 @@ export const SynchroButton = () => {
 
   const [isSelectedAll, setIsSelectedAll] = useState(false);
 
+  const handleCloseModal = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  const handleSynchro = useCallback(() => {
+    _handleClickSynchro(selectedRef.current);
+    handleCloseModal();
+  }, [_handleClickSynchro, handleCloseModal]);
+
   const handleOpenModal = useCallback(async () => {
     const dataFromIndexedDb = await synchroDb.getRulesToUpdate();
     const conflictedData = await fetchClient.getConflicts(dataFromIndexedDb);
 
     setConflictedData(conflictedData);
 
-    setOpen(true);
-  }, []);
+    if (setConflictedData?.length) return setOpen(true);
 
-  const handleCloseModal = useCallback(() => {
-    setOpen(false);
-  }, []);
-
-  const handleSynchro = useCallback(() => {
-    _handleClickSynchro();
-    handleCloseModal();
-  }, [_handleClickSynchro, handleCloseModal]);
+    handleSynchro();
+  }, [handleSynchro]);
 
   const _handleAtomicChange = useCallback(
     (id: number, event: ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +94,7 @@ export const SynchroButton = () => {
             body={
               <>
                 {conflictedData?.map((result) => (
-                  <TableRow>
+                  <TableRow key={result.id}>
                     <TableCell>
                       <Checkbox
                         disabled={isSelectedAll}
@@ -103,7 +105,11 @@ export const SynchroButton = () => {
                     </TableCell>
                     {columns.map((config) => (
                       <TableCell id={`${result.id}-${config.label}`}>
-                        {result[config.resource]}
+                        {typeof result[config.resource] === 'boolean'
+                          ? result[config.resource]
+                            ? 'Activo'
+                            : 'Inactivo'
+                          : result[config.resource]}
                       </TableCell>
                     ))}
                   </TableRow>

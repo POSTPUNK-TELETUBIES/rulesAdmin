@@ -21,6 +21,7 @@ import {
   Pojo,
   RulesFilter,
 } from '../../types/fetchClient';
+
 import { LocalRulesStatus } from './dexie';
 import { getTodayMidnight, isNill, keyBy } from '../../tools';
 import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
@@ -44,14 +45,14 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       .from('status')
       .select(
         `
-      *,
-      qualityprofiles(
-        *
-      ),
-      rules!inner(
-        *
-      )
-    `
+          *,
+          qualityprofiles(
+          *
+          ),
+          rules!inner(
+            *
+        )
+        `
       )
       .in(
         'id',

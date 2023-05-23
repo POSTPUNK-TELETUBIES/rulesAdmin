@@ -50,4 +50,8 @@ export const columns: ColumnConfig[] = [
     especialConfig: true,
     icon: <Schedule sx={{ color: (theme) => theme.palette.common.white }} />,
   },
+  {
+    label: 'Autor',
+    resource: 'user_email',
+  },
 ];
