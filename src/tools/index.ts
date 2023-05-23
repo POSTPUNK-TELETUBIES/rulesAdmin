@@ -134,3 +134,12 @@ export const getTodayMidnight = () => {
 
   return today;
 };
+
+export const exposeGlobal = (key: string, data: unknown, onlyInDev = true) => {
+  if (!onlyInDev) return (window[key] = data);
+
+  if (import.meta.env.DEV) return (window[key] = data);
+};
+
+exposeGlobal('keyBy', keyBy);
+exposeGlobal('renderConditional', renderConditional);

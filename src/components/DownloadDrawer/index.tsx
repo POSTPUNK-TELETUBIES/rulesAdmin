@@ -82,6 +82,7 @@ export const DownloadDrawer = ({
         onSubmit={handleSubmit(_handleSubmit)}
       >
         <List>
+          {/* maybe this needs key in each repeatad component acording to dev tools */}
           <ListItem>
             <FormControlLabel
               control={<Switch onClick={_handleStateChange} />}

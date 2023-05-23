@@ -35,7 +35,11 @@ export const SynchroButton = () => {
   }, []);
 
   const handleSynchro = useCallback(() => {
-    _handleClickSynchro(selectedRef.current);
+    const { current } = selectedRef;
+
+    const idsBy = Object.values(current).length ? current : undefined;
+
+    _handleClickSynchro(idsBy);
     handleCloseModal();
   }, [_handleClickSynchro, handleCloseModal]);
 
@@ -45,7 +49,7 @@ export const SynchroButton = () => {
 
     setConflictedData(conflictedData);
 
-    if (setConflictedData?.length) return setOpen(true);
+    if (conflictedData?.length) return setOpen(true);
 
     handleSynchro();
   }, [handleSynchro]);
