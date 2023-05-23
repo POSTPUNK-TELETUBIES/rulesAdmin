@@ -66,7 +66,7 @@ export function StatusSwitch({
           updated_at: new Date(),
           languageId: result.lang_id,
           qualityProfileId: Number(result.qualityProfile_id),
-          user_email: user.email,
+          user_email: user?.email,
         });
       setIsInIndexedDb(true);
     },
@@ -76,7 +76,7 @@ export function StatusSwitch({
       result.isActiveOriginal,
       result.lang_id,
       result.qualityProfile_id,
-      user.email,
+      user?.email,
     ]
   );
 

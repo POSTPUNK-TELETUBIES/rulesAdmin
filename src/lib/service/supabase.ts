@@ -116,18 +116,20 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   }
 
   private changeIsActive(data: LocalRulesStatus[], newStatus = true) {
-    if (data.length)
-      return this.client
-        .from('status')
-        .update({
-          isActive: newStatus,
-          updated_at: new Date(),
-        })
-        .in(
-          'id',
-          data.map(({ id }) => id)
-        )
-        .throwOnError();
+    if (!data.length) return;
+    const [{ user_email }] = data;
+    return this.client
+      .from('status')
+      .update({
+        isActive: newStatus,
+        updated_at: new Date(),
+        user_email: user_email,
+      })
+      .in(
+        'id',
+        data.map(({ id }) => id)
+      )
+      .throwOnError();
   }
 
   private async bulkUpdateDescription(data: LocalRulesStatus[]) {
@@ -142,7 +144,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
           id,
           description,
           qualityProfile_id: qualityProfileId,
-          user_email: userData.user.email,
+          user_email: userData.user?.email,
         }))
       )
       .select()

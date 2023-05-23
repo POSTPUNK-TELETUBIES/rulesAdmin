@@ -37,7 +37,7 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
   const _handleChange = useDebouncedCallback(
     async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
       return await synchroDB.saveDescription(
-        { ...result, user_email: user.email },
+        { ...result, user_email: user?.email },
         target.value
       );
     },
