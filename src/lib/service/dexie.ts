@@ -24,9 +24,9 @@ export class SynchroIndexedDb extends Dexie {
 
   private constructor() {
     super('syncro');
-    this.version(4).stores({
+    this.version(5).stores({
       rulesStatus:
-        'id, updated_at, newStatus, language, qualityProfileId, description user_email',
+        'id, updated_at, newStatus, language, qualityProfileId, description, user_email',
     });
   }
 
@@ -49,7 +49,7 @@ export class SynchroIndexedDb extends Dexie {
       qualityProfileId: Number(data.qualityProfile_id),
       ...previuosData,
       updated_at: new Date(),
-      description,
+      ...(description ? { description } : {}),
       user_email: data.user_email,
     });
   }
