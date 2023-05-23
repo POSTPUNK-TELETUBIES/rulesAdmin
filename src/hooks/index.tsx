@@ -209,7 +209,6 @@ export const useSynchro = (): [
   const synchroStatus = useCallback(
     async (idsBy?: Record<number | string, number | boolean>) => {
       setIsProcessing(true);
-
       const changes = await synchroIndexedDb.rulesStatus.toArray();
 
       const filteredChanges = idsBy
