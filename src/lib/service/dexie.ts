@@ -52,6 +52,10 @@ export class SynchroIndexedDb extends Dexie {
       description,
     });
   }
+
+  async getRulesToUpdate() {
+    return await this.rulesStatus.toArray();
+  }
 }
 
 export default SynchroIndexedDb.getInstance();

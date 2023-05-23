@@ -42,7 +42,17 @@ export class LocalSupabaseClient implements FetchClientSingleton {
 
     const { data } = await this.client
       .from('status')
-      .select()
+      .select(
+        `
+      *,
+      qualityprofiles(
+        *
+      ),
+      rules!inner(
+        *
+      )
+    `
+      )
       .in(
         'id',
         dataToUpdate.map(({ id }) => id)
@@ -53,10 +63,18 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     const dataBy = keyBy<RulesResponse>(<RulesResponse[]>data, 'id');
 
     const filterToUpdateWithConflict = dataToUpdate.filter(
-      ({ id, newStatus }) => dataBy[id].isActive !== newStatus
+      ({ id, newStatus }) =>
+        isNill(dataBy[id]?.isActive) && dataBy[id]?.isActive !== newStatus
     );
 
-    return filterToUpdateWithConflict;
+    return filterToUpdateWithConflict.map((filtered) => {
+      const { rules, ...rest } = dataBy[filtered.id];
+      return {
+        ...rules,
+        ...rest,
+        ...filtered,
+      };
+    });
   }
 
   private async getCSVReportUpdatables(qualityProfileId: number) {

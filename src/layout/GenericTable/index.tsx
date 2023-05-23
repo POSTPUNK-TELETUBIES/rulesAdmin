@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo } from 'react';
 import {
   TableContainer,
   Table,
@@ -6,8 +6,8 @@ import {
   TableBody,
   TableFooter,
   Paper,
-} from "@mui/material";
-import { ColorPalletes } from "../../theme";
+} from '@mui/material';
+import { ColorPalletes } from '../../theme';
 
 interface GenericTablePros {
   header: JSX.Element;
@@ -24,8 +24,8 @@ const genericMemoizedTable = memo(function GenericTable({
   stickyHeader = true,
 }: GenericTablePros) {
   return (
-    <Paper sx={{ paddingY: 4, background: "transparent" }}>
-      <TableContainer sx={{ maxHeight: "80vh" }}>
+    <Paper sx={{ paddingY: 4, background: 'transparent' }}>
+      <TableContainer sx={{ maxHeight: '80vh' }}>
         <Table stickyHeader={stickyHeader}>
           <TableHead>{header}</TableHead>
           <TableBody
