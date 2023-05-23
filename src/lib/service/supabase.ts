@@ -142,7 +142,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
           id,
           description,
           qualityProfile_id: qualityProfileId,
-          user_id: userData.user.id,
+          user_email: userData.user.email,
         }))
       )
       .select()

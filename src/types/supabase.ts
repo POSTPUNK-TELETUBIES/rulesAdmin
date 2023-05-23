@@ -21,6 +21,7 @@ export interface RulesCreateDTO {
   severity?: Severity;
   type?: Type;
   description?: string;
+  user_email: string;
 }
 
 export interface RuleDTO extends RulesCreateDTO {
