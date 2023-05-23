@@ -1,16 +1,16 @@
 export enum Severity {
-  Blocker = "BLOCKER",
-  Critical = "CRITICAL",
-  Info = "INFO",
-  Major = "MAJOR",
-  Minor = "MINOR",
+  Blocker = 'BLOCKER',
+  Critical = 'CRITICAL',
+  Info = 'INFO',
+  Major = 'MAJOR',
+  Minor = 'MINOR',
 }
 
 export enum Type {
-  Bug = "BUG",
-  CodeSmell = "CODE_SMELL",
-  SecurityHotspot = "SECURITY_HOTSPOT",
-  Vulnerability = "VULNERABILITY",
+  Bug = 'BUG',
+  CodeSmell = 'CODE_SMELL',
+  SecurityHotspot = 'SECURITY_HOTSPOT',
+  Vulnerability = 'VULNERABILITY',
 }
 
 export interface RulesCreateDTO {

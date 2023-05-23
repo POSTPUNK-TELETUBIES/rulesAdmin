@@ -1,8 +1,8 @@
-import { clientType } from "../config/supabase";
-import AxiosFetchData from "../service/axios";
-import { FetchClientSingleton } from "../../types/fetchClient";
-import LocalSupabaseClient from "../service/supabase";
-import { supabaseClient } from "./supabase";
+import { clientType } from '../config/supabase';
+import AxiosFetchData from '../service/axios';
+import { FetchClientSingleton } from '../../types/fetchClient';
+import LocalSupabaseClient from '../service/supabase';
+import { supabaseClient } from './supabase';
 
 const clientsContainer: Record<string, () => FetchClientSingleton> = {
   axios: AxiosFetchData,
