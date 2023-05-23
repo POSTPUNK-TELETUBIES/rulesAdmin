@@ -124,3 +124,13 @@ export const keyBy = <T = unknown, R = T>(
 
     return acmPojo;
   }, {});
+
+export const getTodayMidnight = () => {
+  const today = new Date();
+
+  today.setHours(0);
+
+  today.setHours(0);
+
+  return today;
+};

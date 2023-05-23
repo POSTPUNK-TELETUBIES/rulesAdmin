@@ -51,6 +51,8 @@ export interface FetchClientSingleton {
     filter: RulesFilter,
     pagination: PaginationParams
   ): Promise<PaginationResult>;
+
+  getConflicts(data: LocalRulesStatus[]): Promise<LocalRulesStatus[]>;
 }
 
 export interface AuthClient {

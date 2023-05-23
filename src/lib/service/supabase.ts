@@ -22,7 +22,7 @@ import {
   RulesFilter,
 } from '../../types/fetchClient';
 import { LocalRulesStatus } from './dexie';
-import { isNill } from '../../tools';
+import { getTodayMidnight, isNill, keyBy } from '../../tools';
 import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
 export class LocalSupabaseClient implements FetchClientSingleton {
@@ -36,6 +36,28 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   };
 
   private constructor(private client: SupabaseClient<Database>) {}
+
+  public async getConflicts(dataToUpdate: LocalRulesStatus[]) {
+    const today = getTodayMidnight().toISOString();
+
+    const { data } = await this.client
+      .from('status')
+      .select()
+      .in(
+        'id',
+        dataToUpdate.map(({ id }) => id)
+      )
+      .gt('updated_at', today)
+      .throwOnError();
+
+    const dataBy = keyBy<RulesResponse>(<RulesResponse[]>data, 'id');
+
+    const filterToUpdateWithConflict = dataToUpdate.filter(
+      ({ id, newStatus }) => dataBy[id].isActive !== newStatus
+    );
+
+    return filterToUpdateWithConflict;
+  }
 
   private async getCSVReportUpdatables(qualityProfileId: number) {
     return await this.client
