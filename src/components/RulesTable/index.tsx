@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useCallback } from 'react';
+import { ChangeEvent, MouseEvent, useCallback, useContext } from 'react';
 import {
   Box,
   TableCell,
@@ -24,6 +24,7 @@ import { RuleDTO, RulesStatus } from '../../types/supabase';
 
 import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
+import { AuthContext } from '../../context/auth';
 
 interface EditableCommentProps {
   title: string;
@@ -32,9 +33,13 @@ interface EditableCommentProps {
 
 const EditableComment = ({ title, result }: EditableCommentProps) => {
   // TODO: add waiter
+  const { user } = useContext(AuthContext);
   const _handleChange = useDebouncedCallback(
     async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-      return await synchroDB.saveDescription(result, target.value);
+      return await synchroDB.saveDescription(
+        { ...result, user_email: user?.email },
+        target.value
+      );
     },
     500
   );

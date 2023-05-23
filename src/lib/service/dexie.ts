@@ -9,7 +9,7 @@ export interface LocalRulesStatus {
   qualityProfileId?: number;
   description?: string;
   // TODO: add to model
-  user_id?: string;
+  user_email: string;
 }
 
 export class SynchroIndexedDb extends Dexie {
@@ -24,9 +24,9 @@ export class SynchroIndexedDb extends Dexie {
 
   private constructor() {
     super('syncro');
-    this.version(3).stores({
+    this.version(5).stores({
       rulesStatus:
-        'id, updated_at, newStatus, language, qualityProfileId, description',
+        'id, updated_at, newStatus, language, qualityProfileId, description, user_email',
     });
   }
 
@@ -49,7 +49,8 @@ export class SynchroIndexedDb extends Dexie {
       qualityProfileId: Number(data.qualityProfile_id),
       ...previuosData,
       updated_at: new Date(),
-      description,
+      ...(description ? { description } : {}),
+      user_email: data.user_email,
     });
   }
 

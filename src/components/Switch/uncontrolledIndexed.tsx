@@ -1,8 +1,15 @@
 import { Stack, Switch, Typography } from '@mui/material';
 import synchroDb from '../../lib/service/dexie';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Sync } from '@mui/icons-material';
 import { RuleDTO, RulesStatus } from '../../types/supabase';
+import { AuthContext } from '../../context/auth';
 
 interface UncontrolledSwitchProps {
   initialStatus: boolean;
@@ -18,6 +25,8 @@ export function StatusSwitch({
 }: UncontrolledSwitchProps) {
   const [isInIndexedDb, setIsInIndexedDb] = useState(false);
   const [isChecked, setIsChecked] = useState(initialStatus);
+
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     setIsChecked(initialStatus);
@@ -57,6 +66,7 @@ export function StatusSwitch({
           updated_at: new Date(),
           languageId: result.lang_id,
           qualityProfileId: Number(result.qualityProfile_id),
+          user_email: user?.email,
         });
       setIsInIndexedDb(true);
     },
@@ -66,6 +76,7 @@ export function StatusSwitch({
       result.isActiveOriginal,
       result.lang_id,
       result.qualityProfile_id,
+      user?.email,
     ]
   );
 

@@ -128,9 +128,9 @@ export const keyBy = <T = unknown, R = T>(
 export const getTodayMidnight = () => {
   const today = new Date();
 
-  today.setHours(0);
+  today.setUTCHours(0);
 
-  today.setHours(0);
+  today.setUTCMinutes(0);
 
   return today;
 };

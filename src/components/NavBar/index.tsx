@@ -82,7 +82,12 @@ export const NavBar = () => {
       </AppBar>
       <Menu open={!!anchorRef} anchorEl={anchorRef} onClose={_handleClose}>
         <List>
-          <MenuItem onClick={() => authClient.logOut()}>
+          <MenuItem
+            onClick={() => {
+              authClient.logOut();
+              _handleClose();
+            }}
+          >
             <ListItemIcon>
               <Logout />
             </ListItemIcon>
