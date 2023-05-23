@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { LocalStorageVisit } from '../types/constants';
 
 export const getEnvOrThorw = (envName: string) => {
@@ -84,3 +85,42 @@ export const parseConditionallySonarKey = (
   needsParse: boolean,
   blackList?: Record<string, number | boolean>
 ) => (!needsParse ? text : parseSonarKey(text, blackList));
+
+export const renderConditional = <T extends ReactNode = ReactNode>(
+  isRender: boolean,
+  falseValue: T,
+  trueValue: T
+) => (isRender ? falseValue : trueValue);
+
+/**
+ * Returns a POJO like `{'123asd' : {id: '123asd', name: 'Juan'}, ...}`.
+ * For instance, if you have an array of users where user is
+ * ```ts
+ * User{
+ *   id: string;
+ *   name: string;
+ *   lastName: string;
+ * }
+ * const users: User[] = [user1, user2]
+ * keyBy(users, 'id') = {
+ *   'idUser1': user1,
+ *   'idUser2' user2 // The values are of type User
+ * }
+ *
+ * ```
+ * @param array Data to convert to hash map
+ * @param key
+ * @param value
+ * @returns Returns a hash map (a.k.a. POJO)
+ */
+
+export const keyBy = <T = unknown, R = T>(
+  array: T[],
+  key: string,
+  value?: string
+): Record<string, R> =>
+  array?.reduce((acmPojo, nextData) => {
+    acmPojo[String(nextData[key])] = value ? nextData[value] : nextData;
+
+    return acmPojo;
+  }, {});

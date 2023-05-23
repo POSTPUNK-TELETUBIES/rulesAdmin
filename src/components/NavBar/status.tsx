@@ -1,4 +1,4 @@
-import syncroDB from '../../lib/service/dexie';
+import synchroDB, { LocalRulesStatus } from '../../lib/service/dexie';
 import {
   Card,
   CardActions,
@@ -12,41 +12,43 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import GenericPopover from '../../layout/GenericPopover';
 import { useQuery } from '@tanstack/react-query';
 import { fetchClient } from '../../lib/modules/fetchClient';
-import { useMemo } from 'react';
 import { SynchroButton } from '../SynchroButton';
+import { keyBy, renderConditional } from '../../tools';
+import { useMemo } from 'react';
+import { LanguageDTO } from '../../types/supabase';
+
+const fetchLanguages = () => fetchClient.getAllLanguages();
 
 export const Status = () => {
   // TODO: Use live query is a reactive observable
-  const rulesStatus = useLiveQuery(() => syncroDB.rulesStatus.toArray());
+  const rulesStatus: LocalRulesStatus[] = useLiveQuery(() =>
+    synchroDB.rulesStatus.toArray()
+  );
 
   const { data: languagesData } = useQuery({
     queryKey: ['languages'],
-    queryFn: () => fetchClient.getAllLanguages(),
+    queryFn: fetchLanguages,
   });
 
   const languageBy = useMemo(
-    () =>
-      languagesData?.reduce((acmPojo, { id, name }) => {
-        acmPojo[id] = name;
-        return acmPojo;
-      }, {}),
+    () => keyBy<LanguageDTO, string>(languagesData, 'id', 'name'),
     [languagesData]
   );
 
   return (
     <GenericPopover
-      icon={
-        rulesStatus?.length ? (
-          <SyncProblem color='warning' />
-        ) : (
-          <CloudDone color='success' />
-        )
-      }
+      icon={renderConditional<JSX.Element>(
+        !rulesStatus?.length,
+        <CloudDone />,
+        <SyncProblem />
+      )}
       textButton={
         <Typography>
-          {rulesStatus?.length
-            ? 'Tienes cambios sin sincronizar'
-            : 'No hay cambios sin sincronizar'}
+          {renderConditional(
+            !!rulesStatus?.length,
+            'Tienes cambios sin sincronizar',
+            'No hay cambios sin sincronizar'
+          )}
         </Typography>
       }
       buttonProps={{ variant: 'contained' }}
