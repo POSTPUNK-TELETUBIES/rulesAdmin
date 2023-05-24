@@ -12,6 +12,7 @@ export interface ColumnConfig {
   className?: string;
   filter?: JSX.Element;
   textAlign?: string;
+  sxProps?: Record<string, unknown>;
 }
 
 export const columns: ColumnConfig[] = [
@@ -37,12 +38,14 @@ export const columns: ColumnConfig[] = [
     className: 'actualState',
     textAlign: 'left',
     filter: <ActivateFilter />,
+    sxProps: { minWidth: 100 },
   },
   {
     label: 'E. Propuesto',
     resource: 'isActive',
     especialConfig: true,
     className: 'proposedState',
+    sxProps: { minWidth: 100 },
   },
   {
     label: 'Propuesta',

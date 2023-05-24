@@ -47,7 +47,7 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
     <TextField
       multiline
       fullWidth
-      sx={{ ml: 20, mr: 12, minHeight: 'initial', height: 'auto' }}
+      sx={{ ml: 18, mr: 15, minHeight: 'initial', height: 'auto' }}
       defaultValue={result.description}
       title={title}
       placeholder='Ingresa el porqué del cambio'
@@ -110,7 +110,7 @@ export function RulesTable() {
                               <TableCell
                                 sx={{
                                   textAlign: textAlign ?? 'center',
-                                  maxWidth: 100,
+                                  maxWidth: 140,
                                 }}
                                 key={resource + result.id}
                               >
