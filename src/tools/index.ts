@@ -32,19 +32,15 @@ export const DOMHideOverflow = (
   element.style.overflow = isOpen ? 'hidden' : 'auto';
 };
 
-const shouldRepeatTour = (date: Date, times: number) => {
-  const finalDate = new Date();
-  finalDate.setHours(23);
-
-  return date > finalDate && times <= 3;
+const shouldRepeatTour = (times: number) => {
+  return times <= 3;
 };
 
 export const visitHandler = () => {
   const firstVisit = localStorage.getItem(LocalStorageVisit.FIRST_VISIT);
   const timesVisit = localStorage.getItem(LocalStorageVisit.TIMES_VISIT);
 
-  if (firstVisit || !shouldRepeatTour(new Date(firstVisit), Number(timesVisit)))
-    return;
+  if (firstVisit || !shouldRepeatTour(Number(timesVisit))) return;
 
   localStorage.setItem(
     LocalStorageVisit.FIRST_VISIT,
