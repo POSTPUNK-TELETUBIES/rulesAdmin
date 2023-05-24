@@ -26,6 +26,9 @@ import { LocalRulesStatus } from './dexie';
 import { getTodayMidnight, isNill, keyBy } from '../../tools';
 import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
+import ReportGenerator from './reportGenerator';
+import type { IReportGenerator } from '../../types/reports';
+
 export class LocalSupabaseClient implements FetchClientSingleton {
   private static instance: LocalSupabaseClient;
   private static readonly whiteList = {
@@ -36,7 +39,10 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     web: true,
   };
 
-  private constructor(private client: SupabaseClient<Database>) {}
+  private constructor(
+    private client: SupabaseClient<Database>,
+    private reportGenerator: IReportGenerator = ReportGenerator
+  ) {}
 
   public async getConflicts(dataToUpdate: LocalRulesStatus[]) {
     const today = getTodayMidnight().toISOString();
@@ -79,18 +85,22 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   }
 
   private async getCSVReportUpdatables(qualityProfileId: number) {
-    return await this.client
+    const { data } = await this.client
       .rpc('get_changed_q', { quality_id: Number(qualityProfileId) })
       .select('*')
       .csv()
       .throwOnError();
+
+    return data;
   }
 
-  private async getCSVCompletFiltered(filter: RulesFilter) {
-    return await this.prepareFilteredQuery(filter).csv().throwOnError();
+  private async getCSVCompleteFiltered(filter: RulesFilter) {
+    const { data } = await this.prepareFilteredQuery(filter).throwOnError();
+
+    return this.reportGenerator.parseReport(<RulesResponse[]>data);
   }
 
-  //TODO: evaluar pasar a un servio aparte
+  //TODO: maybe downloads should be another service
   /**
    *
    * @param showOnlyIsActiveDifferences If true will only include data that need to be updated in Sonar Qube
@@ -100,9 +110,9 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     filter: RulesFilter,
     showOnlyIsActiveDifferences = true
   ) {
-    const { data } = showOnlyIsActiveDifferences
+    const data = showOnlyIsActiveDifferences
       ? await this.getCSVReportUpdatables(Number(filter.qualityProfile_id))
-      : await this.getCSVCompletFiltered(filter);
+      : await this.getCSVCompleteFiltered(filter);
 
     // TODO: create an element and get wiht querySelector
     // TODO: or investigate how to pipe with rxjs

@@ -110,7 +110,6 @@ export const DownloadDrawer = ({
                       label={label}
                       labelId={id}
                       inputProps={register(registerField)}
-                      isActive={false}
                     />
                   }
                 />

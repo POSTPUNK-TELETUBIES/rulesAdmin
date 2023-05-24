@@ -97,4 +97,5 @@ export interface Database {
 
 export interface RulesResponse extends RulesStatus {
   rules: RuleDTO;
+  qualityprofiles?: QualityProfileDTO;
 }
