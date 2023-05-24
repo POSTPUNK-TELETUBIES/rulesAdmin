@@ -6,8 +6,8 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-} from "@mui/material";
-import { useLanguages } from "../../hooks/filters";
+} from '@mui/material';
+import { useLanguages } from '../../hooks/filters';
 
 interface LanguageGenericFilterProps {
   handleChange: (event: SelectChangeEvent) => void;
@@ -30,17 +30,17 @@ export const LanguageGenericFilter = ({
     <FormControl sx={{ width: 200 }} className={className}>
       {!isLoading ? (
         <>
-          <InputLabel id="language">Lenguaje</InputLabel>
+          <InputLabel id='language'>Lenguaje</InputLabel>
           <Select
             inputProps={inputProps}
-            labelId="language"
-            label="Lenguaje"
+            labelId='language'
+            label='Lenguaje'
             onChange={_handleChange}
             sx={{ width: 200 }}
-            defaultValue={includeAllOption ? "all" : ""}
+            defaultValue={includeAllOption ? 'all' : ''}
             displayEmpty={displayEmpty}
           >
-            {includeAllOption && <MenuItem value="all">Todos</MenuItem>}
+            {includeAllOption && <MenuItem value='all'>Todos</MenuItem>}
             {data?.map(({ id, name }) => (
               <MenuItem key={id} value={id}>
                 {name}
