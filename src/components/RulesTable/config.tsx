@@ -31,7 +31,7 @@ export const columns: ColumnConfig[] = [
     filter: <SeverityProfileFilter />,
   },
   {
-    label: 'Estado Actual',
+    label: 'E. Actual',
     resource: 'isActiveSonar',
     especialConfig: true,
     className: 'actualState',
@@ -39,13 +39,13 @@ export const columns: ColumnConfig[] = [
     filter: <ActivateFilter />,
   },
   {
-    label: 'Estado Propuesto',
+    label: 'E. Propuesto',
     resource: 'isActive',
     especialConfig: true,
     className: 'proposedState',
   },
   {
-    label: 'Última Propuesta: ',
+    label: 'Propuesta',
     resource: 'updated_at',
     especialConfig: true,
     icon: <Schedule sx={{ color: (theme) => theme.palette.common.white }} />,
