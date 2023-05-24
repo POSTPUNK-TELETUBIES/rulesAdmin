@@ -5,7 +5,8 @@ import {
   useEffect,
   useState,
   useCallback,
-} from "react";
+  useContext,
+} from 'react';
 import {
   setPage,
   setTotalStatus$,
@@ -14,22 +15,29 @@ import {
   useQualityProfileFilter,
   useRuleTypeFilter,
   useSetPage,
-  useSetTextmatchFilter,
+  useSetTextmatchFilter as useSetTextMatchFilter,
   useSeverityFilter,
-} from "../lib/observers";
-import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "../lib/modules/fetchClient";
-import { RuleDTO, type RulesStatus } from "../types/supabase";
+} from '../lib/observers';
+import { useQuery } from '@tanstack/react-query';
+import { fetchClient } from '../lib/modules/fetchClient';
+import { RuleDTO, type RulesStatus } from '../types/supabase';
 
-import synchroIndexedDb from "../lib/service/dexie";
-import { reactQueryClient } from "../lib/modules/reactQuery";
+import synchroIndexedDb, { LocalRulesStatus } from '../lib/service/dexie';
+import { reactQueryClient } from '../lib/modules/reactQuery';
+import { AuthContext } from '../context/auth';
+
+import supabase from '../lib/service/supabase';
+import { RealtimePostgresUpdatePayload } from '@supabase/supabase-js';
 
 interface UseGetRulesStatusData {
-  data?: (RulesStatus & RuleDTO)[];
+  data?: (RulesStatus & RuleDTO & { isActiveOriginal: boolean })[];
   isLoading: boolean;
+  isFetching: boolean;
   total?: number;
   page: number;
   rowsPerPage: number;
+  isRefetching?: boolean;
+  isFetched?: boolean;
 }
 
 type UseGetRulesStatusResults = [
@@ -38,14 +46,36 @@ type UseGetRulesStatusResults = [
   UseGetRulesStatusData
 ];
 
-export const useGetRulesStatus = (): UseGetRulesStatusResults => {
+export const useGetAllFilters = () => {
   const severity = useSeverityFilter();
   const lang_id = useLanguageFilter();
   const isActiveSonar = useActiveFilter();
   const qualityProfile_id = useQualityProfileFilter();
   const type = useRuleTypeFilter();
   const page = useSetPage();
-  const textMatchFilter = useSetTextmatchFilter();
+  const textMatchFilter = useSetTextMatchFilter();
+
+  return {
+    severity,
+    lang_id,
+    isActiveSonar,
+    qualityProfile_id,
+    type,
+    page,
+    textMatchFilter,
+  };
+};
+
+export const useGetRulesStatus = (): UseGetRulesStatusResults => {
+  const {
+    isActiveSonar,
+    lang_id,
+    page,
+    qualityProfile_id,
+    severity,
+    textMatchFilter,
+    type,
+  } = useGetAllFilters();
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -53,11 +83,14 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
 
   const [flattedData, setFlattedData] = useState([]);
 
+  const [payload, setPayload] =
+    useState<RealtimePostgresUpdatePayload<RulesStatus> | null>(null);
+
   const isAvailableToShow = Boolean(lang_id && qualityProfile_id);
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, isLoading, isRefetching, isFetched } = useQuery({
     queryKey: [
-      "rules",
+      'rules',
       lang_id,
       qualityProfile_id,
       type,
@@ -107,59 +140,133 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     const parsedData = data?.map(({ rules, ...rest }) => ({
       ...rules,
       ...rest,
+      ...(Number(payload?.new?.id) === Number(rest.id) ? payload?.new : {}),
+      isActiveOriginal: rest.isActive,
     }));
 
-    const cache = await synchroIndexedDb.getLocalRules(
-      parsedData.map(({ id }) => Number(id))
+    const cache = parsedData
+      ? await synchroIndexedDb.getLocalRules(
+          parsedData.map(({ id }) => Number(id))
+        )
+      : [];
+
+    const cacheBy: Record<string | number, LocalRulesStatus> = cache.reduce(
+      (acmPojo, cacheItem) => {
+        acmPojo[cacheItem.id] = cacheItem;
+
+        return acmPojo;
+      },
+      {}
     );
 
-    const cacheBy = cache.reduce((acmPojo, { id, newStatus }) => {
-      acmPojo[id] = newStatus;
-      return acmPojo;
-    }, {});
-
-    const flattedData = parsedData.map((parsedItem) => ({
+    const flattedData = parsedData?.map((parsedItem) => ({
       ...parsedItem,
-      isActive: cacheBy[parsedItem.id] ?? parsedItem.isActive,
+      isActive: cacheBy[parsedItem.id]?.newStatus ?? parsedItem.isActive,
+      description:
+        cacheBy[parsedItem.id]?.description ?? parsedItem.description,
     }));
 
     setFlattedData(flattedData);
-  }, [data, isAvailableToShow]);
+  }, [data, isAvailableToShow, payload]);
 
   useEffect(() => {
     parseFlattedData();
   }, [data, page, parseFlattedData]);
+
+  // TODO: update cache too
+  useEffect(() => {
+    const channel = supabase().subscribeChanges((payload) =>
+      setPayload({ ...payload })
+    );
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   return [
     setPage,
     setRowsPerPage,
     {
       data: flattedData,
-      isLoading: isFetching,
+      isFetching,
+      isLoading,
       total: totalRef.current,
       page,
+      isFetched,
       rowsPerPage,
+      isRefetching,
     },
   ];
 };
 
-export const useSynchro = (): [() => Promise<void>, boolean] => {
+export const useSynchro = (): [
+  (idsBy?: Record<number | string, number | boolean>) => Promise<void>,
+  boolean
+] => {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const synchroStatus = useCallback(async () => {
-    setIsProcessing(true);
+  const synchroStatus = useCallback(
+    async (idsBy?: Record<number | string, number | boolean>) => {
+      setIsProcessing(true);
+      const changes = await synchroIndexedDb.rulesStatus.toArray();
 
-    const changes = await synchroIndexedDb.rulesStatus.toArray();
+      const filteredChanges = idsBy
+        ? changes.filter(({ id }) => idsBy[Number(id)])
+        : changes;
 
-    await fetchClient.postNewStatus(changes);
+      await fetchClient.postNewStatus(filteredChanges);
+
+      await synchroIndexedDb.rulesStatus.clear();
+
+      await reactQueryClient.invalidateQueries({ queryKey: ['rules'] });
+
+      setPage(1);
+      setIsProcessing(false);
+    },
+    []
+  );
+
+  return [synchroStatus, isProcessing];
+};
+
+export const useDeleteChanges = (): [() => Promise<void>, boolean] => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const deleteChanges = useCallback(async () => {
+    setIsDeleting(true);
 
     await synchroIndexedDb.rulesStatus.clear();
 
-    await reactQueryClient.invalidateQueries({ queryKey: ["rules"] });
+    await reactQueryClient.invalidateQueries({ queryKey: ['rules'] });
 
     setPage(1);
-    setIsProcessing(false);
+
+    setIsDeleting(false);
   }, []);
 
-  return [synchroStatus, isProcessing];
+  return [deleteChanges, isDeleting];
+};
+
+export const useAuth = () => {
+  const authClient = useContext(AuthContext);
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    authClient.checkAuth().then((data) => setIsLogged(!!data?.user?.id));
+  }, [authClient]);
+
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const data = await authClient.login(email, password);
+
+      setIsLogged(true);
+
+      return data;
+    },
+    [authClient]
+  );
+
+  return { isLogged, authClient, login };
 };

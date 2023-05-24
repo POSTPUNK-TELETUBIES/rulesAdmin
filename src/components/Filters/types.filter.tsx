@@ -1,12 +1,7 @@
-import { Type } from "../../types/supabase";
-import { useCallback } from "react";
-import { setRuleTypeFilterChange } from "../../lib/observers";
-import { FilterPopover } from "../../layout/FilterPopover";
-
-const filterConfig = [
-  { value: "all", label: "Todos" },
-  ...Object.values(Type).map((value) => ({ value, label: value })),
-];
+import { useCallback } from 'react';
+import { setRuleTypeFilterChange } from '../../lib/observers';
+import { FilterPopover } from '../../layout/FilterPopover';
+import { filterTypeConfig } from '../../lib/config/filters';
 
 export const TypesFilter = () => {
   const _handleChange = useCallback(
@@ -16,7 +11,7 @@ export const TypesFilter = () => {
 
   return (
     <FilterPopover
-      filterConfig={filterConfig}
+      filterConfig={filterTypeConfig}
       isClosingRecursive={true}
       reactiveCallback={_handleChange}
     />

@@ -1,24 +1,17 @@
-import { Menu as MenuIcon, Sync } from "@mui/icons-material";
-import {
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
-import Draggable from "react-draggable";
-import { useSynchro } from "../../hooks";
-import { DownloadButton } from "../ActionButtons";
-import { useSetOpenMenu } from "../../lib/observers";
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { IconButton, Menu } from '@mui/material';
+import { MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import Draggable from 'react-draggable';
+import { DownloadButton } from '../ActionButtons';
+import { useSetOpenMenu } from '../../lib/observers';
+import { SynchroButton } from '../SynchroButton';
+import { RestartButton } from '../RestartButton';
 
 // TODO: menu ref observable should pipe to be a toggle
 export const DraggableMenu = () => {
   const [refMenu, setRefMenu] = useState(null);
   const menuRef = useRef<HTMLButtonElement>(null);
   const isMenuOpen = useSetOpenMenu();
-
-  const [_handleClickSyncro] = useSynchro();
 
   const _handleClose = useCallback(() => {
     setRefMenu(null);
@@ -36,6 +29,8 @@ export const DraggableMenu = () => {
     []
   );
 
+  // TODO: this classnames should be in a enum
+
   return (
     <>
       <Draggable>
@@ -46,24 +41,20 @@ export const DraggableMenu = () => {
             background: ({ palette }) => palette.secondary.main,
             zIndex: 500,
           }}
-          className="dragableMenu"
+          className='dragableMenu'
         >
-          <MenuIcon fontSize="large" />
+          <MenuIcon fontSize='large' />
         </IconButton>
       </Draggable>
       <Menu
-        className="menuDragable"
+        className='menuDragable'
         anchorEl={refMenu}
         open={!!refMenu}
         onClose={_handleClose}
       >
-        <MenuItem onClick={_handleClickSyncro}>
-          <ListItemIcon>
-            <Sync fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Sincronizar</ListItemText>
-        </MenuItem>
-        <DownloadButton cb={_handleClickSyncro} />
+        <SynchroButton />
+        <DownloadButton />
+        <RestartButton />
       </Menu>
     </>
   );

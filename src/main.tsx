@@ -10,6 +10,7 @@ import hotkeys from "hotkeys-js";
 import { setOpenMenu } from "./lib/observers/index.ts";
 import { Typography } from "@mui/material";
 import { woopraDomain } from "./lib/config/woopra.ts";
+import { AuthWrapper } from "./components/AuthWrapper/index.tsx";
 
 hotkeys("ctrl+m", (event) => {
   event.preventDefault();
@@ -68,9 +69,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         } */
       ]}
     >
-      <QueryClientProvider client={reactQueryClient}>
-        <App />
-      </QueryClientProvider>
+      <AuthWrapper>
+        <QueryClientProvider client={reactQueryClient}>
+          <App />
+        </QueryClientProvider>
+      </AuthWrapper>
     </TourProvider>
   </React.StrictMode>
 );

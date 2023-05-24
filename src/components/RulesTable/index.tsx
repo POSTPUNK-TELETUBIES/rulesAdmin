@@ -1,22 +1,78 @@
-import { Box, TableCell, TablePagination, TableRow } from "@mui/material";
+import { ChangeEvent, MouseEvent, useCallback, useContext } from 'react';
+import {
+  Box,
+  TableCell,
+  TablePagination,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { useDebouncedCallback } from 'use-debounce';
 
-import GenericTable from "../../layout/GenericTable";
+import GenericTable from '../../layout/GenericTable';
 
-import { columns } from "./config";
+import { columns } from './config';
 
-import { useGetRulesStatus } from "../../hooks";
-import { GenericHeader } from "../GenericHeader";
-import { MouseEvent, useCallback } from "react";
-import { EspecialConfigCell } from "./especialConfig";
-import { LoadingContentTable } from "./loadingContent";
-import { NoDataContent } from "./noData";
+import synchroDB from '../../lib/service/dexie';
+
+import { useGetRulesStatus } from '../../hooks';
+import { GenericHeader } from '../GenericHeader';
+import { EspecialConfigCell } from './especialConfig';
+import { LoadingContentTable } from './loadingContent';
+import { NoDataContent } from './noData';
+import { RuleDTO, RulesStatus } from '../../types/supabase';
+
+import { parseConditionallySonarKey } from '../../tools';
+import { WithCollapsible } from './WithCollpasible';
+import { AuthContext } from '../../context/auth';
+
+interface EditableCommentProps {
+  title: string;
+  result: RulesStatus & RuleDTO;
+}
+
+const EditableComment = ({ title, result }: EditableCommentProps) => {
+  // TODO: add waiter
+  const { user } = useContext(AuthContext);
+  const _handleChange = useDebouncedCallback(
+    async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
+      return await synchroDB.saveDescription(
+        { ...result, user_email: user?.email },
+        target.value
+      );
+    },
+    500
+  );
+  return (
+    <TextField
+      multiline
+      fullWidth
+      sx={{ ml: 18, mr: 15, minHeight: 'initial', height: 'auto' }}
+      defaultValue={result.description}
+      title={title}
+      InputProps={{
+        style: {
+          fontStyle: 'italic',
+          fontWeight: 'normal',
+        },
+        startAdornment: (
+          <span style={{ fontWeight: 'bold' }}>
+            Sustento de la Propuesta de Cambio:
+          </span>
+        ),
+      }}
+      placeholder='Esta regla aún no ha tenido observaciones'
+      onChange={_handleChange}
+    />
+  );
+};
 
 // TODO: Abstract table and config
 export function RulesTable() {
   const [
     setPage,
     setRowsPerPage,
-    { data, isLoading, total, page, rowsPerPage },
+    { data, isFetching, total, page, rowsPerPage },
   ] = useGetRulesStatus();
 
   const handleChangePage = useCallback(
@@ -36,57 +92,91 @@ export function RulesTable() {
     [setPage, setRowsPerPage]
   );
 
-  // TODO: refactor this spagetti 💩,
+  // TODO: refactor this spaghetti 💩,
   return (
     <>
       <GenericTable
         body={
-          isLoading ? (
+          isFetching ? (
             <LoadingContentTable colSpan={columns.length} />
           ) : (
             <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
-              {data?.map((result) => (
-                <TableRow key={result.id}>
-                  {columns.map(({ resource, especialConfig, textAlign }) => {
-                    if (!especialConfig)
-                      return (
-                        <TableCell
-                          sx={{ textAlign: textAlign ?? "center" }}
-                          key={resource + result.id}
-                        >
-                          {String(result[resource] ?? "--")}
-                        </TableCell>
-                      );
-
-                    return (
-                      <TableCell
-                        key={resource + result.id}
-                        sx={{ textAlign: "center" }}
-                      >
-                        <EspecialConfigCell
+              {isFetching
+                ? []
+                : data?.map((result) => (
+                    <WithCollapsible
+                      key={result.id}
+                      colSpan={columns.length}
+                      collapseContent={
+                        <EditableComment
                           result={result}
-                          resource={resource}
-                          secondaryValue={result.created_at}
-                          value={result[resource] ?? "--"}
+                          title={`${result.id}-comments`}
                         />
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
+                      }
+                    >
+                      {columns.map(
+                        ({ resource, especialConfig, textAlign }) => {
+                          if (!especialConfig)
+                            return (
+                              <TableCell
+                                sx={{
+                                  textAlign: textAlign ?? 'center',
+                                  maxWidth: 140,
+                                }}
+                                key={resource + result.id}
+                              >
+                                <Tooltip
+                                  title={String(result[resource] ?? '--')}
+                                >
+                                  <Typography
+                                    noWrap
+                                    sx={{
+                                      ...(resource === 'key'
+                                        ? { width: 60 }
+                                        : {}),
+                                    }}
+                                  >
+                                    {parseConditionallySonarKey(
+                                      String(result[resource] ?? '--'),
+                                      resource === 'key'
+                                    )}
+                                  </Typography>
+                                </Tooltip>
+                              </TableCell>
+                            );
+
+                          return (
+                            <TableCell
+                              key={resource + result.id}
+                              sx={{
+                                textAlign: textAlign ?? 'center',
+                              }}
+                            >
+                              <EspecialConfigCell
+                                result={result}
+                                resource={resource}
+                                secondaryValue={result.created_at}
+                                value={result[resource] ?? '--'}
+                              />
+                            </TableCell>
+                          );
+                        }
+                      )}
+                    </WithCollapsible>
+                  ))}
             </NoDataContent>
           )
         }
         header={<GenericHeader data={columns} />}
       />
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <TablePagination
           rowsPerPage={rowsPerPage}
           count={total ?? 1000}
           page={page - 1}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage="Filas por pagina"
+          labelRowsPerPage='Filas por página'
         />
       </Box>
     </>

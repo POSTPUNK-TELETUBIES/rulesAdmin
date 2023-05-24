@@ -1,3 +1,6 @@
 {
-  "endOfLine": "lf"
+  "$schema": "http://json.schemastore.org/prettierrc",
+  "endOfLine": "lf",
+  "singleQuote": true,
+  "jsxSingleQuote": true
 }

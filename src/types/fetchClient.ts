@@ -1,5 +1,7 @@
-import { LocalRulesStatus } from "../lib/service/dexie";
-import { LanguageDTO, QualityProfileDTO, RulesResponse } from "./supabase";
+import { User } from '@supabase/supabase-js';
+import { LocalRulesStatus } from '../lib/service/dexie';
+import { SingUpFields } from './auth';
+import { LanguageDTO, QualityProfileDTO, RulesResponse } from './supabase';
 
 export interface PaginationParams {
   page: number;
@@ -11,11 +13,11 @@ export interface Pojo {
 }
 
 export interface RulesFilter {
-  lang_id: string;
-  qualityProfile_id: string;
+  lang_id: string | number;
+  qualityProfile_id: string | number;
   severity: string;
   type: string;
-  isActiveSonar: boolean | string;
+  isActiveSonar?: boolean | string;
 }
 
 export interface PaginationResult {
@@ -49,4 +51,17 @@ export interface FetchClientSingleton {
     filter: RulesFilter,
     pagination: PaginationParams
   ): Promise<PaginationResult>;
+
+  getConflicts(data: LocalRulesStatus[]): Promise<LocalRulesStatus[]>;
+}
+
+export interface AuthClient {
+  isLogged: boolean;
+  user: User;
+  login(email: string, password: string): Promise<any>;
+  verifyAuth?(token?: string, extraData?: unknown): Promise<unknown>;
+  logOut(token?: string, extraData?: unknown): Promise<unknown>;
+  getPermissions?(token?: string, extraData?: unknown): Promise<unknown>;
+  checkAuth(token?: string, refreshToken?: string): Promise<any>;
+  singUp(data: SingUpFields): Promise<unknown>;
 }

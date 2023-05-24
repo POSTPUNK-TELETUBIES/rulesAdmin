@@ -46,3 +46,8 @@ kbd {
   padding: 2px 4px;
   white-space: nowrap;
 }
+
+
+::-ms-reveal {
+  display: none;
+}
