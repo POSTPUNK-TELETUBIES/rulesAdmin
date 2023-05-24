@@ -1,6 +1,14 @@
-import { ChangeEvent, MouseEvent, useCallback, useContext } from 'react';
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 import {
   Box,
+  Checkbox,
+  FormControlLabel,
   TableCell,
   TablePagination,
   TextField,
@@ -33,6 +41,15 @@ interface EditableCommentProps {
 
 const EditableComment = ({ title, result }: EditableCommentProps) => {
   // TODO: add waiter
+  const [isTextFieldEnabled, setIsTextFieldEnabled] = useState(false);
+
+  const handleCheckboxChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setIsTextFieldEnabled(event.target.checked);
+    },
+    []
+  );
+
   const { user } = useContext(AuthContext);
   const _handleChange = useDebouncedCallback(
     async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
@@ -44,26 +61,34 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
     500
   );
   return (
-    <TextField
-      multiline
-      fullWidth
-      sx={{ ml: 18, mr: 15, minHeight: 'initial', height: 'auto' }}
-      defaultValue={result.description}
-      title={title}
-      InputProps={{
-        style: {
-          fontStyle: 'italic',
-          fontWeight: 'normal',
-        },
-        startAdornment: (
-          <span style={{ fontWeight: 'bold' }}>
-            Sustento de la Propuesta de Cambio:
-          </span>
-        ),
-      }}
-      placeholder='Esta regla aún no ha tenido observaciones'
-      onChange={_handleChange}
-    />
+    <>
+      <FormControlLabel
+        control={<Checkbox onChange={handleCheckboxChange} />}
+        label='Modificar sustento'
+        sx={{ ml: 1 }}
+      />
+      <TextField
+        disabled={!isTextFieldEnabled}
+        multiline
+        fullWidth
+        sx={{ mr: 14, minHeight: 'initial', height: 'auto' }}
+        defaultValue={result.description}
+        title={title}
+        InputProps={{
+          style: {
+            fontStyle: 'italic',
+            fontWeight: 'normal',
+          },
+          startAdornment: (
+            <span style={{ fontWeight: 'bold' }}>
+              Sustento de la Propuesta de Cambio:
+            </span>
+          ),
+        }}
+        placeholder='Esta regla aún no ha tenido observaciones'
+        onChange={_handleChange}
+      />
+    </>
   );
 };
 
