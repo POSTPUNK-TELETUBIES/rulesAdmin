@@ -37,10 +37,9 @@ const shouldRepeatTour = (times: number) => {
 };
 
 export const visitHandler = () => {
-  const firstVisit = localStorage.getItem(LocalStorageVisit.FIRST_VISIT);
   const timesVisit = localStorage.getItem(LocalStorageVisit.TIMES_VISIT);
 
-  if (firstVisit || !shouldRepeatTour(Number(timesVisit))) return;
+  if (!shouldRepeatTour(Number(timesVisit))) return;
 
   localStorage.setItem(
     LocalStorageVisit.FIRST_VISIT,
