@@ -6,7 +6,6 @@ import {
   ListItem,
   SelectChangeEvent,
   Stack,
-  Typography,
 } from '@mui/material';
 
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -76,11 +75,6 @@ export const DownloadDrawer = ({
         onSubmit={handleSubmit(_handleSubmit)}
       >
         <List>
-          {/* maybe this needs key in each repeatad component acording to dev tools */}
-          <ListItem>
-            <Typography>Filtros:</Typography>
-          </ListItem>
-          <Divider />
           <ListItem>
             <LanguageGenericFilter
               includeAllOption
@@ -98,7 +92,7 @@ export const DownloadDrawer = ({
           <Divider />
           {uncontrolledLocalFilters.map(
             ({ id, label, registerField, config }) => (
-              <ListItem>
+              <ListItem key={id + label}>
                 <BasicInput
                   label={label}
                   id={id}
