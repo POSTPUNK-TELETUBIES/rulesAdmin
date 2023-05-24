@@ -2,10 +2,12 @@ import {
   Button,
   Divider,
   Drawer,
+  FormControlLabel,
   List,
   ListItem,
   SelectChangeEvent,
   Stack,
+  Switch,
 } from '@mui/material';
 
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -42,6 +44,8 @@ export const DownloadDrawer = ({
 
   const [language, setLanguage] = useState<string>();
 
+  const [areFiltersAvailable, setAreFiltersAvailable] = useState(true);
+
   const _handleSubmit: SubmitHandler<FilterFields> = useCallback(
     async (data) => {
       return await supabaseClient().downloadReport(
@@ -76,8 +80,23 @@ export const DownloadDrawer = ({
       >
         <List>
           <ListItem>
+            <FormControlLabel
+              control={
+                <Switch
+                  {...register('showOnlyIsActiveDifferences', {
+                    onChange(event) {
+                      setAreFiltersAvailable(event.target.checked);
+                    },
+                  })}
+                />
+              }
+              label='Solo estados propuestos'
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
             <LanguageGenericFilter
-              includeAllOption
+              includeAllOption={areFiltersAvailable}
               inputProps={register('language_id')}
               className='generic-filter-uncontrolled'
               handleChange={_handleChangeLanguage}
@@ -85,36 +104,34 @@ export const DownloadDrawer = ({
           </ListItem>
           <ListItem>
             <QualityProfilesGenericProfiles
+              includeAllOptions={areFiltersAvailable}
               text={language}
               inputProps={register('qualityProfile_id')}
             />
           </ListItem>
-          <Divider />
-          {uncontrolledLocalFilters.map(
-            ({ id, label, registerField, config }) => (
-              <ListItem key={id + label}>
-                <BasicInput
-                  label={label}
-                  id={id}
-                  input={
-                    <UncontrolledSelect
-                      config={config}
+          {areFiltersAvailable && (
+            <>
+              <Divider />
+              {uncontrolledLocalFilters.map(
+                ({ id, label, registerField, config }) => (
+                  <ListItem key={id + label}>
+                    <BasicInput
                       label={label}
-                      labelId={id}
-                      inputProps={register(registerField)}
+                      id={id}
+                      input={
+                        <UncontrolledSelect
+                          config={config}
+                          label={label}
+                          labelId={id}
+                          inputProps={register(registerField)}
+                        />
+                      }
                     />
-                  }
-                />
-              </ListItem>
-            )
+                  </ListItem>
+                )
+              )}
+            </>
           )}
-          {/* <Divider />
-          <ListItem>
-            <FormControlLabel
-              control={<Switch {...register('showOnlyIsActiveDifferences')} />}
-              label='Solo diferencias'
-            />
-          </ListItem> */}
           <Divider />
           <ListItem>
             <Button
