@@ -50,7 +50,18 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
       sx={{ ml: 18, mr: 15, minHeight: 'initial', height: 'auto' }}
       defaultValue={result.description}
       title={title}
-      placeholder='Ingresa el porqué del cambio'
+      InputProps={{
+        style: {
+          fontStyle: 'italic',
+          fontWeight: 'normal',
+        },
+        startAdornment: (
+          <span style={{ fontWeight: 'bold' }}>
+            Sustento de la Propuesta de Cambio:
+          </span>
+        ),
+      }}
+      placeholder='Esta regla aún no ha tenido observaciones'
       onChange={_handleChange}
     />
   );

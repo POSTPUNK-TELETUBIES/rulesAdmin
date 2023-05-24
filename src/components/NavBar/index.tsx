@@ -56,7 +56,7 @@ export const NavBar = () => {
         <Container>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
             <Box sx={boxStyles}>
-              <Typography variant='h6' fontWeight={900}>
+              <Typography variant='h6' fontWeight={900} fontSize='1.6rem'>
                 Sonardash
               </Typography>
               <Typography variant='body1'>/ Gestión de Reglas</Typography>
