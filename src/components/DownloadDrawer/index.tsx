@@ -2,12 +2,10 @@ import {
   Button,
   Divider,
   Drawer,
-  FormControlLabel,
   List,
   ListItem,
   SelectChangeEvent,
   Stack,
-  Switch,
   Typography,
 } from '@mui/material';
 
@@ -116,13 +114,13 @@ export const DownloadDrawer = ({
               </ListItem>
             )
           )}
-          <Divider />
+          {/* <Divider />
           <ListItem>
             <FormControlLabel
               control={<Switch {...register('showOnlyIsActiveDifferences')} />}
               label='Solo diferencias'
             />
-          </ListItem>
+          </ListItem> */}
           <Divider />
           <ListItem>
             <Button
