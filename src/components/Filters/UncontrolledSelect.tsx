@@ -11,7 +11,6 @@ interface UncontrolledSelectProps {
 export const UncontrolledSelect = ({
   label,
   labelId,
-  isActive,
   inputProps,
   config,
 }: UncontrolledSelectProps) => (
@@ -20,7 +19,6 @@ export const UncontrolledSelect = ({
     label={label}
     sx={{ width: 200 }}
     defaultValue={'all'}
-    disabled={!isActive}
     displayEmpty
     inputProps={inputProps}
   >

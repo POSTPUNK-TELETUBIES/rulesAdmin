@@ -8,6 +8,7 @@ import {
   SelectChangeEvent,
   Stack,
   Switch,
+  Typography,
 } from '@mui/material';
 
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -40,7 +41,6 @@ export const DownloadDrawer = ({
   handleClose: _handleClose,
   isOpen,
 }: DownloadDrawerInterface) => {
-  const [isActive, setIsActive] = useState(false);
   const { register, handleSubmit } = useForm();
 
   const [language, setLanguage] = useState<string>();
@@ -61,10 +61,6 @@ export const DownloadDrawer = ({
     []
   );
 
-  const _handleStateChange = useCallback(() => {
-    setIsActive((prev) => !prev);
-  }, []);
-
   const _handleChangeLanguage = useCallback((event: SelectChangeEvent) => {
     setLanguage(event.target.value);
   }, []);
@@ -84,10 +80,7 @@ export const DownloadDrawer = ({
         <List>
           {/* maybe this needs key in each repeatad component acording to dev tools */}
           <ListItem>
-            <FormControlLabel
-              control={<Switch onClick={_handleStateChange} />}
-              label='Filtros'
-            />
+            <Typography>Filtros:</Typography>
           </ListItem>
           <Divider />
           <ListItem>
@@ -117,7 +110,7 @@ export const DownloadDrawer = ({
                       label={label}
                       labelId={id}
                       inputProps={register(registerField)}
-                      isActive={isActive}
+                      isActive={false}
                     />
                   }
                 />
@@ -139,7 +132,7 @@ export const DownloadDrawer = ({
               startIcon={<Download />}
               sx={{ width: '100%' }}
             >
-              Download
+              Descargar
             </Button>
           </ListItem>
         </List>
