@@ -26,7 +26,7 @@ export const QualityProfilesGenericProfiles = ({
 
   if (isFetching) return <CircularProgress />;
 
-  const [firstOption] = data;
+  const [firstOption] = data ?? [];
 
   return (
     <FormControl sx={{ width: 200 }}>

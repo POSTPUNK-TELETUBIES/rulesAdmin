@@ -83,11 +83,11 @@ export const DownloadDrawer = ({
             <FormControlLabel
               control={
                 <Switch
-                  {...register('showOnlyIsActiveDifferences', {
-                    onChange(event) {
-                      setAreFiltersAvailable(event.target.checked);
-                    },
-                  })}
+                  {...register('showOnlyIsActiveDifferences')}
+                  checked={!areFiltersAvailable}
+                  onChange={(event) =>
+                    setAreFiltersAvailable(!event.target.checked)
+                  }
                 />
               }
               label='Solo estados propuestos'
