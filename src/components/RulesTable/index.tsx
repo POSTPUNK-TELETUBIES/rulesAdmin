@@ -1,6 +1,7 @@
 import { ChangeEvent, MouseEvent, useCallback, useContext } from 'react';
 import {
   Box,
+  Stack,
   TableCell,
   TablePagination,
   TextField,
@@ -43,24 +44,13 @@ const EditableComment = ({ title, result }: EditableCommentProps) => {
     },
     500
   );
+
   return (
     <TextField
       multiline
       fullWidth
-      sx={{ ml: 18, mr: 15, minHeight: 'initial', height: 'auto' }}
       defaultValue={result.description}
       title={title}
-      InputProps={{
-        style: {
-          fontStyle: 'italic',
-          fontWeight: 'normal',
-        },
-        startAdornment: (
-          <span style={{ fontWeight: 'bold' }}>
-            Sustento de la Propuesta de Cambio:
-          </span>
-        ),
-      }}
       placeholder='Esta regla aún no ha tenido observaciones'
       onChange={_handleChange}
     />
@@ -106,12 +96,19 @@ export function RulesTable() {
                 : data?.map((result) => (
                     <WithCollapsible
                       key={result.id}
-                      colSpan={columns.length}
+                      colSpan={columns.length - 2}
                       collapseContent={
-                        <EditableComment
-                          result={result}
-                          title={`${result.id}-comments`}
-                        />
+                        <Stack direction='row' pr={2}>
+                          <Typography
+                            sx={{ fontStyle: 'italic', fontWeight: 900 }}
+                          >
+                            Sustento de la propuesta
+                          </Typography>
+                          <EditableComment
+                            result={result}
+                            title={`${result.id}-comments`}
+                          />
+                        </Stack>
                       }
                     >
                       {columns.map(
