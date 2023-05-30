@@ -3,12 +3,19 @@ import type { RuleDTO, RulesStatus } from '../../types/supabase';
 import { TimeAgo } from '../TimeAgo';
 import { PopOverDetails } from '../PopOverDetails';
 
-import GenericPopover from '../../layout/GenericPopover';
 import { StatusSwitch } from '../Switch/uncontrolledIndexed';
-import { Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 
 import dayjs from 'dayjs';
+import { useState } from 'react';
 
 interface ExpecialConfigCell {
   resource: string;
@@ -24,22 +31,60 @@ export const EspecialConfigCell = ({
   result,
   secondaryValue,
 }: ExpecialConfigCell) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
+
+  const handleToggleDescription = () => {
+    setShowDescription(!showDescription);
+  };
+
+  const handleToggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
   if (resource === 'isActiveSonar')
     return <Typography>{value ? 'Activo' : 'Inactivo'}</Typography>;
 
   if (resource === 'htmlDesc')
     return (
-      <GenericPopover
-        icon={<Visibility />}
-        popoverBody={
-          <PopOverDetails
-            tags={[result.severity, result.type]}
-            isActive={result.isActive}
-            ruleTitle={result.name}
-            ruleDescription={result.htmlDesc}
-          />
-        }
-      />
+      <>
+        <IconButton onClick={handleToggleDrawer}>
+          <Visibility />
+        </IconButton>
+        <Drawer
+          anchor='right'
+          open={isDrawerOpen}
+          onClose={handleToggleDrawer}
+          PaperProps={{ style: { width: '33.33%' } }}
+        >
+          <Box padding={2}>
+            <Button
+              onClick={handleToggleDescription}
+              variant='contained'
+              size='large'
+            >
+              Descripción
+            </Button>
+            {showDescription && (
+              <PopOverDetails
+                tags={[result.severity, result.type]}
+                isActive={result.isActive}
+                ruleTitle={result.name}
+                ruleDescription={result.htmlDesc}
+              />
+            )}
+          </Box>
+          <Divider />
+          <Box padding={2}>
+            <Button
+              sx={{ padding: '8px 16px' }}
+              variant='contained'
+              size='large'
+            >
+              Historial
+            </Button>
+          </Box>
+        </Drawer>
+      </>
     );
 
   if (resource === 'updated_at')
