@@ -34,13 +34,25 @@ export const EspecialConfigCell = ({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
 
-  const handleToggleDescription = () => {
+  const handleToggleHistory = (event) => {
+    event.stopPropagation();
+    // history logic
+  };
+
+  const handleToggleDescription = (event) => {
+    event.stopPropagation();
     setShowDescription(!showDescription);
   };
 
-  const handleToggleDrawer = () => {
+  const handleToggleDrawer = (event) => {
+    event.stopPropagation();
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  const handleDrawerClick = (event) => {
+    event.stopPropagation();
+  };
+
   if (resource === 'isActiveSonar')
     return <Typography>{value ? 'Activo' : 'Inactivo'}</Typography>;
 
@@ -54,6 +66,7 @@ export const EspecialConfigCell = ({
           anchor='right'
           open={isDrawerOpen}
           onClose={handleToggleDrawer}
+          onClick={handleDrawerClick}
           PaperProps={{ style: { width: '33.33%' } }}
         >
           <Box padding={2}>
@@ -79,6 +92,7 @@ export const EspecialConfigCell = ({
               sx={{ padding: '8px 16px' }}
               variant='contained'
               size='large'
+              onClick={handleToggleHistory}
             >
               Historial
             </Button>
