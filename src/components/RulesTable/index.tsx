@@ -96,10 +96,14 @@ export function RulesTable() {
                 : data?.map((result) => (
                     <WithCollapsible
                       key={result.id}
-                      colSpan={columns.length}
+                      colSpan={columns.length - 2}
                       collapseContent={
                         <Stack direction='row' pr={2}>
-                          <Typography>Sustento de la propuesta</Typography>
+                          <Typography
+                            sx={{ fontStyle: 'italic', fontWeight: 900 }}
+                          >
+                            Sustento de la propuesta
+                          </Typography>
                           <EditableComment
                             result={result}
                             title={`${result.id}-comments`}
