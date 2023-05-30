@@ -28,14 +28,9 @@ export const WithCollapsible = ({
         {children}
       </TableRow>
       <TableRow>
+        <TableCell padding={isOpen ? 'normal' : 'none'} colSpan={2} />
         <TableCell colSpan={colSpan} padding={isOpen ? 'normal' : 'none'}>
-          <Collapse
-            in={isOpen}
-            // Warning: considerar que puede no estar optimizado
-            sx={{ '& .MuiCollapse-wrapperInner': { display: 'flex' } }}
-          >
-            {collapseContent}
-          </Collapse>
+          <Collapse in={isOpen}>{collapseContent}</Collapse>
         </TableCell>
       </TableRow>
     </>
