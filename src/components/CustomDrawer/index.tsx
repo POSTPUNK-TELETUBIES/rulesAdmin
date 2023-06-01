@@ -10,7 +10,7 @@ export const CustomDrawer = ({
   result,
   handleToggleHistory,
 }) => {
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (_, newValue) => {
     setActiveTab(newValue === activeTab ? null : newValue);
   };
 
