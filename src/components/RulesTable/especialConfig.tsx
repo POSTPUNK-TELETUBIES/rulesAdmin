@@ -24,22 +24,16 @@ export const EspecialConfigCell = ({
   result,
   secondaryValue,
 }: ExpecialConfigCell) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [showDescription, setShowDescription] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
 
   const handleToggleHistory = (event) => {
     event.stopPropagation();
     // history logic
   };
 
-  const handleToggleDescription = (event) => {
-    event.stopPropagation();
-    setShowDescription(!showDescription);
-  };
-
   const handleToggleDrawer = (event) => {
     event.stopPropagation();
-    setShowDescription(false);
     setIsDrawerOpen(!isDrawerOpen);
   };
 
@@ -60,8 +54,8 @@ export const EspecialConfigCell = ({
           isDrawerOpen={isDrawerOpen}
           handleToggleDrawer={handleToggleDrawer}
           handleDrawerClick={handleDrawerClick}
-          handleToggleDescription={handleToggleDescription}
-          showDescription={showDescription}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
           result={result}
           handleToggleHistory={handleToggleHistory}
         />
