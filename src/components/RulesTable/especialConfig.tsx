@@ -1,21 +1,14 @@
 import type { RuleDTO, RulesStatus } from '../../types/supabase';
 
 import { TimeAgo } from '../TimeAgo';
-import { PopOverDetails } from '../PopOverDetails';
 
 import { StatusSwitch } from '../Switch/uncontrolledIndexed';
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 
 import dayjs from 'dayjs';
 import { useState } from 'react';
+import { CustomDrawer } from '../CustomDrawer';
 
 interface ExpecialConfigCell {
   resource: string;
@@ -46,6 +39,7 @@ export const EspecialConfigCell = ({
 
   const handleToggleDrawer = (event) => {
     event.stopPropagation();
+    setShowDescription(false);
     setIsDrawerOpen(!isDrawerOpen);
   };
 
@@ -62,42 +56,15 @@ export const EspecialConfigCell = ({
         <IconButton onClick={handleToggleDrawer}>
           <Visibility />
         </IconButton>
-        <Drawer
-          anchor='right'
-          open={isDrawerOpen}
-          onClose={handleToggleDrawer}
-          onClick={handleDrawerClick}
-          PaperProps={{ style: { width: '33.33%' } }}
-        >
-          <Box padding={2}>
-            <Button
-              onClick={handleToggleDescription}
-              variant='contained'
-              size='large'
-            >
-              Descripción
-            </Button>
-            {showDescription && (
-              <PopOverDetails
-                tags={[result.severity, result.type]}
-                isActive={result.isActive}
-                ruleTitle={result.name}
-                ruleDescription={result.htmlDesc}
-              />
-            )}
-          </Box>
-          <Divider />
-          <Box padding={2}>
-            <Button
-              sx={{ padding: '8px 16px' }}
-              variant='contained'
-              size='large'
-              onClick={handleToggleHistory}
-            >
-              Historial
-            </Button>
-          </Box>
-        </Drawer>
+        <CustomDrawer
+          isDrawerOpen={isDrawerOpen}
+          handleToggleDrawer={handleToggleDrawer}
+          handleDrawerClick={handleDrawerClick}
+          handleToggleDescription={handleToggleDescription}
+          showDescription={showDescription}
+          result={result}
+          handleToggleHistory={handleToggleHistory}
+        />
       </>
     );
 
