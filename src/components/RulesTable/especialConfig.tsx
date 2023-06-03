@@ -7,8 +7,9 @@ import { IconButton, Typography } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 
 import dayjs from 'dayjs';
-import { useState } from 'react';
+
 import { CustomDrawer } from '../CustomDrawer';
+import { useState } from 'react';
 
 interface ExpecialConfigCell {
   resource: string;
@@ -24,21 +25,10 @@ export const EspecialConfigCell = ({
   result,
   secondaryValue,
 }: ExpecialConfigCell) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(null);
-  const [activeTab, setActiveTab] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleToggleHistory = (event) => {
-    event.stopPropagation();
-    // history logic
-  };
-
-  const handleToggleDrawer = (event) => {
-    event.stopPropagation();
+  const handleToggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
-  };
-
-  const handleDrawerClick = (event) => {
-    event.stopPropagation();
   };
 
   if (resource === 'isActiveSonar')
@@ -52,12 +42,8 @@ export const EspecialConfigCell = ({
         </IconButton>
         <CustomDrawer
           isDrawerOpen={isDrawerOpen}
-          handleToggleDrawer={handleToggleDrawer}
-          handleDrawerClick={handleDrawerClick}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          setIsDrawerOpen={setIsDrawerOpen}
           result={result}
-          handleToggleHistory={handleToggleHistory}
         />
       </>
     );

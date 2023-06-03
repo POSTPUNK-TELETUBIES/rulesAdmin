@@ -1,17 +1,36 @@
 import { Button, Drawer, Tab, Tabs } from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
+import { RuleDTO, RulesStatus } from '../../types/supabase';
+import { useState } from 'react';
+
+interface CustomDrawerProps {
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  result: RulesStatus & RuleDTO & { isActiveOriginal: boolean };
+}
+
 export const CustomDrawer = ({
   isDrawerOpen,
-  handleToggleDrawer,
-  handleDrawerClick,
-  activeTab,
-  setActiveTab,
+  setIsDrawerOpen,
   result,
-  handleToggleHistory,
-}) => {
-  const handleTabChange = (_, newValue) => {
-    setActiveTab(newValue === activeTab ? null : newValue);
+}: CustomDrawerProps) => {
+  const [activeTab, setActiveTab] = useState('');
+
+  const handleToggleDrawer = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsDrawerOpen(!isDrawerOpen);
+    if (activeTab === 'description') {
+      setActiveTab('');
+    }
+  };
+
+  const handleTabChange = (_: React.ChangeEvent<object>, newValue: string) => {
+    setActiveTab(newValue);
+  };
+
+  const handleDrawerClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
   };
 
   return (
@@ -40,12 +59,7 @@ export const CustomDrawer = ({
         />
       )}
       {activeTab === 'history' && (
-        <Button
-          sx={{ padding: '8px 16px' }}
-          variant='contained'
-          size='large'
-          onClick={handleToggleHistory}
-        >
+        <Button sx={{ padding: '8px 16px' }} variant='contained' size='large'>
           Historial
         </Button>
       )}
