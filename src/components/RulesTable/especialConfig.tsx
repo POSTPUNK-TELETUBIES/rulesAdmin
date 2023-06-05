@@ -1,14 +1,15 @@
 import type { RuleDTO, RulesStatus } from '../../types/supabase';
 
 import { TimeAgo } from '../TimeAgo';
-import { PopOverDetails } from '../PopOverDetails';
 
-import GenericPopover from '../../layout/GenericPopover';
 import { StatusSwitch } from '../Switch/uncontrolledIndexed';
-import { Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 
 import dayjs from 'dayjs';
+
+import { CustomDrawer } from '../CustomDrawer';
+import { useState } from 'react';
 
 interface ExpecialConfigCell {
   resource: string;
@@ -24,22 +25,27 @@ export const EspecialConfigCell = ({
   result,
   secondaryValue,
 }: ExpecialConfigCell) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const handleToggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
   if (resource === 'isActiveSonar')
     return <Typography>{value ? 'Activo' : 'Inactivo'}</Typography>;
 
   if (resource === 'htmlDesc')
     return (
-      <GenericPopover
-        icon={<Visibility />}
-        popoverBody={
-          <PopOverDetails
-            tags={[result.severity, result.type]}
-            isActive={result.isActive}
-            ruleTitle={result.name}
-            ruleDescription={result.htmlDesc}
-          />
-        }
-      />
+      <>
+        <IconButton onClick={handleToggleDrawer}>
+          <Visibility />
+        </IconButton>
+        <CustomDrawer
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          result={result}
+        />
+      </>
     );
 
   if (resource === 'updated_at')
