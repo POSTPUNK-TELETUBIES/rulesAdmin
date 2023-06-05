@@ -1,4 +1,12 @@
-import { Button, Divider, Drawer, Tab, Tabs, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  Tab,
+  Tabs,
+  TextField,
+} from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
 import { RuleDTO, RulesStatus } from '../../types/supabase';
@@ -25,22 +33,23 @@ const renderOptions = [
   {
     tab: 'history',
     content: () => (
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ flex: 1 }}>
+      <Box height='100%' display='flex' flexDirection='column'>
+        <Box flexGrow={1}>
           <Button sx={{ padding: '8px 16px' }} variant='contained' size='large'>
             Historial
           </Button>
-        </div>
-        <div style={{ height: '25%', overflowY: 'auto', padding: '8px' }}>
+        </Box>
+        <Divider />
+        <Box height='25%' overflow='auto' p={2}>
           <TextField
             fullWidth
             placeholder='Agregar observación'
             multiline
             variant='outlined'
-            style={{ width: '100%', height: '100%' }}
+            sx={{ height: '100%' }}
           />
-        </div>
-      </div>
+        </Box>
+      </Box>
     ),
   },
 ];
