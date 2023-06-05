@@ -10,6 +10,28 @@ interface CustomDrawerProps {
   result: RulesStatus & RuleDTO & { isActiveOriginal: boolean };
 }
 
+const renderOptions = [
+  {
+    tab: 'description',
+    content: ({ result }) => (
+      <PopOverDetails
+        tags={[result.severity, result.type]}
+        isActive={result.isActive}
+        ruleTitle={result.name}
+        ruleDescription={result.htmlDesc}
+      />
+    ),
+  },
+  {
+    tab: 'history',
+    content: () => (
+      <Button sx={{ padding: '8px 16px' }} variant='contained' size='large'>
+        Historial
+      </Button>
+    ),
+  },
+];
+
 export const CustomDrawer = ({
   isDrawerOpen,
   setIsDrawerOpen,
@@ -33,6 +55,10 @@ export const CustomDrawer = ({
     event.stopPropagation();
   };
 
+  const renderContent = renderOptions.find(
+    (option) => option.tab === activeTab
+  );
+
   return (
     <Drawer
       anchor='right'
@@ -50,19 +76,7 @@ export const CustomDrawer = ({
         <Tab label='Descripción de Reglas' value='description' />
         <Tab label='Historial de Cambios' value='history' />
       </Tabs>
-      {activeTab === 'description' && (
-        <PopOverDetails
-          tags={[result.severity, result.type]}
-          isActive={result.isActive}
-          ruleTitle={result.name}
-          ruleDescription={result.htmlDesc}
-        />
-      )}
-      {activeTab === 'history' && (
-        <Button sx={{ padding: '8px 16px' }} variant='contained' size='large'>
-          Historial
-        </Button>
-      )}
+      {renderContent && renderContent.content({ result })}
     </Drawer>
   );
 };
