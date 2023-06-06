@@ -1,16 +1,10 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  Tab,
-  Tabs,
-  TextField,
-} from '@mui/material';
+import { Box, Divider, Drawer, Tab, Tabs } from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
 import { RuleDTO, RulesStatus } from '../../types/supabase';
 import { useState } from 'react';
+import { CommentBox } from '../CommentBox/CommentBox';
+import { CommentHistory } from '../CommentHistory/CommentHistory';
 
 interface CustomDrawerProps {
   isDrawerOpen: boolean;
@@ -35,19 +29,11 @@ const renderOptions = [
     content: () => (
       <Box height='100%' display='flex' flexDirection='column'>
         <Box flexGrow={1}>
-          <Button sx={{ padding: '8px 16px' }} variant='contained' size='large'>
-            Historial
-          </Button>
+          <CommentHistory comments={[]} />
         </Box>
         <Divider />
         <Box height='25%' overflow='auto' p={2}>
-          <TextField
-            fullWidth
-            placeholder='Agregar observación'
-            multiline
-            variant='outlined'
-            sx={{ height: '100%' }}
-          />
+          <CommentBox />
         </Box>
       </Box>
     ),
