@@ -5,6 +5,27 @@ import { RuleDTO, RulesStatus } from '../../types/supabase';
 import { useState } from 'react';
 import { CommentBox } from '../CommentBox/CommentBox';
 import { CommentHistory } from '../CommentHistory/CommentHistory';
+import { faker } from '@faker-js/faker';
+
+const generateRandomComments = (count) => {
+  const comments = [];
+  const timestamp = new Date(); // Fecha actual
+
+  for (let i = 0; i < count; i++) {
+    timestamp.setMinutes(timestamp.getMinutes() - i); // Restar minutos al timestamp en cada iteración
+
+    const comment = {
+      id: i + 1,
+      author: faker.person.fullName(),
+      timestamp: timestamp.toLocaleString(),
+      content: faker.lorem.sentence(),
+    };
+
+    comments.push(comment);
+  }
+
+  return comments; // Revertir el orden para que los comentarios más recientes aparezcan primero
+};
 
 interface CustomDrawerProps {
   isDrawerOpen: boolean;
@@ -26,17 +47,21 @@ const renderOptions = [
   },
   {
     tab: 'history',
-    content: () => (
-      <Box height='100%' display='flex' flexDirection='column'>
-        <Box flexGrow={1}>
-          <CommentHistory comments={[]} />
+    content: () => {
+      const randomComments = generateRandomComments(6);
+
+      return (
+        <Box height='100%' display='flex' flexDirection='column'>
+          <Box flexGrow={1}>
+            <CommentHistory comments={randomComments} />
+          </Box>
+          <Divider />
+          <Box height='25%' overflow='auto' p={2}>
+            <CommentBox />
+          </Box>
         </Box>
-        <Divider />
-        <Box height='25%' overflow='auto' p={2}>
-          <CommentBox />
-        </Box>
-      </Box>
-    ),
+      );
+    },
   },
 ];
 
