@@ -2,7 +2,7 @@ import { Box, Divider, Drawer, Tab, Tabs } from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
 import { RuleDTO, RulesStatus } from '../../types/supabase';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CommentBox } from '../CommentBox/CommentBox';
 import { CommentHistory } from '../CommentHistory/CommentHistory';
 import { faker } from '@faker-js/faker';
@@ -48,15 +48,15 @@ const renderOptions = [
   {
     tab: 'history',
     content: () => {
-      const randomComments = generateRandomComments(3);
+      const randomComments = generateRandomComments(8);
 
       return (
         <Box height='100%' display='flex' flexDirection='column'>
-          <Box flexGrow={1}>
+          <Box flexGrow={1} overflow='auto' flexBasis='75%'>
             <CommentHistory comments={randomComments} />
           </Box>
           <Divider />
-          <Box height='25%' overflow='auto' p={2}>
+          <Box height='30%' overflow='auto' p={2}>
             <CommentBox />
           </Box>
         </Box>
@@ -71,6 +71,12 @@ export const CustomDrawer = ({
   result,
 }: CustomDrawerProps) => {
   const [activeTab, setActiveTab] = useState('');
+
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      setActiveTab('');
+    }
+  }, [isDrawerOpen]);
 
   const handleToggleDrawer = (event: React.MouseEvent) => {
     event.stopPropagation();

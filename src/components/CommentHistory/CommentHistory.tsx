@@ -34,7 +34,7 @@ export function CommentHistory({ comments }: CommentHistoryProps) {
           </TimelineContent>
           <TimelineSeparator>
             <TimelineConnector />
-            <TimelineDot>
+            <TimelineDot color='primary'>
               <HistoryIcon />
             </TimelineDot>
             <TimelineConnector />
