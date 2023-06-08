@@ -9,10 +9,10 @@ import { faker } from '@faker-js/faker';
 
 const generateRandomComments = (count) => {
   const comments = [];
-  const timestamp = new Date(); // Fecha actual
+  const timestamp = new Date();
 
   for (let i = 0; i < count; i++) {
-    timestamp.setMinutes(timestamp.getMinutes() - i); // Restar minutos al timestamp en cada iteración
+    timestamp.setMinutes(timestamp.getMinutes() - i);
 
     const comment = {
       id: i + 1,
@@ -24,7 +24,7 @@ const generateRandomComments = (count) => {
     comments.push(comment);
   }
 
-  return comments; // Revertir el orden para que los comentarios más recientes aparezcan primero
+  return comments;
 };
 
 interface CustomDrawerProps {
@@ -48,7 +48,7 @@ const renderOptions = [
   {
     tab: 'history',
     content: () => {
-      const randomComments = generateRandomComments(6);
+      const randomComments = generateRandomComments(3);
 
       return (
         <Box height='100%' display='flex' flexDirection='column'>

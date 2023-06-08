@@ -1,4 +1,14 @@
-import { Box, Divider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import HistoryIcon from '@mui/icons-material/History';
+import {
+  Timeline,
+  TimelineConnector,
+  TimelineContent,
+  TimelineDot,
+  TimelineItem,
+  TimelineOppositeContent,
+  TimelineSeparator,
+} from '@mui/lab';
 
 interface Comment {
   id: number;
@@ -13,46 +23,31 @@ interface CommentHistoryProps {
 
 export function CommentHistory({ comments }: CommentHistoryProps) {
   return (
-    <Box>
-      {comments.map((comment, index) => (
-        <Box
-          key={comment.id}
-          my={2}
-          sx={{
-            position: 'relative',
-            borderLeft: '2px solid #ddd',
-            paddingLeft: '20px',
-          }}
-        >
-          <Box
-            sx={{
-              position: 'absolute',
-              left: '-10px',
-              top: '8px',
-              backgroundColor: '#ddd',
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-            }}
-          />
-          <Typography variant='subtitle1'>{comment.author}</Typography>
-          <Typography variant='caption' color='text.secondary'>
+    <Timeline>
+      {comments.map((comment) => (
+        <TimelineItem key={comment.id}>
+          <TimelineContent sx={{ py: '12px', px: 2 }}>
+            <Typography variant='h6' component='span'>
+              {comment.author}
+            </Typography>
+            <Typography>{comment.content}</Typography>
+          </TimelineContent>
+          <TimelineSeparator>
+            <TimelineConnector />
+            <TimelineDot>
+              <HistoryIcon />
+            </TimelineDot>
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineOppositeContent
+            sx={{ m: 'auto 0' }}
+            variant='body2'
+            color='text.secondary'
+          >
             {comment.timestamp}
-          </Typography>
-          <Typography variant='body1'>{comment.content}</Typography>
-          {index !== comments.length - 1 && (
-            <Divider
-              sx={{
-                position: 'absolute',
-                left: '10px',
-                top: '25px',
-                width: '1px',
-                height: '100%',
-              }}
-            />
-          )}
-        </Box>
+          </TimelineOppositeContent>
+        </TimelineItem>
       ))}
-    </Box>
+    </Timeline>
   );
 }
