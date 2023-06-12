@@ -32,7 +32,7 @@ interface EditableCommentProps {
   result: RulesStatus & RuleDTO;
 }
 
-const EditableComment = ({ title, result }: EditableCommentProps) => {
+export const EditableComment = ({ title, result }: EditableCommentProps) => {
   // TODO: add waiter
   const { user } = useContext(AuthContext);
   const _handleChange = useDebouncedCallback(

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import HistoryIcon from '@mui/icons-material/History';
 import {
   Timeline,
@@ -6,8 +6,8 @@ import {
   TimelineContent,
   TimelineDot,
   TimelineItem,
-  TimelineOppositeContent,
   TimelineSeparator,
+  timelineItemClasses,
 } from '@mui/lab';
 
 interface Comment {
@@ -23,29 +23,34 @@ interface CommentHistoryProps {
 
 export function CommentHistory({ comments }: CommentHistoryProps) {
   return (
-    <Timeline>
+    <Timeline
+      sx={{
+        [`& .${timelineItemClasses.root}:before`]: {
+          flex: 0,
+          padding: 0,
+        },
+      }}
+    >
       {comments.map((comment) => (
         <TimelineItem key={comment.id}>
-          <TimelineContent sx={{ py: '12px', px: 2 }}>
-            <Typography variant='h6' component='span'>
-              {comment.author}
-            </Typography>
-            <Typography>{comment.content}</Typography>
-          </TimelineContent>
           <TimelineSeparator>
-            <TimelineConnector />
             <TimelineDot color='primary'>
               <HistoryIcon />
             </TimelineDot>
             <TimelineConnector />
           </TimelineSeparator>
-          <TimelineOppositeContent
-            sx={{ m: 'auto 0' }}
-            variant='body2'
-            color='text.secondary'
-          >
-            {comment.timestamp}
-          </TimelineOppositeContent>
+          <TimelineContent>
+            <Box sx={{ textAlign: 'left' }}>
+              <Typography
+                variant='subtitle2'
+                sx={{ fontSize: '1rem', fontWeight: 'bold', color: 'black' }}
+              >
+                {comment.timestamp}
+              </Typography>
+              <Typography variant='body1'>{comment.author}</Typography>
+              <Typography variant='body1'>{comment.content}</Typography>
+            </Box>
+          </TimelineContent>
         </TimelineItem>
       ))}
     </Timeline>

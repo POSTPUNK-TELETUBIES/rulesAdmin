@@ -1,31 +1,19 @@
-import { Box, Divider, Drawer, Tab, Tabs } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Drawer,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
 import { RuleDTO, RulesStatus } from '../../types/supabase';
 import { useEffect, useState } from 'react';
-import { CommentBox } from '../CommentBox/CommentBox';
 import { CommentHistory } from '../CommentHistory/CommentHistory';
-import { faker } from '@faker-js/faker';
-
-const generateRandomComments = (count) => {
-  const comments = [];
-  const timestamp = new Date();
-
-  for (let i = 0; i < count; i++) {
-    timestamp.setMinutes(timestamp.getMinutes() - i);
-
-    const comment = {
-      id: i + 1,
-      author: faker.person.fullName(),
-      timestamp: timestamp.toLocaleString(),
-      content: faker.lorem.sentence(),
-    };
-
-    comments.push(comment);
-  }
-
-  return comments;
-};
+import { generateRandomComments } from '../../tools';
+import { EditableComment } from '../RulesTable';
 
 interface CustomDrawerProps {
   isDrawerOpen: boolean;
@@ -57,7 +45,27 @@ const renderOptions = [
           </Box>
           <Divider />
           <Box height='30%' overflow='auto' p={2}>
-            <CommentBox />
+            <Stack direction='row' pr={2}>
+              <Typography sx={{ fontStyle: 'italic', fontWeight: 900 }}>
+                Sustento de la propuesta
+              </Typography>
+              <EditableComment
+                result={{
+                  id: '1',
+                  created_at: new Date(),
+                  isActive: true,
+                  isActiveSonar: false,
+                  qualityProfile_id: 'profile-id',
+                  rule_id: 'rule-id',
+                  updated_at: new Date(),
+                  key: 'rule-key',
+                  lang_id: 'language-id',
+                  name: 'rule-name',
+                  user_email: 'user@example.com',
+                }}
+                title='Sustento de la propuesta'
+              />
+            </Stack>
           </Box>
         </Box>
       );

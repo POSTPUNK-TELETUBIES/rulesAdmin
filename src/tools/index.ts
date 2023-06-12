@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { LocalStorageVisit } from '../types/constants';
+import { faker } from '@faker-js/faker';
 
 export const getEnvOrThorw = (envName: string) => {
   const env = import.meta.env[envName];
@@ -138,3 +139,23 @@ export const exposeGlobal = (key: string, data: unknown, onlyInDev = true) => {
 
 exposeGlobal('keyBy', keyBy);
 exposeGlobal('renderConditional', renderConditional);
+
+export const generateRandomComments = (count) => {
+  const comments = [];
+  const timestamp = new Date();
+
+  for (let i = 0; i < count; i++) {
+    timestamp.setMinutes(timestamp.getMinutes() - i);
+
+    const comment = {
+      id: i + 1,
+      author: faker.person.fullName(),
+      timestamp: timestamp.toLocaleString(),
+      content: faker.lorem.sentence(),
+    };
+
+    comments.push(comment);
+  }
+
+  return comments;
+};
