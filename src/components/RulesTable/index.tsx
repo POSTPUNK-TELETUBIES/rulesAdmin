@@ -47,15 +47,26 @@ export const EditableComment = ({ title, result }: EditableCommentProps) => {
     500
   );
 
+  const handleEditComment = () => {
+    // Lógica para abrir el componente EditableComment en modo de edición
+  };
+
   return (
-    <TextField
-      multiline
-      fullWidth
-      defaultValue={result.description}
-      title={title}
-      placeholder='Esta regla aún no ha tenido observaciones'
-      onChange={_handleChange}
-    />
+    <>
+      <TextField
+        multiline
+        fullWidth
+        defaultValue={result.description}
+        title={title}
+        placeholder='Esta regla aún no ha tenido observaciones'
+        onChange={_handleChange}
+      />
+      <Tooltip title='Editar propuesta'>
+        <IconButton onClick={handleEditComment}>
+          <EditIcon />
+        </IconButton>
+      </Tooltip>
+    </>
   );
 };
 
@@ -84,10 +95,6 @@ export function RulesTable() {
     [setPage, setRowsPerPage]
   );
 
-  const handleEditComment = () => {
-    // Lógica para abrir el componente EditableComment en modo de edición
-  };
-
   // TODO: refactor this spaghetti 💩,
   return (
     <>
@@ -105,11 +112,6 @@ export function RulesTable() {
                       colSpan={columns.length - 2}
                       collapseContent={
                         <Stack direction='row' pr={2}>
-                          <Tooltip title='Editar propuesta'>
-                            <IconButton onClick={handleEditComment}>
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
                           <Typography
                             sx={{ fontStyle: 'italic', fontWeight: 900 }}
                           >
