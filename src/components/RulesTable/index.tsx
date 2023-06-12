@@ -62,7 +62,13 @@ export const EditableComment = ({ title, result }: EditableCommentProps) => {
         onChange={_handleChange}
       />
       <Tooltip title='Editar propuesta'>
-        <IconButton onClick={handleEditComment}>
+        <IconButton
+          onClick={handleEditComment}
+          sx={{
+            background: ({ palette }) => palette.primary.light,
+            zIndex: 500,
+          }}
+        >
           <EditIcon />
         </IconButton>
       </Tooltip>
