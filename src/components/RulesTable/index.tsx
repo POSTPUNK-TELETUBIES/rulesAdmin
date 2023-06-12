@@ -1,6 +1,7 @@
 import { ChangeEvent, MouseEvent, useCallback, useContext } from 'react';
 import {
   Box,
+  IconButton,
   Stack,
   TableCell,
   TablePagination,
@@ -26,13 +27,14 @@ import { RuleDTO, RulesStatus } from '../../types/supabase';
 import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
 import { AuthContext } from '../../context/auth';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface EditableCommentProps {
   title: string;
   result: RulesStatus & RuleDTO;
 }
 
-const EditableComment = ({ title, result }: EditableCommentProps) => {
+export const EditableComment = ({ title, result }: EditableCommentProps) => {
   // TODO: add waiter
   const { user } = useContext(AuthContext);
   const _handleChange = useDebouncedCallback(
@@ -82,6 +84,10 @@ export function RulesTable() {
     [setPage, setRowsPerPage]
   );
 
+  const handleEditComment = () => {
+    // Lógica para abrir el componente EditableComment en modo de edición
+  };
+
   // TODO: refactor this spaghetti 💩,
   return (
     <>
@@ -99,6 +105,11 @@ export function RulesTable() {
                       colSpan={columns.length - 2}
                       collapseContent={
                         <Stack direction='row' pr={2}>
+                          <Tooltip title='Editar propuesta'>
+                            <IconButton onClick={handleEditComment}>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
                           <Typography
                             sx={{ fontStyle: 'italic', fontWeight: 900 }}
                           >

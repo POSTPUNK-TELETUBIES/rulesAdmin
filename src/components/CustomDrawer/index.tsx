@@ -1,16 +1,19 @@
 import {
   Box,
-  Button,
   Divider,
   Drawer,
+  Stack,
   Tab,
   Tabs,
-  TextField,
+  Typography,
 } from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
 import { RuleDTO, RulesStatus } from '../../types/supabase';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { CommentHistory } from '../CommentHistory/CommentHistory';
+import { generateRandomComments } from '../../tools';
+import { EditableComment } from '../RulesTable';
 
 interface CustomDrawerProps {
   isDrawerOpen: boolean;
@@ -32,25 +35,41 @@ const renderOptions = [
   },
   {
     tab: 'history',
-    content: () => (
-      <Box height='100%' display='flex' flexDirection='column'>
-        <Box flexGrow={1}>
-          <Button sx={{ padding: '8px 16px' }} variant='contained' size='large'>
-            Historial
-          </Button>
+    content: () => {
+      const randomComments = generateRandomComments(8);
+
+      return (
+        <Box height='100%' display='flex' flexDirection='column'>
+          <Box flexGrow={1} overflow='auto' flexBasis='75%'>
+            <CommentHistory comments={randomComments} />
+          </Box>
+          <Divider />
+          <Box height='30%' overflow='auto' p={2}>
+            <Stack direction='row' pr={2}>
+              <Typography sx={{ fontStyle: 'italic', fontWeight: 900 }}>
+                Sustento de la propuesta
+              </Typography>
+              <EditableComment
+                result={{
+                  id: '1',
+                  created_at: new Date(),
+                  isActive: true,
+                  isActiveSonar: false,
+                  qualityProfile_id: 'profile-id',
+                  rule_id: 'rule-id',
+                  updated_at: new Date(),
+                  key: 'rule-key',
+                  lang_id: 'language-id',
+                  name: 'rule-name',
+                  user_email: 'user@example.com',
+                }}
+                title='Sustento de la propuesta'
+              />
+            </Stack>
+          </Box>
         </Box>
-        <Divider />
-        <Box height='25%' overflow='auto' p={2}>
-          <TextField
-            fullWidth
-            placeholder='Agregar observación'
-            multiline
-            variant='outlined'
-            sx={{ height: '100%' }}
-          />
-        </Box>
-      </Box>
-    ),
+      );
+    },
   },
 ];
 
@@ -60,6 +79,12 @@ export const CustomDrawer = ({
   result,
 }: CustomDrawerProps) => {
   const [activeTab, setActiveTab] = useState('');
+
+  useEffect(() => {
+    if (!isDrawerOpen) {
+      setActiveTab('');
+    }
+  }, [isDrawerOpen]);
 
   const handleToggleDrawer = (event: React.MouseEvent) => {
     event.stopPropagation();
