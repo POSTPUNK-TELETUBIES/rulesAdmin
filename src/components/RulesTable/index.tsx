@@ -1,80 +1,22 @@
-import { ChangeEvent, MouseEvent, useCallback, useContext } from 'react';
+import { MouseEvent, useCallback } from 'react';
 import {
   Box,
-  IconButton,
   Stack,
   TableCell,
   TablePagination,
-  TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useDebouncedCallback } from 'use-debounce';
-
 import GenericTable from '../../layout/GenericTable';
-
 import { columns } from './config';
-
-import synchroDB from '../../lib/service/dexie';
-
 import { useGetRulesStatus } from '../../hooks';
 import { GenericHeader } from '../GenericHeader';
 import { EspecialConfigCell } from './especialConfig';
 import { LoadingContentTable } from './loadingContent';
 import { NoDataContent } from './noData';
-import { RuleDTO, RulesStatus } from '../../types/supabase';
-
 import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
-import { AuthContext } from '../../context/auth';
-import EditIcon from '@mui/icons-material/Edit';
-
-interface EditableCommentProps {
-  title: string;
-  result: RulesStatus & RuleDTO;
-}
-
-export const EditableComment = ({ title, result }: EditableCommentProps) => {
-  // TODO: add waiter
-  const { user } = useContext(AuthContext);
-  const _handleChange = useDebouncedCallback(
-    async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-      return await synchroDB.saveDescription(
-        { ...result, user_email: user?.email },
-        target.value
-      );
-    },
-    500
-  );
-
-  const handleEditComment = () => {
-    // Lógica para abrir el componente EditableComment en modo de edición
-  };
-
-  return (
-    <>
-      <TextField
-        multiline
-        fullWidth
-        defaultValue={result.description}
-        title={title}
-        placeholder='Esta regla aún no ha tenido observaciones'
-        onChange={_handleChange}
-      />
-      <Tooltip title='Editar propuesta'>
-        <IconButton
-          onClick={handleEditComment}
-          sx={{
-            background: ({ palette }) => palette.primary.light,
-            zIndex: 500,
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      </Tooltip>
-    </>
-  );
-};
+import { EditableComment } from '../EditableComment';
 
 // TODO: Abstract table and config
 export function RulesTable() {
@@ -118,11 +60,6 @@ export function RulesTable() {
                       colSpan={columns.length - 2}
                       collapseContent={
                         <Stack direction='row' pr={2}>
-                          <Typography
-                            sx={{ fontStyle: 'italic', fontWeight: 900 }}
-                          >
-                            Sustento de la propuesta
-                          </Typography>
                           <EditableComment
                             result={result}
                             title={`${result.id}-comments`}
@@ -198,3 +135,4 @@ export function RulesTable() {
     </>
   );
 }
+export { EditableComment };
