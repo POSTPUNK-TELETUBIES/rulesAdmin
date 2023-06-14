@@ -1,19 +1,11 @@
-import {
-  Box,
-  Divider,
-  Drawer,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material';
+import { Box, Divider, Drawer, Stack, Tab, Tabs } from '@mui/material';
 import { PopOverDetails } from '../PopOverDetails';
 
 import { RuleDTO, RulesStatus } from '../../types/supabase';
 import { useEffect, useState } from 'react';
 import { CommentHistory } from '../CommentHistory/CommentHistory';
 import { generateRandomComments } from '../../tools';
-import { EditableComment } from '../RulesTable';
+import { EditableComment } from '../EditableComment';
 
 interface CustomDrawerProps {
   isDrawerOpen: boolean;
@@ -46,9 +38,6 @@ const renderOptions = [
           <Divider />
           <Box height='30%' overflow='auto' p={2}>
             <Stack direction='row' pr={2}>
-              <Typography sx={{ fontStyle: 'italic', fontWeight: 900 }}>
-                Sustento de la propuesta
-              </Typography>
               <EditableComment
                 result={{
                   id: '1',
