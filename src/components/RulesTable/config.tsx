@@ -56,5 +56,6 @@ export const columns: ColumnConfig[] = [
   {
     label: 'Autor',
     resource: 'user_email',
+    sxProps: { width: 150 },
   },
 ];
