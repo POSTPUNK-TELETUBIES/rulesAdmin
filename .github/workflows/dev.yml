@@ -3,8 +3,7 @@ permissions:
   contents: write
 on:
   push:
-    tags:
-      - "dev-v*"
+    branches: [dev]
 
 jobs:
   deploy-dev:
