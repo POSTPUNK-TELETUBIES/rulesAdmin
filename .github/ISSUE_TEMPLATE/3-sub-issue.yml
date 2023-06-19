@@ -1,0 +1,9 @@
+name: 'Feature'
+description: Issues específicos que nacen de un issue muy grande
+
+- type: textarea
+  id: description
+  attributes:
+    label: Descripción
+  validations:
+    required: true

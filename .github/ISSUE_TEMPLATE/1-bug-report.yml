@@ -1,0 +1,73 @@
+name: Bug Report
+description: Reporta un bug
+
+# body:
+#   - type: dropdown
+#     id: affected-packages
+#     attributes:
+#       label: Which @angular/* package(s) are the source of the bug?
+#       options:
+#         - animations
+#         - bazel
+#         - common
+#         - compiler-cli
+#         - compiler
+#         - core
+#         - elements
+#         - forms
+#         - language-service
+#         - localize
+#         - platform-browser-dynamic
+#         - platform-browser
+#         - platform-server
+#         - router
+#         - service-worker
+#         - upgrade
+#         - zone.js
+#         - Don't known / other
+#       multiple: true
+#     validations:
+#       required: true
+
+  - type: dropdown
+    id: is-regression
+    attributes:
+      label: Esta es una regresión?
+      options:
+        - 'Si'
+        - 'No'
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Pon un link para una reproducción mínima del bug o documéntalo aquí
+
+  - type: textarea
+    id: exception-or-error
+    attributes:
+      label: Coloca el error o errores que devuelve la consola o similar
+      render: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Detalles del entorno
+      render: true
+      placeholder: |
+        Node: 14.17.0
+        Package Manager: pnpm 1.22.10
+        OS: linux x64
+
+  - type: textarea
+    id: other
+    attributes:
+      label: Algo más?
