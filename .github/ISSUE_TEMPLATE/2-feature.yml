@@ -1,0 +1,47 @@
+name: 'Feature'
+description: Funcionalidad nueva
+
+body:
+  # - type: dropdown
+  #   id: affected-packages
+  #   attributes:
+  #     label: Which @angular/* package(s) are relevant/related to the feature request?
+  #     options:
+  #       - animations
+  #       - bazel
+  #       - common
+  #       - compiler-cli
+  #       - compiler
+  #       - core
+  #       - elements
+  #       - forms
+  #       - language-service
+  #       - localize
+  #       - platform-browser-dynamic
+  #       - platform-browser
+  #       - platform-server
+  #       - router
+  #       - service-worker
+  #       - upgrade
+  #     multiple: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Solución
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives-considered
+    attributes:
+      label: Alternativas consideradas
+    validations:
+      required: true
