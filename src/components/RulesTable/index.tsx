@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useContext, useState } from 'react';
+import { MouseEvent, useCallback } from 'react';
 import {
   Box,
   Stack,
@@ -17,7 +17,7 @@ import { NoDataContent } from './noData';
 import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
 import { EditableComment } from '../EditableComment';
-import { SwitchContext, SwitchProvider } from '../Switch/switchContext';
+import { SwitchProvider } from '../Switch/switchContext';
 
 // TODO: Abstract table and config
 export function RulesTable() {
