@@ -10,7 +10,6 @@ import {
 import { Sync } from '@mui/icons-material';
 import { RuleDTO, RulesStatus } from '../../types/supabase';
 import { AuthContext } from '../../context/auth';
-import { SwitchContext } from './switchContext';
 
 interface UncontrolledSwitchProps {
   initialStatus: boolean;
@@ -26,7 +25,6 @@ export function StatusSwitch({
 }: UncontrolledSwitchProps) {
   const [isInIndexedDb, setIsInIndexedDb] = useState(false);
   const [isChecked, setIsChecked] = useState(initialStatus);
-  const { setIsDisabled } = useContext(SwitchContext);
 
   const { user } = useContext(AuthContext);
 
@@ -57,7 +55,6 @@ export function StatusSwitch({
   const _handleChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
       setIsChecked(event.target.checked);
-      setIsDisabled(!event.target.checked);
 
       const prevData = await synchroDb.rulesStatus.get(Number(id));
 
@@ -80,7 +77,6 @@ export function StatusSwitch({
       result.lang_id,
       result.qualityProfile_id,
       user?.email,
-      setIsDisabled,
     ]
   );
 
