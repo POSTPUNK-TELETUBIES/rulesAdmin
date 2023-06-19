@@ -1,7 +1,7 @@
 name: Bug Report
 description: Reporta un bug
 
-# body:
+body:
 #   - type: dropdown
 #     id: affected-packages
 #     attributes:
