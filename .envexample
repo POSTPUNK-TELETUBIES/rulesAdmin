@@ -1,8 +1,0 @@
-
-VITE_SUPABASE_TOKEN=dasd.sadsad.asd
-
-VITE_TYPE_CLIENT=supabase
-
-VITE_SUPABASE_URL =https://mockserver.co
-
-VITE_WOOPRA_DOMAIN=teletubies.com

@@ -9,6 +9,9 @@ import { LoginDrawer } from '../components/LoginDrawer';
 import { Login } from '../components/Login';
 import { SingUp } from '../components/SingUp';
 
+import { server } from '../../mock/mirage';
+server();
+
 interface HomeProps {
   isSingUpAvailable?: boolean;
 }
