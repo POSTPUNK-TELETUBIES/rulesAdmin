@@ -3,7 +3,7 @@ import { USER } from './data/user';
 import { GROUP_SELECTORS } from './data/groupSelectors';
 import { LANGUAGES } from './data/languages';
 
-export const server = () => {
+export const serverInit = () => {
   createServer({
     models: {
       token: Model,

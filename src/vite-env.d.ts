@@ -6,3 +6,7 @@ declare interface Window {
   woopra: any;
   __woo: any;
 }
+
+declare interface ImportMetaEnv {
+  VITE_IS_INTERCEPTOR_ON?: string;
+}

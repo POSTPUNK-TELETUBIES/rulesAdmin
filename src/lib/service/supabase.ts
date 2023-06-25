@@ -47,18 +47,18 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   public async getConflicts(dataToUpdate: LocalRulesStatus[]) {
     const today = getTodayMidnight().toISOString();
 
-    const { data } = await this.client
+    const query = this.client
       .from('status')
       .select(
         `
-          *,
-          qualityprofiles(
+        *,
+        qualityprofiles(
+        *
+        ),
+        rules!inner(
           *
-          ),
-          rules!inner(
-            *
-        )
-        `
+      )
+      `
       )
       .in(
         'id',
@@ -66,6 +66,10 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       )
       .gt('updated_at', today)
       .throwOnError();
+
+    const { data } = await query;
+
+    query.explain().then(({ data }) => console.dir(data));
 
     const dataBy = keyBy<RulesResponse>(<RulesResponse[]>data, 'id');
 
