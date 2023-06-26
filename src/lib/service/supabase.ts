@@ -30,6 +30,14 @@ import ReportGenerator from './reportGenerator';
 import type { IReportGenerator } from '../../types/reports';
 
 export class LocalSupabaseClient implements FetchClientSingleton {
+  static getInstance(client?: SupabaseClient) {
+    LocalSupabaseClient.instance ??= new LocalSupabaseClient(
+      client ?? createClient<Database>(supabaseURL, supbaseToken)
+    );
+
+    return LocalSupabaseClient.instance;
+  }
+
   private static instance: LocalSupabaseClient;
   private static readonly whiteList = {
     ts: true,
@@ -47,18 +55,18 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   public async getConflicts(dataToUpdate: LocalRulesStatus[]) {
     const today = getTodayMidnight().toISOString();
 
-    const { data } = await this.client
+    const query = this.client
       .from('status')
       .select(
         `
-          *,
-          qualityprofiles(
+        *,
+        qualityprofiles(
+        *
+        ),
+        rules!inner(
           *
-          ),
-          rules!inner(
-            *
-        )
-        `
+      )
+      `
       )
       .in(
         'id',
@@ -66,6 +74,8 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       )
       .gt('updated_at', today)
       .throwOnError();
+
+    const { data } = await query;
 
     const dataBy = keyBy<RulesResponse>(<RulesResponse[]>data, 'id');
 
@@ -183,14 +193,18 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     return count ?? 0;
   }
 
-  async getQualityProfilesByLanguage(
-    languageId: string
-  ): Promise<QualityProfileDTO[] | null> {
-    const { data } = await this.client
+  getQualityProfilesByLanguageQuery(languageId: string) {
+    return this.client
       .from('qualityprofiles')
       .select()
       .eq('language_id', languageId)
       .throwOnError();
+  }
+
+  async getQualityProfilesByLanguage(
+    languageId: string
+  ): Promise<QualityProfileDTO[] | null> {
+    const { data } = await this.getQualityProfilesByLanguageQuery(languageId);
 
     return data as QualityProfileDTO[];
   }
@@ -241,37 +255,38 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     return this.buildQuery(query, filter);
   }
 
+  getPaginatedRulesByFilterQuery(
+    filter: RulesFilter,
+    pagination: PaginationParams
+  ) {
+    return this.prepareFilteredQuery(filter)
+      .range(...this.getRange(pagination))
+      .order('id', { ascending: true })
+      .throwOnError();
+  }
+
   async getPaginatedRulesByFilter(
     filter: RulesFilter,
     pagination: PaginationParams
   ) {
-    const query = this.prepareFilteredQuery(filter);
-
-    const { data, count } = await query
-      .range(...this.getRange(pagination))
-      .order('id', { ascending: true })
-      .throwOnError();
+    const { data, count } = await this.getPaginatedRulesByFilterQuery(
+      filter,
+      pagination
+    );
 
     return { data: data as RulesResponse[], count };
   }
 
+  getAllLanguagesQuery() {
+    return this.client.from('languages').select().throwOnError();
+  }
+
   async getAllLanguages(): Promise<LanguageDTO[] | null> {
-    const { data } = await this.client
-      .from('languages')
-      .select()
-      .throwOnError();
+    const { data } = await this.getAllLanguagesQuery();
 
     return (<LanguageDTO[]>data).filter(
       ({ name }) => LocalSupabaseClient.whiteList[name]
     );
-  }
-
-  static getInstance(client?: SupabaseClient) {
-    LocalSupabaseClient.instance ??= new LocalSupabaseClient(
-      client ?? createClient<Database>(supabaseURL, supbaseToken)
-    );
-
-    return LocalSupabaseClient.instance;
   }
 
   private getRange({ page, limit = 10 }: PaginationParams): [number, number] {
