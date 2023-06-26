@@ -1,5 +1,6 @@
 import { Collapse, TableCell, TableRow } from '@mui/material';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useContext, useState } from 'react';
+import { SwitchContext } from '../Switch/switchContext';
 
 interface WithCollapsibleProps {
   collapseContent: JSX.Element;
@@ -12,18 +13,24 @@ export const WithCollapsible = ({
   colSpan,
 }: PropsWithChildren<WithCollapsibleProps>) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { isDisabled } = useContext(SwitchContext);
+
+  const handleClick = (event: React.MouseEvent<HTMLTableRowElement>) => {
+    if (!isDisabled && event.target instanceof HTMLInputElement) {
+      setIsOpen((prev) => !prev);
+    }
+  };
   return (
     <>
       <TableRow
         sx={{
-          cursor: 'pointer',
+          cursor: isDisabled ? 'default' : 'pointer',
           ':hover': {
-            backgroundColor: ({ palette }) => palette.grey[400],
+            backgroundColor: ({ palette }) =>
+              isDisabled ? 'inherit' : palette.grey[400],
           },
         }}
-        onClick={() => {
-          setIsOpen((prev) => !prev);
-        }}
+        onClick={handleClick}
       >
         {children}
       </TableRow>

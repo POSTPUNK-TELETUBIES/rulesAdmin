@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { LocalStorageVisit } from '../types/constants';
-import { faker } from '@faker-js/faker';
 
 class RequiredEnvError extends Error {
   constructor(envName: CustomEnvKeys) {
@@ -151,7 +150,7 @@ export const exposeGlobal = (key: string, data: unknown, onlyInDev = true) => {
 exposeGlobal('keyBy', keyBy);
 exposeGlobal('renderConditional', renderConditional);
 
-export const generateRandomComments = (count) => {
+export const generateRandomComments = (count: number) => {
   const comments = [];
   const timestamp = new Date();
 
@@ -160,9 +159,9 @@ export const generateRandomComments = (count) => {
 
     const comment = {
       id: i + 1,
-      author: faker.person.fullName(),
-      timestamp: timestamp.toLocaleString(),
-      content: faker.lorem.sentence(),
+      author: 'asda',
+      timestamp: 'asdsa',
+      content: 'asdasdsad',
     };
 
     comments.push(comment);
