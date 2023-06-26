@@ -2,13 +2,24 @@ import { ReactNode } from 'react';
 import { LocalStorageVisit } from '../types/constants';
 import { faker } from '@faker-js/faker';
 
-export const getEnvOrThorw = (envName: string) => {
+class RequiredEnvError extends Error {
+  constructor(envName: CustomEnvKeys) {
+    super(
+      `${envName} is required, please do check .envexample to provide one similar into .env file`
+    );
+  }
+}
+
+export const getEnvOrThrow = (envName: CustomEnvKeys) => {
   const env = import.meta.env[envName];
 
-  if (!env) throw new Error(`Not found env ${envName}`);
+  if (!env) throw new RequiredEnvError(envName);
 
   return env;
 };
+
+export const getEnv = (envName: CustomEnvKeys, defaultValue?: unknown) =>
+  import.meta.env[envName] ?? defaultValue;
 
 export const rexifyObjectKeys = (
   pojo: Record<string, string>,
@@ -57,7 +68,7 @@ export const visitHandler = () => {
 // eslint-disable-next-line eqeqeq
 export const isNill = (data: unknown) => data != null;
 
-const sonaKeyLangaugesBlackList: Record<string, number | boolean> = {
+const sonarKeyLanguagesBlackList: Record<string, number | boolean> = {
   css: 1,
   java: 1,
   web: 1,
@@ -68,7 +79,7 @@ const sonaKeyLangaugesBlackList: Record<string, number | boolean> = {
 
 export const parseSonarKey = (
   text: string,
-  blackList = sonaKeyLangaugesBlackList
+  blackList = sonarKeyLanguagesBlackList
 ) => {
   const [match] = text.match(/^.+:/);
   if (!blackList[match.substring(0, match.length - 1)]) return text;

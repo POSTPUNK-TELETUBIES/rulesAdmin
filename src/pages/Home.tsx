@@ -9,9 +9,6 @@ import { LoginDrawer } from '../components/LoginDrawer';
 import { Login } from '../components/Login';
 import { SingUp } from '../components/SingUp';
 
-if (import.meta.env.DEV && import.meta.env.VITE_IS_INTERCEPTOR_ON)
-  import('../../mock/mirage').then((mockServer) => mockServer.serverInit());
-
 interface HomeProps {
   isSingUpAvailable?: boolean;
 }

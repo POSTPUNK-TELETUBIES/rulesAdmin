@@ -5,3 +5,5 @@ VITE_TYPE_CLIENT=supabase
 VITE_SUPABASE_URL =https://mockserver.co
 
 VITE_WOOPRA_DOMAIN=teletubies.com
+
+VITE_IS_INTERCEPTOR_ON=1
