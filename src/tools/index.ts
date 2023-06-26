@@ -17,10 +17,8 @@ export const getEnvOrThrow = (envName: CustomEnvKeys) => {
   return env;
 };
 
-export const getEnv = (envName: CustomEnvKeys, defaultValue?: unknown) => {
-  const envValue = process.env[envName];
-  return envValue ?? defaultValue;
-}
+export const getEnv = (envName: CustomEnvKeys, defaultValue?: unknown) =>
+  import.meta.env[envName] ?? defaultValue;
 
 export const rexifyObjectKeys = (
   pojo: Record<string, string>,
