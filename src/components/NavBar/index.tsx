@@ -21,8 +21,6 @@ import { LightMode, Logout, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
 import { AuthContext } from '../../context/auth';
 
-import { getLanguages } from '../../../mock/utils/getLanguages';
-
 // TODO: Planear pasar a layout
 export const NavBar = () => {
   const { palette } = useTheme();
@@ -55,7 +53,6 @@ export const NavBar = () => {
             `linear-gradient(90deg, ${palette.primary.main} 80%, ${palette.secondary.main} 100%)`,
         }}
       >
-        <button onClick={() => getLanguages()}>Traer Data</button>
         <Container>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
             <Box sx={boxStyles}>
