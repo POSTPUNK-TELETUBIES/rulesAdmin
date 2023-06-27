@@ -1,35 +1,32 @@
-pre{
+pre {
   overflow-x: scroll;
   color: white;
   background-color: #454545;
   padding: 2rem;
-
 }
 
 /* ===== Scrollbar CSS ===== */
-  /* Firefox */
+/* Firefox */
 * {
   scrollbar-width: auto;
-  scrollbar-color: #1b44da #b7c7eb;
+  scrollbar-color: #0099cc #848484;
 }
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 16px;
+  width: 0.5rem;
 }
 
 *::-webkit-scrollbar-track {
-  background: #b7c7eb;
+  background: #848484;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #1b44da;
-  border-radius: 10px;
-  border: 3px solid #ffffff;
+  background-color: #0099cc;
 }
 
-
-.reactour__popover{
+.reactour__popover {
   color: black !important;
 }
 
@@ -37,7 +34,8 @@ kbd {
   background-color: #eee;
   border-radius: 3px;
   border: 1px solid #b4b4b4;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
   color: #333;
   display: inline-block;
   font-size: 0.85em;
@@ -46,7 +44,6 @@ kbd {
   padding: 2px 4px;
   white-space: nowrap;
 }
-
 
 ::-ms-reveal {
   display: none;

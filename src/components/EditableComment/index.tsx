@@ -47,6 +47,10 @@ export const EditableComment = ({ title, result }: EditableCommentProps) => {
           sx={{
             background: ({ palette }) => palette.primary.light,
             zIndex: 500,
+            width: '3rem',
+            height: '3rem',
+            margin: 'auto',
+            marginLeft: '1rem',
           }}
         >
           <EditIcon />

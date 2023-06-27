@@ -51,6 +51,7 @@ export const FilterPopover = ({
       <Menu anchorEl={menuRef} onClose={_handleClose} open={Boolean(menuRef)}>
         {filterConfig.map(({ value, label }) => (
           <MenuItemReactive
+            key={value}
             label={label}
             value={value}
             reactiveCb={_handleReactive}

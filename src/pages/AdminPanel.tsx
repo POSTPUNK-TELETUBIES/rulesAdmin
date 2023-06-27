@@ -10,12 +10,12 @@ import { Search } from '../components/Search';
 export default function AdminPanel() {
   return (
     <>
-      <Stack gap={3}>
-        <Typography>
+      <Stack gap={3} marginBottom={6}>
+        <Typography style={{ display: 'flex', gap: '1rem' }}>
           <QuestionAnswer /> Activa o desactiva los switches dependiendo si
           deseas habilitar la regla o no
         </Typography>
-        <Typography>
+        <Typography style={{ display: 'flex', gap: '1rem' }}>
           <Info /> Recuerda que los estados que propongas no se aplicarán de
           inmediato en SonarQube
         </Typography>
