@@ -8,7 +8,9 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -36,6 +38,13 @@
     "use-debounce": "^9.0.4"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "7.0.23",
+    "@storybook/addon-interactions": "7.0.23",
+    "@storybook/addon-links": "7.0.23",
+    "@storybook/blocks": "7.0.23",
+    "@storybook/react": "7.0.23",
+    "@storybook/react-vite": "7.0.23",
+    "@storybook/testing-library": "0.0.14-next.2",
     "@types/papaparse": "^5.3.7",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -45,10 +54,13 @@
     "eslint": "^8.38.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "eslint-plugin-storybook": "^0.6.12",
     "husky": ">=6",
     "lint-staged": ">=10",
     "miragejs": "^0.1.47",
     "prettier": "^2.8.8",
+    "prop-types": "15.8.1",
+    "storybook": "7.0.23",
     "typescript": "^5.0.2",
     "vite": "^4.3.0"
   },
