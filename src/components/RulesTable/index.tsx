@@ -17,6 +17,8 @@ import { NoDataContent } from './noData';
 import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
 import { EditableComment } from '../EditableComment';
+import { SwitchProvider } from '../Switch/switchContext';
+
 
 // TODO: Abstract table and config
 export function RulesTable() {
