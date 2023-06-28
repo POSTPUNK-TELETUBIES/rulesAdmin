@@ -56,10 +56,6 @@ export function StatusSwitch({
     async (event: ChangeEvent<HTMLInputElement>) => {
       setIsChecked(event.target.checked);
 
-      if (!event.target.checked) {
-        setIsDisabled(false);
-      }
-
       const prevData = await synchroDb.rulesStatus.get(Number(id));
 
       if (!isInIndexedDb || result.isActiveOriginal !== event.target.checked)
