@@ -1,4 +1,4 @@
-import { FormControl, InputLabel } from "@mui/material";
+import { FormControl, InputLabel } from '@mui/material';
 
 interface BasicInputProps {
   input: JSX.Element;

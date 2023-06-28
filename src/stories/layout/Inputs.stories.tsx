@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Search } from '../components/Search';
+import { BasicInput } from '../../layout/Inputs/BasicInput';
 
-const meta: Meta<typeof Search> = {
-  title: 'components/Search',
-  component: Search,
+const meta: Meta<typeof BasicInput> = {
+  title: 'layout/BasicInput',
+  component: BasicInput,
   tags: ['autodocs'],
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default meta;
 
-type Story = StoryObj<typeof Search>;
+type Story = StoryObj<typeof BasicInput>;
 
 export const Example1: Story = {};
