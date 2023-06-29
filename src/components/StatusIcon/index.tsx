@@ -1,9 +1,9 @@
-import { CheckCircleOutline, Close } from "@mui/icons-material";
+import { CheckCircleOutline, Close } from '@mui/icons-material';
 
 export function StatusIcon({ isActive }: { isActive: boolean }) {
   return isActive ? (
-    <CheckCircleOutline color="success" />
+    <CheckCircleOutline color='success' />
   ) : (
-    <Close color="error" />
+    <Close color='error' />
   );
 }
