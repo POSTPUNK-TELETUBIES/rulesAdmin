@@ -11,9 +11,11 @@ import { SingUp } from '../components/SingUp';
 
 interface HomeProps {
   isSingUpAvailable?: boolean;
+  title: string;
+  description: string;
 }
 
-export const Home = ({ isSingUpAvailable }: HomeProps) => {
+export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
@@ -57,11 +59,9 @@ export const Home = ({ isSingUpAvailable }: HomeProps) => {
         </Box>
         <Stack spacing={1} width={{ sm: '100%', md: '50%' }}>
           <Typography variant='h3' component='h1'>
-            Ace config and simplify SonarQube rule administration
+            {title}
           </Typography>
-          <Typography variant='body1'>
-            Effortlessly Customize SonarQube Rules for Optimal Code Quality
-          </Typography>
+          <Typography variant='body1'>{description}</Typography>
           <Stack spacing={2} direction={{ sm: 'column', md: 'row' }}>
             {isSingUpAvailable && (
               <Button variant='contained' onClick={_handleOpenLogin(false)}>
