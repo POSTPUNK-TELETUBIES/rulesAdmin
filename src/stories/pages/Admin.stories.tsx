@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import AdminPanel from '../../pages/AdminPanel';
 
 const meta: Meta<typeof AdminPanel> = {
-  title: 'pages/AdminPanel',
+  title: 'faltantes/pages/AdminPanel',
   component: AdminPanel,
   tags: ['autodocs'],
 };

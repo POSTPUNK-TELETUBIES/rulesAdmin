@@ -12,4 +12,15 @@ export default meta;
 
 type Story = StoryObj<typeof CommentHistory>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    comments: [
+      {
+        author: 'John Doe',
+        timestamp: 'Hace 2 minutos',
+        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        id: 1,
+      },
+    ],
+  },
+};

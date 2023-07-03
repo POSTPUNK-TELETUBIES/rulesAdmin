@@ -12,4 +12,14 @@ export default meta;
 
 type Story = StoryObj<typeof StatusIcon>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    isActive: true,
+  },
+};
+
+export const Example2: Story = {
+  args: {
+    isActive: false,
+  },
+};

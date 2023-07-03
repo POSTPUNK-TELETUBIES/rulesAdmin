@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { DownloadButton } from '../../components/ActionButtons';
 
 const meta: Meta<typeof DownloadButton> = {
-  title: 'components/DownloadButton',
+  title: 'faltantes/components/DownloadButton',
   component: DownloadButton,
   tags: ['autodocs'],
 };

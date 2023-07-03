@@ -12,4 +12,16 @@ export default meta;
 
 type Story = StoryObj<typeof GenericHeader>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    data: [
+      {
+        label: 'Texto de prueba',
+        resource: 'name',
+        textAlign: 'left',
+        className: 'name',
+        sxProps: { width: 150 },
+      },
+    ],
+  },
+};

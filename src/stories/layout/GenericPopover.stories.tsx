@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import GenericPopover from '../../layout/GenericPopover';
 
 const meta: Meta<typeof GenericPopover> = {
-  title: 'layout/GenericPopover',
+  title: 'faltantes/layout/GenericPopover',
   component: GenericPopover,
   tags: ['autodocs'],
 };
