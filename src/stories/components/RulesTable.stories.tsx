@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { RulesTable } from '../../components/RulesTable';
 
 const meta: Meta<typeof RulesTable> = {
-  title: 'components/RulesTable',
+  title: 'faltantes/components/RulesTable',
   component: RulesTable,
   tags: ['autodocs'],
 };

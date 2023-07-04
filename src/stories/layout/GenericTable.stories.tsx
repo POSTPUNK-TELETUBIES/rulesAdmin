@@ -12,4 +12,12 @@ export default meta;
 
 type Story = StoryObj<typeof GenericTable>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    header: <header>Header</header>,
+    body: <main>Main</main>,
+    footer: <footer>Footer</footer>,
+    stickyHeader: true,
+    isEmpty: true,
+  },
+};

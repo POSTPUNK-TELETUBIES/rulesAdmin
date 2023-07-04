@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { DownloadDrawer } from '../../components/DownloadDrawer';
 
 const meta: Meta<typeof DownloadDrawer> = {
-  title: 'components/DownloadDrawer',
+  title: 'faltantes/components/DownloadDrawer',
   component: DownloadDrawer,
   tags: ['autodocs'],
 };
@@ -12,4 +12,9 @@ export default meta;
 
 type Story = StoryObj<typeof DownloadDrawer>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    // handleClose: () => { },
+    isOpen: true,
+  },
+};

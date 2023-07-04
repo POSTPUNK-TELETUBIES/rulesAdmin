@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BasicInput } from '../../layout/Inputs/BasicInput';
 
 const meta: Meta<typeof BasicInput> = {
-  title: 'layout/BasicInput',
+  title: 'faltantes/layout/BasicInput',
   component: BasicInput,
   tags: ['autodocs'],
 };
@@ -12,4 +12,10 @@ export default meta;
 
 type Story = StoryObj<typeof BasicInput>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    id: '1',
+    input: <input type='text' />,
+    label: 'label example',
+  },
+};

@@ -12,4 +12,8 @@ export default meta;
 
 type Story = StoryObj<typeof TimeAgo>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    date: new Date(),
+  },
+};

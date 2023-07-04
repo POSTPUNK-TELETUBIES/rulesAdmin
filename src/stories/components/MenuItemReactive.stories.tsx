@@ -12,4 +12,9 @@ export default meta;
 
 type Story = StoryObj<typeof MenuItemReactive>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    label: 'Texto de prueba',
+    value: 'value',
+  },
+};

@@ -23,7 +23,10 @@ function App() {
             <Container sx={{ paddingTop: 12, minHeight: '100vh' }}>
               {isLoading && <CustomSkeleton />}
               {!isLogged && !isLoading ? (
-                <Home />
+                <Home
+                  title='Ace config and simplify SonarQube rule administration'
+                  description='Effortlessly Customize SonarQube Rules for Optimal Code Quality'
+                />
               ) : (
                 <Suspense fallback={<CustomSkeleton />}>
                   <LazyAdminPanel />

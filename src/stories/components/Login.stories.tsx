@@ -12,4 +12,8 @@ export default meta;
 
 type Story = StoryObj<typeof Login>;
 
-export const Example1: Story = {};
+export const Example1: Story = {
+  args: {
+    isSingUpAvailable: true,
+  },
+};
