@@ -8,14 +8,16 @@ type Props = {
   type: IconTypes;
 };
 
-const icon = ({ type }: Props) => {
-  return (
-    <div>
-      {type === 'update' && <AutorenewIcon fontSize='small' />}
-      {type === 'download' && <DownloadIcon fontSize='small' />}
-      {type === 'trash' && <DeleteIcon fontSize='small' />}
-    </div>
-  );
+const iconMap: Record<IconTypes, React.ElementType> = {
+  update: AutorenewIcon,
+  download: DownloadIcon,
+  trash: DeleteIcon,
 };
 
-export default icon;
+const Icon = ({ type }: Props) => {
+  const IconComponent = iconMap[type];
+
+  return <div>{IconComponent && <IconComponent fontSize='small' />}</div>;
+};
+
+export default Icon;
