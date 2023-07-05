@@ -1,6 +1,6 @@
 # Rules Admin Dashboard
 
-This project provides a user-friendly interface for managing lint rules provided by SonarQube. The tool includes a table that displays all the available rules and allows users to filter, search, and download reports. The tool also supports the activation and deactivation of rules according to a quality profile.
+This project provides a user-friendly interface for managing lint rules provided by SonarQube. The tool includes a table that displays all the available rules and allows users to filter, search, and download reports. The tool also supports the activation and deactivation of rules according to a quality profile(s).
 
 Data is fetched from supabase.
 

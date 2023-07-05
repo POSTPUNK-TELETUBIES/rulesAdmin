@@ -1,7 +1,7 @@
-import { useCallback } from "react";
-import { setActivateFilterChange } from "../../lib/observers";
-import { FilterPopover } from "../../layout/FilterPopover";
-import { filterStateConfig } from "../../lib/config/filters";
+import { useCallback } from 'react';
+import { setActivateFilterChange } from '../../lib/observers';
+import { filterStateConfig } from '../../lib/config/filters';
+import { FilterPopover } from '../../layout/Filters/FilterContent';
 
 const parsedValues = Object.freeze({
   all: null,

@@ -52,7 +52,7 @@ const renderOptions = [
                   name: 'rule-name',
                   user_email: 'user@example.com',
                 }}
-                title='Sustento de la propuesta'
+                title=''
               />
             </Stack>
           </Box>

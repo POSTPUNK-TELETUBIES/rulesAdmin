@@ -1,8 +1,6 @@
-import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
-
-import { Download } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 import { DownloadDrawer } from '../DownloadDrawer';
+import Button from '../Button/Button';
 
 export const DownloadButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,12 +15,11 @@ export const DownloadButton = () => {
 
   return (
     <>
-      <MenuItem onClick={_handleClick}>
-        <ListItemIcon>
-          <Download />
-        </ListItemIcon>
-        <ListItemText>Descarga Personalizada</ListItemText>
-      </MenuItem>
+      <Button
+        text='Descarga Personalizada'
+        iconType='download'
+        onClik={_handleClick}
+      />
       <DownloadDrawer handleClose={_handleClose} isOpen={isOpen} />
     </>
   );

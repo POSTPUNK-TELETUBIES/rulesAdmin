@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { CloudDone, SyncProblem } from '@mui/icons-material';
 import { useLiveQuery } from 'dexie-react-hooks';
-import GenericPopover from '../../layout/GenericPopover';
+import GenericPopover from '../../layout/DescriptionContent/GenericContent';
 import { useQuery } from '@tanstack/react-query';
 import { fetchClient } from '../../lib/modules/fetchClient';
 import { SynchroButton } from '../SynchroButton';
