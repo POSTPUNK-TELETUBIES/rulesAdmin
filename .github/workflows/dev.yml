@@ -8,6 +8,8 @@ on:
       - '**.ts'
       - '**.tsx'
       - '!src/stories/**'
+      - '!.storybook/**'
+      - '!test/**'
 
 jobs:
   deploy-dev:
