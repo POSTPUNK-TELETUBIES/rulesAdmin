@@ -1,4 +1,9 @@
+import { Sync } from '@mui/icons-material';
 import {
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Button,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -15,7 +20,6 @@ import GenericTable from '../../layout/GenericTable';
 
 import synchroDb, { LocalRulesStatus } from '../../lib/service/dexie';
 import { columns } from './config';
-import Button from '../Button/Button';
 
 export const SynchroButton = () => {
   const [_handleClickSynchro] = useSynchro();
@@ -68,8 +72,12 @@ export const SynchroButton = () => {
 
   return (
     <>
-      <Button text='Sincronizar' iconType='update' onClik={handleOpenModal} />
-
+      <MenuItem onClick={handleOpenModal}>
+        <ListItemIcon>
+          <Sync fontSize='small' />
+        </ListItemIcon>
+        <ListItemText>Sincronizar</ListItemText>
+      </MenuItem>
       <Dialog onClose={handleCloseModal} open={open}>
         <DialogTitle>Hay conflictos</DialogTitle>
         <DialogContent>
@@ -114,11 +122,9 @@ export const SynchroButton = () => {
             }
           />
           <DialogActions>
-            <Button
-              text='Sincronizar'
-              iconType='update'
-              onClik={handleSynchro}
-            />
+            <Button onClick={handleSynchro} startIcon={<Sync />}>
+              Sincronizar
+            </Button>
           </DialogActions>
         </DialogContent>
       </Dialog>
