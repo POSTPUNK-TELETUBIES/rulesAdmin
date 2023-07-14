@@ -1,4 +1,4 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   FormControl,
   IconButton,
@@ -6,8 +6,8 @@ import {
   InputBaseComponentProps,
   InputLabel,
   OutlinedInput,
-} from "@mui/material";
-import { useCallback, useState } from "react";
+} from '@mui/material';
+import { useCallback, useState } from 'react';
 
 interface PasswordProps {
   inputProps?: InputBaseComponentProps;
@@ -19,8 +19,8 @@ interface PasswordProps {
 export const Password = ({
   inputProps,
   disabled,
-  id = "password",
-  label = "Password",
+  id = 'password',
+  label = 'Contraseña',
 }: PasswordProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -33,14 +33,14 @@ export const Password = ({
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <OutlinedInput
         id={id}
-        type={isVisible ? "text" : "password"}
+        type={isVisible ? 'text' : 'password'}
         inputProps={inputProps}
         endAdornment={
-          <InputAdornment position="end">
+          <InputAdornment position='end'>
             <IconButton
-              aria-label="toggle password visibility"
+              aria-label='toggle password visibility'
               onMouseDown={(event) => event.preventDefault()}
-              edge="end"
+              edge='end'
               onClick={_handleClick}
             >
               {isVisible ? <VisibilityOff /> : <Visibility />}

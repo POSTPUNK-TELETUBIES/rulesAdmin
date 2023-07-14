@@ -24,7 +24,7 @@ const genericMemoizedTable = memo(function GenericTable({
   stickyHeader = true,
 }: GenericTablePros) {
   return (
-    <Paper sx={{ paddingY: 4, background: 'transparent' }}>
+    <Paper sx={{ my: 4, background: 'transparent' }}>
       <TableContainer sx={{ maxHeight: '80vh' }}>
         <Table stickyHeader={stickyHeader}>
           <TableHead>{header}</TableHead>

@@ -16,13 +16,15 @@ import {
 } from '@mui/material';
 import { MouseEvent, useCallback, useContext, useState } from 'react';
 import { ColorModeContext, ColorPalletes } from '../../theme';
-import { SxProps, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { LightMode, Logout, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
 import { AuthContext } from '../../context/auth';
+import { useNavigate } from 'react-router-dom';
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
+  const navigate = useNavigate();
   const { palette } = useTheme();
   const colorMode = useContext(ColorModeContext);
   const { isLogged, user } = useContext(AuthContext);
@@ -48,17 +50,34 @@ export const NavBar = () => {
   return (
     <>
       <AppBar
+        position='sticky'
         sx={{
-          background: ({ palette }) =>
-            `linear-gradient(90deg, ${palette.primary.main} 80%, ${palette.secondary.main} 100%)`,
+          backgroundImage: 'url(\'/public/BannerDegrade.webp\')',
+          backgroundSize: 'cover',
         }}
       >
-        <Container>
+        <Container sx={{ py: 0.5 }}>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-            <Box sx={boxStyles}>
-              <Typography variant='h6' fontWeight={900} fontSize='1.6rem'>
-                Sonardash
-              </Typography>
+            <Box
+              display={'flex'}
+              flexWrap={'wrap'}
+              gap={{ xs: 0, sm: 1 }}
+              alignItems={'center'}
+            >
+              <Box display={'flex'} gap={1} alignItems={'center'}>
+                <img
+                  src='logo.png'
+                  alt='logo de pacifico'
+                  style={{ width: '30px' }}
+                />
+                <Typography
+                  variant='h6'
+                  fontWeight={900}
+                  fontSize={{ xs: '1.4rem', sm: '1.6rem' }}
+                >
+                  Sonardash
+                </Typography>
+              </Box>
               <Typography variant='body1'>/ Gestión de Reglas</Typography>
             </Box>
             {isLogged && <Status />}
@@ -86,6 +105,7 @@ export const NavBar = () => {
             onClick={() => {
               authClient.logOut();
               _handleClose();
+              navigate('home');
             }}
           >
             <ListItemIcon>
@@ -97,11 +117,4 @@ export const NavBar = () => {
       </Menu>
     </>
   );
-};
-
-const boxStyles: SxProps = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 1,
 };

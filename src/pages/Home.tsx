@@ -1,21 +1,14 @@
-import { Box, Stack, Typography, Button } from '@mui/material';
-import admin from '/admin.svg';
+import { Stack, Typography, Button, Box, Grid } from '@mui/material';
 import { useCallback, useState } from 'react';
-
-import { SxProps } from '@mui/material/styles';
-
-import styles from './home.module.css';
 import { LoginDrawer } from '../components/LoginDrawer';
 import { Login } from '../components/Login';
 import { SingUp } from '../components/SingUp';
 
 interface HomeProps {
   isSingUpAvailable?: boolean;
-  title: string;
-  description: string;
 }
 
-export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
+const Home = ({ isSingUpAvailable }: HomeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
@@ -42,38 +35,68 @@ export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
 
   return (
     <>
-      <Stack
-        direction='row'
-        height={'80vh'}
-        spacing={2}
-        gap={2}
-        alignItems='center'
-        justifyContent='center'
-      >
-        <Box sx={BoxStyles}>
-          <img
-            className={styles.heroImage}
-            src={admin}
-            alt='admin configuring panel'
-          />
-        </Box>
-        <Stack spacing={1} width={{ sm: '100%', md: '50%' }}>
-          <Typography variant='h3' component='h1'>
-            {title}
-          </Typography>
-          <Typography variant='body1'>{description}</Typography>
-          <Stack spacing={2} direction={{ sm: 'column', md: 'row' }}>
-            {isSingUpAvailable && (
-              <Button variant='contained' onClick={_handleOpenLogin(false)}>
-                Sing up
+      <Grid container flexGrow={1} width={'100%'} columns={{ xs: 6, md: 12 }}>
+        <Grid
+          item
+          xs={6}
+          display={{ xs: 'none', md: 'inherit' }}
+          alignContent={'center'}
+          sx={{
+            backgroundImage: 'url(\'/public/admin2.jpg\')',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+
+        <Grid item xs={6}>
+          <Box
+            height={'100%'}
+            p={{ xs: 3, sm: 8, lg: 14 }}
+            gap={2}
+            display={'flex'}
+            flexDirection={'column'}
+            justifyContent={'center'}
+          >
+            <Typography
+              fontSize={{ xs: '30px', sm: '40px', md: '40px', lg: '45px' }}
+              component='h1'
+              textAlign={{ xs: 'center', md: 'left' }}
+              fontWeight={'bold'}
+            >
+              Administración de reglas de SonarQube
+            </Typography>
+            <Typography
+              variant='body1'
+              fontSize={{ xs: '16px', sm: '20px', md: '22px' }}
+              textAlign={{ xs: 'center', md: 'left' }}
+              color={'gray'}
+            >
+              Personalize y configure sin esfuerzo para optimizar la calidad del
+              codigo.
+            </Typography>
+            <Stack
+              spacing={2}
+              direction={{ sm: 'column', md: 'row' }}
+              marginTop={{ xs: 2, sm: 4 }}
+            >
+              {isSingUpAvailable && (
+                <Button variant='contained' onClick={_handleOpenLogin(false)}>
+                  Registrate
+                </Button>
+              )}
+              <Button
+                variant='outlined'
+                onClick={_handleOpenLogin()}
+                sx={{ px: 6 }}
+                style={{ alignSelf: 'center', width: 'max-content' }}
+              >
+                Iniciar sesión
               </Button>
-            )}
-            <Button variant='outlined' onClick={_handleOpenLogin()}>
-              Log in
-            </Button>
-          </Stack>
-        </Stack>
-      </Stack>
+            </Stack>
+          </Box>
+        </Grid>
+      </Grid>
+
       <LoginDrawer
         content={
           isLogin ? (
@@ -90,13 +113,4 @@ export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
   );
 };
 
-const BoxStyles: SxProps = {
-  width: {
-    xs: '0%',
-    md: '50%',
-  },
-  display: {
-    xs: 'none',
-    md: 'block',
-  },
-};
+export default Home;

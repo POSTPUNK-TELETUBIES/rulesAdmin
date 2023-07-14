@@ -1,20 +1,20 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import "@mui/material/CssBaseline";
-import { createContext, useEffect, useMemo, useState } from "react";
-import { CssBaseline, useMediaQuery } from "@mui/material";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import '@mui/material/CssBaseline';
+import { createContext, useEffect, useMemo, useState } from 'react';
+import { CssBaseline, useMediaQuery } from '@mui/material';
 
 export enum ColorPalletes {
-  DARK = "dark",
-  LIGTH = "light",
+  DARK = 'dark',
+  LIGTH = 'light',
 }
 
 const typographyGlobals = {
-  fontFamily: ["Foco"].join(","),
+  fontFamily: ['Foco'].join(','),
 };
 
 const darkTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: 'dark',
   },
   typography: {
     ...typographyGlobals,
@@ -23,12 +23,12 @@ const darkTheme = createTheme({
 
 const lightTheme = createTheme({
   palette: {
-    mode: "light",
+    mode: 'light',
     primary: {
-      main: "#0099CC",
+      main: '#0099CC',
     },
     secondary: {
-      main: "#EE2C70",
+      main: '#EE2C70',
     },
   },
   typography: {
@@ -42,11 +42,11 @@ export const ColorModeContext = createContext({
   },
 });
 
-export const ColorModeWrapper = ({ app }: { app: JSX.Element }) => {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+export const ColorModeWrapper = ({ children }: { children: JSX.Element }) => {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const [colorMode, setColorMode] = useState<ColorPalletes>(
-    (localStorage.getItem("mode") as ColorPalletes) ||
+    (localStorage.getItem('mode') as ColorPalletes) ||
       (!prefersDarkMode ? ColorPalletes.DARK : ColorPalletes.LIGTH)
   );
 
@@ -62,7 +62,7 @@ export const ColorModeWrapper = ({ app }: { app: JSX.Element }) => {
   );
 
   useEffect(() => {
-    localStorage.setItem("mode", colorMode);
+    localStorage.setItem('mode', colorMode);
   }, [colorMode]);
 
   return (
@@ -71,7 +71,7 @@ export const ColorModeWrapper = ({ app }: { app: JSX.Element }) => {
         theme={colorMode === ColorPalletes.DARK ? darkTheme : lightTheme}
       >
         <CssBaseline />
-        {app}
+        {children}
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

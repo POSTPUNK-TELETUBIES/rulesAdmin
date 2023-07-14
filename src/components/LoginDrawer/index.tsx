@@ -3,9 +3,9 @@ import {
   SwipeableDrawer,
   SxProps,
   useMediaQuery,
-} from "@mui/material";
+} from '@mui/material';
 
-import { useTheme } from "@mui/material/styles";
+import { useTheme } from '@mui/material/styles';
 
 interface LoginDrawer {
   handleOpen: () => void;
@@ -21,17 +21,17 @@ export const LoginDrawer = ({
   content,
 }: LoginDrawer) => {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <SwipeableDrawer
       PaperProps={{
-        sx: { justifyContent: "center" },
+        sx: { justifyContent: 'center' },
       }}
       onOpen={_handleOpen}
       onClose={_handleClose}
       open={isOpen}
-      anchor={matches ? "right" : "bottom"}
+      anchor={matches ? 'right' : 'bottom'}
     >
       <Container sx={containerStyles}>{content}</Container>
     </SwipeableDrawer>
@@ -41,9 +41,9 @@ export const LoginDrawer = ({
 const containerStyles: SxProps = {
   maxWidth: 500,
   width: {
-    md: "50vw",
+    md: '50vw',
   },
-  minHeight: "50vh",
-  display: "grid",
-  placeContent: "center",
+  minHeight: '50vh',
+  display: 'grid',
+  placeContent: 'center',
 };
