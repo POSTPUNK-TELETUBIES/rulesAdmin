@@ -1,21 +1,17 @@
-import { Box, Stack, Typography, Button } from '@mui/material';
-import admin from '/admin.svg';
+import { Stack, Button, Box, Grid } from '@mui/material';
 import { useCallback, useState } from 'react';
-
-import { SxProps } from '@mui/material/styles';
-
-import styles from './home.module.css';
 import { LoginDrawer } from '../components/LoginDrawer';
 import { Login } from '../components/Login';
 import { SingUp } from '../components/SingUp';
+import styles from './home.module.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 interface HomeProps {
   isSingUpAvailable?: boolean;
-  title: string;
-  description: string;
 }
 
-export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
+const Home = ({ isSingUpAvailable }: HomeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
@@ -42,38 +38,50 @@ export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
 
   return (
     <>
-      <Stack
-        direction='row'
-        height={'80vh'}
-        spacing={2}
-        gap={2}
-        alignItems='center'
-        justifyContent='center'
-      >
-        <Box sx={BoxStyles}>
-          <img
-            className={styles.heroImage}
-            src={admin}
-            alt='admin configuring panel'
+      <Grid container columns={{ xs: 6, md: 12 }} className={styles.container}>
+        <Grid item xs={6} className={styles.imgContainer}>
+          <LazyLoadImage
+            src='admin3.webp'
+            className={styles.img}
+            alt='chica sujetando en sus manos una laptop de colo negra'
+            effect='blur'
+            width='100%'
           />
-        </Box>
-        <Stack spacing={1} width={{ sm: '100%', md: '50%' }}>
-          <Typography variant='h3' component='h1'>
-            {title}
-          </Typography>
-          <Typography variant='body1'>{description}</Typography>
-          <Stack spacing={2} direction={{ sm: 'column', md: 'row' }}>
-            {isSingUpAvailable && (
-              <Button variant='contained' onClick={_handleOpenLogin(false)}>
-                Sing up
+        </Grid>
+
+        {/* BLOQUE 2 */}
+        <Grid item xs={6}>
+          <Box p={{ xs: 3, sm: 8, lg: 14 }} className={styles.textContainer}>
+            <h2 className={styles.title}>
+              Administración de reglas de SonarQube
+            </h2>
+            <h3 className={styles.subtitle}>
+              Personalize y configure sin esfuerzo para optimizar la calidad del
+              codigo.
+            </h3>
+            <Stack
+              gap={2}
+              direction={{ sm: 'column', md: 'row' }}
+              marginTop={{ xs: 2, sm: 4 }}
+            >
+              {isSingUpAvailable && (
+                <Button variant='contained' onClick={_handleOpenLogin(false)}>
+                  Registrate
+                </Button>
+              )}
+              <Button
+                variant='outlined'
+                onClick={_handleOpenLogin()}
+                sx={{ px: 6 }}
+                style={{ alignSelf: 'center', width: 'max-content' }}
+              >
+                Iniciar sesión
               </Button>
-            )}
-            <Button variant='outlined' onClick={_handleOpenLogin()}>
-              Log in
-            </Button>
-          </Stack>
-        </Stack>
-      </Stack>
+            </Stack>
+          </Box>
+        </Grid>
+      </Grid>
+
       <LoginDrawer
         content={
           isLogin ? (
@@ -90,13 +98,4 @@ export const Home = ({ isSingUpAvailable, title, description }: HomeProps) => {
   );
 };
 
-const BoxStyles: SxProps = {
-  width: {
-    xs: '0%',
-    md: '50%',
-  },
-  display: {
-    xs: 'none',
-    md: 'block',
-  },
-};
+export default Home;

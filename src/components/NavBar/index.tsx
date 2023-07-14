@@ -16,13 +16,18 @@ import {
 } from '@mui/material';
 import { MouseEvent, useCallback, useContext, useState } from 'react';
 import { ColorModeContext, ColorPalletes } from '../../theme';
-import { SxProps, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { LightMode, Logout, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
 import { AuthContext } from '../../context/auth';
+import { useNavigate } from 'react-router-dom';
+import styles from './navbar.module.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
+  const navigate = useNavigate();
   const { palette } = useTheme();
   const colorMode = useContext(ColorModeContext);
   const { isLogged, user } = useContext(AuthContext);
@@ -47,18 +52,32 @@ export const NavBar = () => {
 
   return (
     <>
-      <AppBar
-        sx={{
-          background: ({ palette }) =>
-            `linear-gradient(90deg, ${palette.primary.main} 80%, ${palette.secondary.main} 100%)`,
-        }}
-      >
-        <Container>
+      <AppBar position='sticky' className={styles.header}>
+        <LazyLoadImage
+          src='BannerDegrade.webp'
+          style={{ background: 'green', top: '0' }}
+          className={styles.bg}
+          effect='blur'
+        />
+        <Container sx={{ py: 2 }}>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-            <Box sx={boxStyles}>
-              <Typography variant='h6' fontWeight={900} fontSize='1.6rem'>
-                Sonardash
-              </Typography>
+            <Box gap={{ xs: 0, sm: 1 }} className={styles.title}>
+              <Box display={'flex'} gap={1} alignItems={'center'}>
+                <LazyLoadImage
+                  src='logo.webp'
+                  effect='blur'
+                  alt='logo de pacifico'
+                  className={styles.logo}
+                  style={{ display: 'flex' }}
+                />
+                <Typography
+                  variant='h6'
+                  fontWeight={900}
+                  fontSize={{ xs: '1.4rem', sm: '1.6rem' }}
+                >
+                  Sonardash
+                </Typography>
+              </Box>
               <Typography variant='body1'>/ Gestión de Reglas</Typography>
             </Box>
             {isLogged && <Status />}
@@ -86,6 +105,7 @@ export const NavBar = () => {
             onClick={() => {
               authClient.logOut();
               _handleClose();
+              navigate('home');
             }}
           >
             <ListItemIcon>
@@ -97,11 +117,4 @@ export const NavBar = () => {
       </Menu>
     </>
   );
-};
-
-const boxStyles: SxProps = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 1,
 };
