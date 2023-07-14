@@ -6,15 +6,15 @@ pre {
 }
 
 *::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #bdbdbd;
+  background: #fff;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #212121;
+  background: linear-gradient(#626262, #009eda, #626262);
 }
 
 .reactour__popover {

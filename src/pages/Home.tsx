@@ -42,7 +42,7 @@ const Home = ({ isSingUpAvailable }: HomeProps) => {
           display={{ xs: 'none', md: 'inherit' }}
           alignContent={'center'}
           sx={{
-            backgroundImage: 'url(\'/public/admin2.jpg\')',
+            backgroundImage: 'url(\'admin3.webp\')',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}

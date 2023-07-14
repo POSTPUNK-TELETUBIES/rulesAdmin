@@ -52,7 +52,7 @@ export const NavBar = () => {
       <AppBar
         position='sticky'
         sx={{
-          backgroundImage: 'url(\'/public/BannerDegrade.webp\')',
+          backgroundImage: 'url(\'BannerDegrade.webp\')',
           backgroundSize: 'cover',
         }}
       >
@@ -66,7 +66,7 @@ export const NavBar = () => {
             >
               <Box display={'flex'} gap={1} alignItems={'center'}>
                 <img
-                  src='logo.png'
+                  src='logo.webp'
                   alt='logo de pacifico'
                   style={{ width: '30px' }}
                 />
