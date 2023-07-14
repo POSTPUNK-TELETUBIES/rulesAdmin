@@ -50,15 +50,9 @@ export const NavBar = () => {
 
   return (
     <>
-      <AppBar
-        position='sticky'
-        sx={{
-          backgroundImage: 'url(\'BannerDegrade.webp\')',
-          backgroundSize: 'cover',
-        }}
-        className={styles.header}
-      >
-        <Container sx={{ py: 0.5 }}>
+      <AppBar position='sticky' className={styles.header}>
+        <img src='BannerDegrade.webp' className={styles.bg} loading='lazy' />
+        <Container sx={{ py: 0.5, bgcolor: 'red' }}>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
             <Box
               display={'flex'}
