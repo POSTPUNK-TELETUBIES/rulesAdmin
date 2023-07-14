@@ -1,3 +1,45 @@
-.heroImage{
+.container {
+  height: var(--heightHero);
   width: 100%;
+}
+.imgContainer {
+  overflow: hidden;
+  height: 100%;
+  display: none;
+}
+.lazy-load-image-background {
+  width: 100%;
+}
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.textContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .imgContainer {
+    display: inherit;
+  }
+  .textContainer {
+    text-align: left;
+  }
+}
+
+.title {
+  font-size: clamp(24px, 3vw, 48px);
+  margin: 0rem;
+}
+.subtitle {
+  font-size: clamp(16px, 2vw, 22px);
+  color: gray;
+  font-weight: normal;
+  margin: 1rem 0;
 }

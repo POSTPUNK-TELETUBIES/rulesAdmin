@@ -4,6 +4,12 @@ permissions:
 on:
   push:
     branches: [dev]
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '!src/stories/**'
+      - '!.storybook/**'
+      - '!test/**'
 
 jobs:
   deploy-dev:

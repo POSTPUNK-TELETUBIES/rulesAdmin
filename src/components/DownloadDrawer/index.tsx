@@ -2,7 +2,9 @@ import {
   Button,
   Divider,
   Drawer,
+  FormControl,
   FormControlLabel,
+  InputLabel,
   List,
   ListItem,
   SelectChangeEvent,
@@ -14,7 +16,6 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { useCallback, useState } from 'react';
 import { Download } from '@mui/icons-material';
-import { BasicInput } from '../../layout/Inputs/BasicInput';
 import { UncontrolledSelect } from '../Filters/UncontrolledSelect';
 import { uncontrolledLocalFilters } from './config';
 import { LanguageGenericFilter } from '../Filters/LanguageGenericFilter';
@@ -115,18 +116,15 @@ export const DownloadDrawer = ({
               {uncontrolledLocalFilters.map(
                 ({ id, label, registerField, config }) => (
                   <ListItem key={id + label}>
-                    <BasicInput
-                      label={label}
-                      id={id}
-                      input={
-                        <UncontrolledSelect
-                          config={config}
-                          label={label}
-                          labelId={id}
-                          inputProps={register(registerField)}
-                        />
-                      }
-                    />
+                    <FormControl sx={{ width: 200 }}>
+                      <InputLabel id={id}>{label}</InputLabel>
+                      <UncontrolledSelect
+                        config={config}
+                        label={label}
+                        labelId={id}
+                        inputProps={register(registerField)}
+                      />
+                    </FormControl>
                   </ListItem>
                 )
               )}

@@ -1,7 +1,5 @@
 import type { RuleDTO, RulesStatus } from '../../types/supabase';
 
-import { TimeAgo } from '../TimeAgo';
-
 import { StatusSwitch } from '../Switch/uncontrolledIndexed';
 import { IconButton, Typography } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
@@ -10,6 +8,7 @@ import dayjs from 'dayjs';
 
 import { CustomDrawer } from '../CustomDrawer';
 import { useState } from 'react';
+import { getTimeAgo } from '../../tools/getTimeAgo';
 
 interface ExpecialConfigCell {
   resource: string;
@@ -50,7 +49,7 @@ export const EspecialConfigCell = ({
 
   if (resource === 'updated_at')
     return Math.abs(dayjs(String(value)).diff(secondaryValue, 'hours')) > 6 ? (
-      <TimeAgo date={String(value)} />
+      <Typography align='left'>{getTimeAgo(String(value))}</Typography>
     ) : (
       <Typography align='left'>--</Typography>
     );

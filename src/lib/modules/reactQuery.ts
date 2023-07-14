@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from '@tanstack/react-query';
 
 export const reactQueryClient = new QueryClient({
   defaultOptions: {
@@ -6,7 +6,7 @@ export const reactQueryClient = new QueryClient({
       staleTime: Infinity,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
-      _optimisticResults: "optimistic",
+      _optimisticResults: 'optimistic',
     },
   },
 });

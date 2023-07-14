@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   FormControl,
   InputLabel,
@@ -11,11 +12,12 @@ import { useCallback, useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AuthContext } from '../../context/auth';
 import { Password } from './Password';
-import { Person } from '@mui/icons-material';
 
 import { LoadingButton } from '@mui/lab';
 import { AuthError } from '@supabase/supabase-js';
 import { useSnackbar } from 'notistack';
+
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFields {
   email: string;
@@ -30,10 +32,12 @@ interface LoginProps {
 function useLogin() {
   const authClient = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   async function login(email: string, password: string) {
     try {
       await authClient.login(email, password);
+      navigate('/admin');
     } catch (error) {
       const { message } = error as AuthError;
       enqueueSnackbar('Credenciales inválidas', {
@@ -67,22 +71,15 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
       component={'form'}
       onSubmit={handleSubmit(_handleSubmit)}
       spacing={2}
-      p={2}
     >
       <Box display='flex' justifyContent='center'>
-        <Person
-          sx={{
-            fontSize: '10vh',
-            borderRadius: '50%',
-            border: '2px solid gray',
-          }}
-        />
+        <Avatar sx={{ width: 80, height: 80 }} />
       </Box>
       <FormControl disabled={isLoading}>
-        <InputLabel htmlFor={'email'}>Email</InputLabel>
+        <InputLabel htmlFor={'email'}>Correo Electronico</InputLabel>
         <OutlinedInput
           id='email'
-          label='Email'
+          label='Correo Electronico'
           inputProps={register('email')}
         />
       </FormControl>
@@ -93,11 +90,11 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
         disabled={isLoading}
         loading={isLoading}
       >
-        Login
+        Iniciar Sesión
       </LoadingButton>
       {isSingUpAvailable && (
         <Typography align='center'>
-          ¿Aún no te registras? <Link onClick={singUpClick}>Sing up</Link>{' '}
+          ¿Aún no te registras? <Link onClick={singUpClick}>Registrate</Link>{' '}
         </Typography>
       )}
     </Stack>

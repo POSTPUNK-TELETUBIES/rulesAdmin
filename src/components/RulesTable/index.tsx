@@ -18,6 +18,7 @@ import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
 import { EditableComment } from '../EditableComment';
 
+
 // TODO: Abstract table and config
 export function RulesTable() {
   const [

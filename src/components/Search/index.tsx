@@ -1,12 +1,12 @@
-import { Search as SearchIcon } from "@mui/icons-material";
-import { Input } from "@mui/material";
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { Search as SearchIcon } from '@mui/icons-material';
+import { Input } from '@mui/material';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 import {
   setTextmatchFilter,
   useLanguageFilter,
   useQualityProfileFilter,
-} from "../../lib/observers";
+} from '../../lib/observers';
 
 export const Search = () => {
   const language = useLanguageFilter();
@@ -25,7 +25,7 @@ export const Search = () => {
   );
 
   useEffect(() => {
-    setValue("");
+    setValue('');
     setTextmatchFilter();
   }, [language, qProfile]);
 
