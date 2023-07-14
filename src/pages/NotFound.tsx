@@ -1,26 +1,19 @@
-import { Box } from '@mui/material';
-import imgError404 from '../../public/error404.webp';
+import { Button } from '@mui/material';
+import styles from './notfound.module.css';
 
 const NotFound = () => {
   return (
-    <Box
-      flexGrow={1}
-      sx={{
-        backgroundImage: `url(${imgError404})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-      display={'flex'}
-    >
-      <Box
-        width={'100%'}
-        sx={{
-          background:
-            'linear-gradient(90deg, rgba(0,0,0,0.85), rgba(0,0,0,0.2))',
-        }}
+    <div className={styles.container}>
+      <img
+        src='error404.webp'
+        className={styles.img}
+        alt='imagen de un laptop mostrando el numero 404'
+        loading='lazy'
       />
-    </Box>
+      <div className={styles.box}>
+        <Button variant='contained'>Volver al inicio</Button>
+      </div>
+    </div>
   );
 };
 export default NotFound;

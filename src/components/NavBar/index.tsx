@@ -21,6 +21,7 @@ import { LightMode, Logout, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
 import { AuthContext } from '../../context/auth';
 import { useNavigate } from 'react-router-dom';
+import styles from './navbar.module.css';
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
@@ -55,6 +56,7 @@ export const NavBar = () => {
           backgroundImage: 'url(\'BannerDegrade.webp\')',
           backgroundSize: 'cover',
         }}
+        className={styles.header}
       >
         <Container sx={{ py: 0.5 }}>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>

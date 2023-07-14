@@ -1,3 +1,8 @@
+:root {
+  --heightHeader: 5rem;
+  --heightHero: calc(100vh - var(--heightHeader));
+}
+
 pre {
   overflow-x: scroll;
   color: white;
