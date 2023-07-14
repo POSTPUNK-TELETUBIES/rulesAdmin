@@ -1,9 +1,10 @@
-name: 'Feature'
+name: 'Sub issue'
 description: Issues específicos que nacen de un issue muy grande
 
-- type: textarea
-  id: description
-  attributes:
-    label: Descripción
-  validations:
-    required: true
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción
+    validations:
+      required: true

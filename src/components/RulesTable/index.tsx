@@ -17,7 +17,7 @@ import { NoDataContent } from './noData';
 import { parseConditionallySonarKey } from '../../tools';
 import { WithCollapsible } from './WithCollpasible';
 import { EditableComment } from '../EditableComment';
-import { SwitchProvider } from '../Switch/switchContext';
+
 
 // TODO: Abstract table and config
 export function RulesTable() {
@@ -47,97 +47,93 @@ export function RulesTable() {
   // TODO: refactor this spaghetti 💩,
   return (
     <>
-      <SwitchProvider>
-        <GenericTable
-          body={
-            isFetching ? (
-              <LoadingContentTable colSpan={columns.length} />
-            ) : (
-              <NoDataContent
-                hasContent={!!data?.length}
-                colSpan={columns.length}
-              >
-                {isFetching
-                  ? []
-                  : data?.map((result) => (
-                      <WithCollapsible
-                        key={result.id}
-                        colSpan={columns.length - 2}
-                        collapseContent={
-                          <Stack direction='row' pr={2}>
-                            <EditableComment
-                              result={result}
-                              title={`${result.id}-comments`}
-                            />
-                          </Stack>
-                        }
-                      >
-                        {columns.map(
-                          ({ resource, especialConfig, textAlign }) => {
-                            if (!especialConfig)
-                              return (
-                                <TableCell
-                                  sx={{
-                                    textAlign: textAlign ?? 'center',
-                                    maxWidth: 140,
-                                  }}
-                                  key={resource + result.id}
-                                >
-                                  <Tooltip
-                                    title={String(result[resource] ?? '--')}
-                                  >
-                                    <Typography
-                                      noWrap
-                                      sx={{
-                                        ...(resource === 'key'
-                                          ? { width: 60 }
-                                          : {}),
-                                      }}
-                                    >
-                                      {parseConditionallySonarKey(
-                                        String(result[resource] ?? '--'),
-                                        resource === 'key'
-                                      )}
-                                    </Typography>
-                                  </Tooltip>
-                                </TableCell>
-                              );
-
+      <GenericTable
+        body={
+          isFetching ? (
+            <LoadingContentTable colSpan={columns.length} />
+          ) : (
+            <NoDataContent hasContent={!!data?.length} colSpan={columns.length}>
+              {isFetching
+                ? []
+                : data?.map((result) => (
+                    <WithCollapsible
+                      key={result.id}
+                      colSpan={columns.length - 2}
+                      collapseContent={
+                        <Stack direction='row' pr={2}>
+                          <EditableComment
+                            result={result}
+                            title={`${result.id}-comments`}
+                          />
+                        </Stack>
+                      }
+                    >
+                      {columns.map(
+                        ({ resource, especialConfig, textAlign }) => {
+                          if (!especialConfig)
                             return (
                               <TableCell
-                                key={resource + result.id}
                                 sx={{
                                   textAlign: textAlign ?? 'center',
+                                  maxWidth: 140,
                                 }}
+                                key={resource + result.id}
                               >
-                                <EspecialConfigCell
-                                  result={result}
-                                  resource={resource}
-                                  secondaryValue={result.created_at}
-                                  value={result[resource] ?? '--'}
-                                />
+                                <Tooltip
+                                  title={String(result[resource] ?? '--')}
+                                >
+                                  <Typography
+                                    noWrap
+                                    sx={{
+                                      ...(resource === 'key'
+                                        ? { width: 60 }
+                                        : {}),
+                                    }}
+                                  >
+                                    {parseConditionallySonarKey(
+                                      String(result[resource] ?? '--'),
+                                      resource === 'key'
+                                    )}
+                                  </Typography>
+                                </Tooltip>
                               </TableCell>
                             );
-                          }
-                        )}
-                      </WithCollapsible>
-                    ))}
-              </NoDataContent>
-            )
-          }
-          header={<GenericHeader data={columns} />}
+
+                          return (
+                            <TableCell
+                              key={resource + result.id}
+                              sx={{
+                                textAlign: textAlign ?? 'center',
+                              }}
+                            >
+                              <EspecialConfigCell
+                                result={result}
+                                resource={resource}
+                                secondaryValue={result.created_at}
+                                value={result[resource] ?? '--'}
+                              />
+                            </TableCell>
+                          );
+                        }
+                      )}
+                    </WithCollapsible>
+                  ))}
+            </NoDataContent>
+          )
+        }
+        header={<GenericHeader data={columns} />}
+      />
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <TablePagination
+          rowsPerPage={rowsPerPage}
+          count={total ?? 1000}
+          page={page - 1}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage='Filas por página'
         />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <TablePagination
-            rowsPerPage={rowsPerPage}
-            count={total ?? 1000}
-            page={page - 1}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage='Filas por página'
-          />
-        </Box>
-      </SwitchProvider>
+      </Box>
     </>
   );
 }
+export { EditableComment };
