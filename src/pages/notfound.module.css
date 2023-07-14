@@ -1,7 +1,6 @@
 .container {
   position: relative;
   height: var(--heightHero);
-  background: pink;
 }
 .img {
   width: 100%;

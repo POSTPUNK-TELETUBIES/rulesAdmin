@@ -22,6 +22,8 @@ import { Status } from './status';
 import { AuthContext } from '../../context/auth';
 import { useNavigate } from 'react-router-dom';
 import styles from './navbar.module.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
@@ -51,20 +53,22 @@ export const NavBar = () => {
   return (
     <>
       <AppBar position='sticky' className={styles.header}>
-        <img src='BannerDegrade.webp' className={styles.bg} loading='lazy' />
-        <Container sx={{ py: 0.5, bgcolor: 'red' }}>
+        <LazyLoadImage
+          src='BannerDegrade.webp'
+          style={{ background: 'green', top: '0' }}
+          className={styles.bg}
+          effect='blur'
+        />
+        <Container sx={{ py: 2 }}>
           <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-            <Box
-              display={'flex'}
-              flexWrap={'wrap'}
-              gap={{ xs: 0, sm: 1 }}
-              alignItems={'center'}
-            >
+            <Box gap={{ xs: 0, sm: 1 }} className={styles.title}>
               <Box display={'flex'} gap={1} alignItems={'center'}>
-                <img
+                <LazyLoadImage
                   src='logo.webp'
+                  effect='blur'
                   alt='logo de pacifico'
-                  style={{ width: '30px' }}
+                  className={styles.logo}
+                  style={{ display: 'flex' }}
                 />
                 <Typography
                   variant='h6'

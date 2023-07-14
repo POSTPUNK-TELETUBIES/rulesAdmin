@@ -4,6 +4,8 @@ import { LoginDrawer } from '../components/LoginDrawer';
 import { Login } from '../components/Login';
 import { SingUp } from '../components/SingUp';
 import styles from './home.module.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 interface HomeProps {
   isSingUpAvailable?: boolean;
@@ -38,11 +40,12 @@ const Home = ({ isSingUpAvailable }: HomeProps) => {
     <>
       <Grid container columns={{ xs: 6, md: 12 }} className={styles.container}>
         <Grid item xs={6} className={styles.imgContainer}>
-          <img
+          <LazyLoadImage
             src='admin3.webp'
             className={styles.img}
             alt='chica sujetando en sus manos una laptop de colo negra'
-            loading='lazy'
+            effect='blur'
+            width='100%'
           />
         </Grid>
 

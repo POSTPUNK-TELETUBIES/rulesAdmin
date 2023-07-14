@@ -1,17 +1,25 @@
 import { Button } from '@mui/material';
 import styles from './notfound.module.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { Link } from 'react-router-dom';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const NotFound = () => {
   return (
     <div className={styles.container}>
-      <img
-        src='error404.webp'
+      <LazyLoadImage
+        src={'error404.webp'}
         className={styles.img}
-        alt='imagen de un laptop mostrando el numero 404'
-        loading='lazy'
+        alt={'Fondo degradado'}
+        effect='blur'
+        width='100%'
       />
       <div className={styles.box}>
-        <Button variant='contained'>Volver al inicio</Button>
+        <Link to='/'>
+          <Button variant='contained' size='large'>
+            Volver al inicio
+          </Button>
+        </Link>
       </div>
     </div>
   );

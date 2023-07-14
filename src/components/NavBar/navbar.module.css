@@ -7,3 +7,11 @@
   position: absolute;
   width: 100%;
 }
+.title {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+.logo {
+  width: 30px;
+}
