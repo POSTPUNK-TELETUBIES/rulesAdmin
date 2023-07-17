@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import { NavBar } from '../components/NavBar';
@@ -10,7 +10,7 @@ export const AppRoutes = () => {
   const { isLogged } = useContext(AuthContext);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <NavBar />
       <Routes>
         <Route
@@ -23,6 +23,6 @@ export const AppRoutes = () => {
         {isLogged && <Route path='/admin' element={<Admin />} />}
         <Route path='*' element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
