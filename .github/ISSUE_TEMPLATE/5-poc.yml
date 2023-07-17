@@ -1,0 +1,41 @@
+name: 'POC'
+description: 'Realizar una prueba de concepto de alguna libreria o tecnologia, etc.'
+labels: ['poc', 'doc']
+
+body:
+  - type: input
+    id: description
+    attributes:
+      label: Descripcion del problema a solucionar
+      value: Aqui explica detalladamente...
+    validations:
+      required: false
+
+  - type: input
+    id: solucion
+    attributes:
+      label: Descripcion de como se solucionó el problema
+      value: Aqui explica detalladamente...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: subtareas
+    attributes:
+      label: Sub tareas
+      description: La secuencia de tareas que se van a realizar
+      options:
+        - label: Investigacion y lectura de la documentacion
+        - label: Creacion del POC
+        - label: Documentacion en discussions
+
+  - type: textarea
+    id: documentacion
+    attributes:
+      label: Enlaces de documentacion y/o libros que se usaron para resolver el problema
+      description: 'Aqui debes colocar todos los enlaces usando markdown'
+      value: |
+        - [Ejemplo 1](https://example.com)
+        - [Ejemplo 2](https://example.com)
+    validations:
+      required: false
