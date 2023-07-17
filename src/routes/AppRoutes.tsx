@@ -13,9 +13,10 @@ import { AuthContext } from '../context/auth';
 import Admin from '../pages/Admin';
 import { isHashed } from '../../config/router';
 
+const RouterFn = isHashed ? HashRouter : BrowserRouter;
+
 export const AppRoutes = () => {
   const { isLogged } = useContext(AuthContext);
-  const RouterFn = isHashed ? HashRouter : BrowserRouter;
 
   return (
     <RouterFn>
