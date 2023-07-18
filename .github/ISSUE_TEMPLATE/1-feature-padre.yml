@@ -32,7 +32,7 @@ body:
   - type: textarea
     id: documentacion
     attributes:
-      label: Enlaces de documentación y/o libros que se usaron para resolver el problema
+      label: Enlaces de documentación y/o libros que se usaron
       description: 'Aqui debes colocar todos los enlaces usando markdown'
       value: |
         - [Ejemplo 1](https://example.com)
