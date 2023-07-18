@@ -15,7 +15,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Descripcion de la tarea que se ha realizado
+      label: Descripción de la tarea que se ha realizado
       description: 'Explica detalladamente:'
       value: 'Aqui explica detalladamente lo que se hizo...'
     validations:
