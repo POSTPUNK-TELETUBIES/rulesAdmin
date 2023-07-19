@@ -1,0 +1,41 @@
+name: Refactor Padre (p)
+description: Solucionar un problema, mejorar el código, etc.
+labels: [parent, refactor]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del problema
+      placeholder: Aqui explica detalladamente...
+    validations:
+      required: true
+
+  - type: input
+    id: solucion
+    attributes:
+      label: Descripción de como se solucionó
+      value: Aqui explica detalladamente...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: subtareas
+    attributes:
+      label: Sub tareas
+      description: La secuencia de tareas que se van a realizar
+      options:
+        - label: Investigación y lectura de la documentación
+        - label: Refactorizar el codigo
+        - label: Documentación en [discussions](https://github.com/Shadowrunner11/rulesAdmin/discussions)
+
+  - type: textarea
+    id: documentacion
+    attributes:
+      label: Enlaces de documentación y/o libros que se usaron
+      description: Aqui debes colocar todos los enlaces usando markdown
+      value: |
+        - [Ejemplo 1](https://example.com)
+        - [Ejemplo 2](https://example.com)
+    validations:
+      required: false
