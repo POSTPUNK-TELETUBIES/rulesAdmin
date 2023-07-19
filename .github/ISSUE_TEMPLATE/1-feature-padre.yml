@@ -1,13 +1,13 @@
-name: 'Feature Padre (p)'
-description: 'Agregar una nueva funcionalidad'
-labels: ['parent']
+name: Feature Padre (p)
+description: Agregar una nueva funcionalidad
+labels: [parent]
 
 body:
   - type: textarea
     id: description
     attributes:
       label: Descripción de la funcionalidad que se quiere implementar
-      placeholder: 'Aqui explica detalladamente...'
+      placeholder: Aqui explica detalladamente...
     validations:
       required: true
 
@@ -33,7 +33,7 @@ body:
     id: documentacion
     attributes:
       label: Enlaces de documentación y/o libros que se usaron
-      description: 'Aqui debes colocar todos los enlaces usando markdown'
+      description: Aqui debes colocar todos los enlaces usando markdown
       value: |
         - [Ejemplo 1](https://example.com)
         - [Ejemplo 2](https://example.com)

@@ -1,10 +1,10 @@
-name: 'POC'
-description: 'Realizar una prueba de concepto de alguna libreria o tecnologia, etc.'
-labels: ['poc', 'doc']
+name: POC
+description: Realizar una prueba de concepto de alguna libreria o tecnologia, etc.
+labels: [poc, doc]
 
 body:
   - type: input
-    id: descriptión
+    id: descripcion
     attributes:
       label: Descripción del problema
       value: Aqui explica detalladamente...
@@ -33,7 +33,7 @@ body:
     id: documentacion
     attributes:
       label: Enlaces de documentación y/o libros que se usaron
-      description: 'Aqui debes colocar todos los enlaces usando markdown'
+      description: Aqui debes colocar todos los enlaces usando markdown
       value: |
         - [Ejemplo 1](https://example.com)
         - [Ejemplo 2](https://example.com)

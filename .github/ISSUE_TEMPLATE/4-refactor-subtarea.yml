@@ -1,6 +1,6 @@
-name: 'Refactor Subtarea (st)'
-description: 'Agregar subtarea que pertenece a una tarea padre que soluciona un problema, mejora el codigo, etc.'
-labels: ['subtarea', 'refactor']
+name: Refactor Subtarea (st)
+description: Agregar subtarea que pertenece a una tarea padre que soluciona un problema, mejora el codigo, etc.
+labels: [subtarea, refactor]
 
 body:
   - type: input
@@ -8,7 +8,7 @@ body:
     attributes:
       label: Tarea padre
       description: 'Numero de la tarea padre a la que pertenece esta subtarea, Ejemplo: "- #12345"'
-      placeholder: '- #numero_de_tarea_padre'
+      placeholder: "- #numero_de_tarea_padre"
     validations:
       required: true
 
@@ -16,7 +16,7 @@ body:
     id: description
     attributes:
       label: Descripción de la tarea que se ha realizado
-      description: 'Explica detalladamente:'
-      value: 'Aqui explica detalladamente lo que se hizo...'
+      description: Explica detalladamente
+      value: Aqui explica detalladamente lo que se hizo...
     validations:
       required: false

@@ -1,13 +1,13 @@
-name: 'Refactor Padre (p)'
-description: 'Solucionar un problema, mejorar el código, etc.'
-labels: ['parent', 'refactor']
+name: Refactor Padre (p)
+description: Solucionar un problema, mejorar el código, etc.
+labels: [parent, refactor]
 
 body:
   - type: textarea
     id: description
     attributes:
       label: Descripción del problema
-      placeholder: 'Aqui explica detalladamente...'
+      placeholder: Aqui explica detalladamente...
     validations:
       required: true
 
@@ -15,7 +15,7 @@ body:
     id: solucion
     attributes:
       label: Descripción de como se solucionó
-      value: 'Aqui explica detalladamente...'
+      value: Aqui explica detalladamente...
     validations:
       required: false
 
@@ -33,7 +33,7 @@ body:
     id: documentacion
     attributes:
       label: Enlaces de documentación y/o libros que se usaron
-      description: 'Aqui debes colocar todos los enlaces usando markdown'
+      description: Aqui debes colocar todos los enlaces usando markdown
       value: |
         - [Ejemplo 1](https://example.com)
         - [Ejemplo 2](https://example.com)
