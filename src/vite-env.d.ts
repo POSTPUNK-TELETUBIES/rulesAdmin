@@ -31,4 +31,5 @@ declare interface ImportMetaEnv {
   VITE_TYPE_CLIENT?: string;
   VITE_SUPABASE_TOKEN?: string;
   VITE_WOOPRA_DOMAIN?: string;
+  VITE_IS_HASH?: string;
 }

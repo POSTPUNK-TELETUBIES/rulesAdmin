@@ -13,8 +13,10 @@ const NotFound = () => {
         alt={'Fondo degradado'}
         effect='blur'
         width='100%'
+        height='100%'
       />
       <div className={styles.box}>
+        <h1 className={styles.title}>¡Ups! Esta página no existe</h1>
         <Link to='/'>
           <Button variant='contained' size='large'>
             Volver al inicio
