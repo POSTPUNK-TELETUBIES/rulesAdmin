@@ -18,6 +18,7 @@ import { AuthError } from '@supabase/supabase-js';
 import { useSnackbar } from 'notistack';
 
 import { useNavigate } from 'react-router-dom';
+import { useSignIn } from 'react-auth-kit';
 
 interface LoginFields {
   email: string;
@@ -36,8 +37,9 @@ function useLogin() {
 
   async function login(email: string, password: string) {
     try {
-      await authClient.login(email, password);
+      const response = await authClient.login(email, password);
       navigate('/admin');
+      return response;
     } catch (error) {
       const { message } = error as AuthError;
       enqueueSnackbar('Credenciales inválidas', {
@@ -55,15 +57,37 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
   const { handleSubmit, register, resetField } = useForm();
   const login = useLogin();
   const [isLoading, setIsLoading] = useState(false);
+  const signIn = useSignIn();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
     async ({ email, password }) => {
       setIsLoading(true);
       resetField('password');
-      login(email, password);
+      try {
+        // Call your login function here
+        const res = await login(email, password);
+        signIn({
+          token: res.data.token,
+          expiresIn: res.data.expiresIn,
+          tokenType: 'Bearer',
+          authState: res.data.authUserState,
+          refreshToken: res.data.refreshToken,
+          refreshTokenExpireIn: res.data.refreshTokenExpireIn,
+        });
+        navigate('/admin');
+      } catch (error) {
+        const { message } = error as AuthError;
+        enqueueSnackbar('Credenciales inválidas', {
+          variant: 'error',
+          autoHideDuration: 3000,
+        });
+        return message;
+      }
       setIsLoading(false);
     },
-    [login, resetField]
+    [login, resetField, signIn]
   );
 
   return (
