@@ -4,11 +4,6 @@ import {
   Box,
   Button,
   Container,
-  List,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
   Stack,
   Switch,
   Toolbar,
@@ -17,22 +12,19 @@ import {
 import { MouseEvent, useCallback, useContext, useState } from 'react';
 import { ColorModeContext, ColorPalletes } from '../../theme';
 import { useTheme } from '@mui/material/styles';
-import { LightMode, Logout, ModeNight } from '@mui/icons-material';
+import { LightMode, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
 import { AuthContext } from '../../context/auth';
-import { useNavigate } from 'react-router-dom';
 import styles from './navbar.module.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-
+import SignOut from '../SignOut/SignOut';
 // TODO: Planear pasar a layout
 export const NavBar = () => {
-  const navigate = useNavigate();
   const { palette } = useTheme();
   const colorMode = useContext(ColorModeContext);
   const { isLogged, user } = useContext(AuthContext);
-  const [anchorRef, setAnchorRef] = useState(null);
-  const authClient = useContext(AuthContext);
+  const [setAnchorRef] = useState(null);
 
   const _handleChange = useCallback(
     () => colorMode.toggleColorMode(),
@@ -45,10 +37,6 @@ export const NavBar = () => {
     },
     []
   );
-
-  const _handleClose = useCallback(() => {
-    setAnchorRef(null);
-  }, []);
 
   return (
     <>
@@ -88,7 +76,9 @@ export const NavBar = () => {
                 <LightMode />
               )}
               <Switch color='warning' onChange={_handleChange} />
-              {isLogged && (
+              {isLogged ? (
+                <SignOut />
+              ) : (
                 <Button sx={{ borderRadius: '50%' }} onClick={_handleClick}>
                   <Avatar sx={{ width: 40, height: 40 }} variant='circular'>
                     {user?.email[0]}
@@ -99,22 +89,6 @@ export const NavBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Menu open={!!anchorRef} anchorEl={anchorRef} onClose={_handleClose}>
-        <List>
-          <MenuItem
-            onClick={() => {
-              authClient.logOut();
-              _handleClose();
-              navigate('home');
-            }}
-          >
-            <ListItemIcon>
-              <Logout />
-            </ListItemIcon>
-            <ListItemText>Log out</ListItemText>
-          </MenuItem>
-        </List>
-      </Menu>
     </>
   );
 };
