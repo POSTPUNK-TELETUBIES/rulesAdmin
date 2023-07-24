@@ -5,6 +5,7 @@ import { NavBar } from '../components/NavBar';
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth';
 import Admin from '../pages/Admin';
+import { RequireAuth } from 'react-auth-kit';
 
 export const AppRoutes = () => {
   const { isLogged } = useContext(AuthContext);
@@ -22,6 +23,15 @@ export const AppRoutes = () => {
         <Route path='/home' element={<Home />} />
         {isLogged && <Route path='/admin' element={<Admin />} />}
         <Route path='*' element={<NotFound />} />
+
+        <Route
+          path='/secure'
+          element={
+            <RequireAuth loginPath='/home'>
+              <div>Admin</div>
+            </RequireAuth>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
