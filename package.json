@@ -31,6 +31,7 @@
     "notistack": "^3.0.1",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
+    "react-auth-kit": "^2.12.4",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-hook-form": "^7.43.9",
