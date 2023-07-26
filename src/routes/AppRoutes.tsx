@@ -1,16 +1,25 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  HashRouter,
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import { NavBar } from '../components/NavBar';
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth';
 import Admin from '../pages/Admin';
+import { isHashed } from '../../config/router';
+
+const RouterFn = isHashed ? HashRouter : BrowserRouter;
 
 export const AppRoutes = () => {
   const { isLogged } = useContext(AuthContext);
 
   return (
-    <BrowserRouter>
+    <RouterFn>
       <NavBar />
       <Routes>
         <Route
@@ -23,6 +32,6 @@ export const AppRoutes = () => {
         {isLogged && <Route path='/admin' element={<Admin />} />}
         <Route path='*' element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </RouterFn>
   );
 };

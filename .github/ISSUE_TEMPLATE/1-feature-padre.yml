@@ -1,0 +1,41 @@
+name: Feature Padre (p)
+description: Agregar una nueva funcionalidad
+labels: [parent]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción de la funcionalidad que se quiere implementar
+      placeholder: Aqui explica detalladamente...
+    validations:
+      required: true
+
+  - type: input
+    id: solucion
+    attributes:
+      label: Descripción de como se realizo la implementación
+      value: Aqui explica detalladamente...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: subtareas
+    attributes:
+      label: Sub tareas
+      description: La secuencia de tareas que se van a realizar
+      options:
+        - label: Investigación y lectura de la documentación
+        - label: Agregar la funcionalidad
+        - label: Documentación en [discussions](https://github.com/Shadowrunner11/rulesAdmin/discussions)
+
+  - type: textarea
+    id: documentacion
+    attributes:
+      label: Enlaces de documentación y/o libros que se usaron
+      description: Aqui debes colocar todos los enlaces usando markdown
+      value: |
+        - [Ejemplo 1](https://example.com)
+        - [Ejemplo 2](https://example.com)
+    validations:
+      required: false
