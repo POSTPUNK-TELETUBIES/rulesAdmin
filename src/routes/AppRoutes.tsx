@@ -5,7 +5,7 @@ import { NavBar } from '../components/NavBar';
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth';
 import Admin from '../pages/Admin';
-import { RequireAuth } from 'react-auth-kit';
+import RequireAuth from '../lib/react-auth-kit/RequireAuth';
 
 export const AppRoutes = () => {
   const { isLogged } = useContext(AuthContext);
@@ -27,7 +27,7 @@ export const AppRoutes = () => {
         <Route
           path='/secure'
           element={
-            <RequireAuth loginPath='/home'>
+            <RequireAuth redirectPath='/home'>
               <div>Admin</div>
             </RequireAuth>
           }

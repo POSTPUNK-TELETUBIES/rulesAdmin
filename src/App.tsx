@@ -9,12 +9,7 @@ function App() {
     <Box display={'flex'} flexDirection={'column'} minHeight={'100vh'}>
       <SnackbarProvider>
         <ColorModeWrapper>
-          <AuthProvider
-            authType={'cookie'}
-            authName={'_auth'}
-            cookieDomain={window.location.hostname}
-            cookieSecure={window.location.protocol === 'https:'}
-          >
+          <AuthProvider authType={'localstorage'} authName={'_auth'}>
             <AppRoutes />
           </AuthProvider>
         </ColorModeWrapper>
