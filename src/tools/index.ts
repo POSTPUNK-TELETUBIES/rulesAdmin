@@ -134,17 +134,25 @@ export const exposeGlobal = (key: string, data: unknown, onlyInDev = true) => {
 };
 
 //TODO Delete
-export const generateRandomComments = (count: number) => {
-  const comments = [];
+interface Comment {
+  id: number;
+  author: string;
+  timestamp: string;
+  content: string;
+}
+
+export const generateRandomComments = (count: number): Comment[] => {
+  const comments: Comment[] = [];
+
   const timestamp = new Date();
 
   for (let i = 0; i < count; i++) {
     timestamp.setMinutes(timestamp.getMinutes() - i);
 
-    const comment = {
+    const comment: Comment = {
       id: i + 1,
       author: 'asda',
-      timestamp: 'asdsa',
+      timestamp: 'asdasdsad',
       content: 'asdasdsad',
     };
 
