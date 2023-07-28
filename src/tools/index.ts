@@ -1,13 +1,6 @@
 import { ReactNode } from 'react';
 import { LocalStorageVisit } from '../types/constants';
-
-class RequiredEnvError extends Error {
-  constructor(envName: CustomEnvKeys) {
-    super(
-      `${envName} is required, please do check .envexample to provide one similar into .env file`
-    );
-  }
-}
+import { RequiredEnvError } from '../lib/errors';
 
 export const getEnvOrThrow = (envName: CustomEnvKeys) => {
   const env = import.meta.env[envName];
@@ -22,17 +15,7 @@ export const getEnv = (envName: CustomEnvKeys, defaultValue?: unknown) => {
   return envValue ?? defaultValue;
 };
 
-export const rexifyObjectKeys = (
-  pojo: Record<string, string>,
-  flags?: string
-) => new RegExp(Object.keys(pojo).join(''), flags);
-
-export const replaceByDict = (
-  text: string,
-  dict: Record<string, string>,
-  flags?: string
-) => text.replace(rexifyObjectKeys(dict, flags), (match) => dict[match]);
-
+//TODO Refactor this
 export const DOMHideOverflow = (
   selector: string,
   isOpen = true,
@@ -66,6 +49,7 @@ export const visitHandler = () => {
   return true;
 };
 
+//TODO Check this should inverted
 // eslint-disable-next-line eqeqeq
 export const isNill = (data: unknown) => data != null;
 
@@ -110,7 +94,7 @@ export const renderConditional = <T extends ReactNode = ReactNode>(
  *   lastName: string;
  * }
  * const users: User[] = [user1, user2]
- * keyBy(users, 'id') = {
+ * keyBy(users, 'id') // {
  *   'idUser1': user1,
  *   'idUser2' user2 // The values are of type User
  * }
@@ -149,9 +133,7 @@ export const exposeGlobal = (key: string, data: unknown, onlyInDev = true) => {
   if (import.meta.env.DEV) return (window[key] = data);
 };
 
-exposeGlobal('keyBy', keyBy);
-exposeGlobal('renderConditional', renderConditional);
-
+//TODO Delete
 export const generateRandomComments = (count: number) => {
   const comments = [];
   const timestamp = new Date();
