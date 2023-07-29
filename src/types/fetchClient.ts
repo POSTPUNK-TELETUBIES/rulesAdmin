@@ -62,6 +62,6 @@ export interface AuthClient {
   verifyAuth?(token?: string, extraData?: unknown): Promise<unknown>;
   logOut(token?: string, extraData?: unknown): Promise<unknown>;
   getPermissions?(token?: string, extraData?: unknown): Promise<unknown>;
-  checkAuth(token?: string, refreshToken?: string): Promise<any>;
+  checkAuth?(token?: string, refreshToken?: string): Promise<any>;
   singUp(data: SingUpFields): Promise<unknown>;
 }

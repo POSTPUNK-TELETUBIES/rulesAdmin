@@ -252,7 +252,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       { count: 'exact' }
     );
 
-    return this.buildQuery(query, filter);
+    return this.buildQuery(query as any, filter);
   }
 
   getPaginatedRulesByFilterQuery(
