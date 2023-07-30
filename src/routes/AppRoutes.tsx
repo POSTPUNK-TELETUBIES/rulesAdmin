@@ -1,5 +1,3 @@
-import { PropsWithChildren } from 'react';
-
 import {
   HashRouter,
   BrowserRouter,
@@ -7,9 +5,8 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import { AuthProvider } from 'react-auth-kit';
 
-import { useIsAuthenticated } from 'react-auth-kit';
+import { AuthProvider } from 'react-auth-kit';
 
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
@@ -17,14 +14,9 @@ import { NavBar } from '../components/NavBar';
 
 import Admin from '../pages/Admin';
 import { isHashed } from '../../config/router';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 const RouterFn = isHashed ? HashRouter : BrowserRouter;
-
-const ProtectedRoute = ({ children }: PropsWithChildren) => {
-  const isAuthenticated = useIsAuthenticated();
-
-  return isAuthenticated ? <>{children}</> : <Navigate to='/home' />;
-};
 
 export const AppRoutes = () => {
   return (

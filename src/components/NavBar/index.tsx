@@ -107,7 +107,7 @@ export const NavBar = () => {
               {isAuthenticated && (
                 <Button sx={{ borderRadius: '50%' }} onClick={_handleClick}>
                   <Avatar sx={{ width: 40, height: 40 }} variant='circular'>
-                    {auth().user?.email}
+                    {auth()?.user?.email}
                   </Avatar>
                 </Button>
               )}
