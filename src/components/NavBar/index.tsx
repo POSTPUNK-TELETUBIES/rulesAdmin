@@ -96,7 +96,7 @@ export const NavBar = () => {
               </Box>
               <Typography variant='body1'>/ Gestión de Reglas</Typography>
             </Box>
-            {isAuthenticated && <Status />}
+            {isAuthenticated() && <Status />}
             <Stack direction='row' justifyContent='center' alignItems='center'>
               {palette?.mode === ColorPalletes.DARK ? (
                 <ModeNight />
@@ -104,7 +104,7 @@ export const NavBar = () => {
                 <LightMode />
               )}
               <Switch color='warning' onChange={_handleChange} />
-              {isAuthenticated && (
+              {isAuthenticated() && (
                 <Button sx={{ borderRadius: '50%' }} onClick={_handleClick}>
                   <Avatar sx={{ width: 40, height: 40 }} variant='circular'>
                     {auth()?.user?.email}

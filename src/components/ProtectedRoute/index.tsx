@@ -13,5 +13,5 @@ export const ProtectedRoute = ({
 }: PropsWithChildren<ProtectedRouteProps>) => {
   const isAuthenticated = useIsAuthenticated();
 
-  return isAuthenticated ? <>{children}</> : <Navigate to={redirectPath} />;
+  return isAuthenticated() ? <>{children}</> : <Navigate to={redirectPath} />;
 };
