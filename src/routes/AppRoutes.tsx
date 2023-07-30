@@ -25,7 +25,6 @@ export const AppRoutes = () => {
         <NavBar />
         <Routes>
           <Route path='/' element={<Navigate to='/admin' />} />
-          <Route path='/home' element={<Home />} />
           <Route
             path='/admin'
             element={
@@ -34,6 +33,7 @@ export const AppRoutes = () => {
               </ProtectedRoute>
             }
           />
+          <Route path='/home' element={<Home />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </AuthProvider>

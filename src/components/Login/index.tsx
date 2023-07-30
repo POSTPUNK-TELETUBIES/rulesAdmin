@@ -39,10 +39,10 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
 
   const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
     async ({ email, password }) => {
-      resetField('password');
       setLoginInfo({ email, password });
+      resetField('password');
     },
-    [resetField]
+    [resetField, setLoginInfo]
   );
 
   useEffect(() => {
@@ -51,11 +51,11 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
         message: 'Credenciales invalidas',
         variant: 'error',
       });
-  }, [error]);
+  }, [enqueueSnackbar, error]);
 
   useEffect(() => {
     if (!error && data) navigate('/admin');
-  }, [error, data]);
+  }, [error, data, navigate]);
 
   return (
     <Stack

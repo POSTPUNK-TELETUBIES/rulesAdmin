@@ -13,11 +13,11 @@ export function useLogin() {
   const [loginInfo, setLoginInfo] = useState<{
     email: string;
     password: string;
-  }>();
+  } | null>(null);
   const signIn = useSignIn();
 
   const reactQueryData = useQuery(
-    ['login'],
+    ['login', Date.now()],
     async () => {
       const data = await authClient.login(
         loginInfo?.email,
@@ -34,6 +34,8 @@ export function useLogin() {
     },
     {
       enabled: !!loginInfo,
+      cacheTime: 0,
+      staleTime: 0,
     }
   );
 

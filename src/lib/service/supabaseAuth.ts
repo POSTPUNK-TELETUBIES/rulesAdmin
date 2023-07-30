@@ -45,7 +45,7 @@ export class SupabaseAuthSingleton implements AuthClient {
   }
 
   async login(email?: string, password?: string) {
-    if (!email || !password) return;
+    if (!email || !password) throw new Error('Not valid email or password');
 
     const { data, error } = await this.client.signInWithPassword({
       email,
