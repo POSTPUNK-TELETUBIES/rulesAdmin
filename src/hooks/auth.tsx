@@ -17,12 +17,13 @@ export function useLogin() {
   const signIn = useSignIn();
 
   const reactQueryData = useQuery(
-    ['login', Date.now()],
+    ['login'],
     async () => {
       const data = await authClient.login(
         loginInfo?.email,
         loginInfo?.password
       );
+
       signIn({
         expiresIn: data.session.expires_in,
         token: data.session.access_token,
@@ -30,12 +31,14 @@ export function useLogin() {
         authState: data.user,
       });
 
+      setLoginInfo(null);
+
       return data;
     },
     {
       enabled: !!loginInfo,
-      cacheTime: 0,
       staleTime: 0,
+      cacheTime: 0,
     }
   );
 

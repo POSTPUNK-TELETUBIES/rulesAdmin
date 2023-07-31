@@ -178,7 +178,7 @@ export const useGetRulesStatus = (): UseGetRulesStatusResults => {
     );
 
     return () => {
-      channel.unsubscribe();
+      channel?.unsubscribe();
     };
   }, []);
 
