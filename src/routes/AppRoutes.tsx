@@ -5,33 +5,38 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
+
+import { AuthProvider } from 'react-auth-kit';
+
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import { NavBar } from '../components/NavBar';
-import { useContext } from 'react';
-import { AuthContext } from '../context/auth';
+
 import Admin from '../pages/Admin';
 import { isHashed } from '../../config/router';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 const RouterFn = isHashed ? HashRouter : BrowserRouter;
 
 export const AppRoutes = () => {
-  const { isLogged } = useContext(AuthContext);
-
   return (
     <RouterFn>
-      <NavBar />
-      <Routes>
-        <Route
-          path='/'
-          element={
-            !isLogged ? <Navigate to='/home' /> : <Navigate to='/admin' />
-          }
-        />
-        <Route path='/home' element={<Home />} />
-        {isLogged && <Route path='/admin' element={<Admin />} />}
-        <Route path='*' element={<NotFound />} />
-      </Routes>
+      <AuthProvider authName='_auth' authType='localstorage'>
+        <NavBar />
+        <Routes>
+          <Route path='/' element={<Navigate to='/admin' />} />
+          <Route
+            path='/admin'
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route path='/home' element={<Home />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </AuthProvider>
     </RouterFn>
   );
 };

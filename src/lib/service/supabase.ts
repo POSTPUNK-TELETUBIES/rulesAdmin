@@ -252,7 +252,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       { count: 'exact' }
     );
 
-    return this.buildQuery(query, filter);
+    return this.buildQuery(query as any, filter);
   }
 
   getPaginatedRulesByFilterQuery(
@@ -316,6 +316,8 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   subscribeChanges(
     cb: (payload: RealtimePostgresUpdatePayload<RulesStatus>) => void
   ) {
+    if (import.meta.env.VITE_IS_INTERCEPTOR_ON) return;
+
     return this.client
       .channel('changes')
       .on(
