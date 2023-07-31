@@ -1,0 +1,28 @@
+.container {
+  display: grid;
+  grid-template: "container";
+  place-items: center;
+  place-content: center;
+  overflow: hidden;
+  /* TODO: theme should be aside layout */
+  color: aliceblue;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+.container > *:first-child{
+  z-index: 3;
+}
+
+.container > * {
+  grid-area: container;
+  max-width: 1000px;
+  display: flex;
+}
+
+/* TODO: study a btter way to layout this to be DRY*/
+.canvasContainer{
+  background-color: #222222;
+  min-width: 100vw;
+  min-height: 100vh;
+}
