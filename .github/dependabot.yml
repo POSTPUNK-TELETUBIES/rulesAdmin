@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      labels:
+        - 'dependabot'
+        - 'dependencias'
+      target-branch: 'dev'
+    commit-message:
+      prefix: '[dependabot] '
