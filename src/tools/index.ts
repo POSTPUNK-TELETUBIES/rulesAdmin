@@ -82,7 +82,7 @@ export const renderConditional = <T extends ReactNode = ReactNode>(
   isRender: boolean,
   falseValue: T,
   trueValue: T
-) => (isRender ? falseValue : trueValue);
+) => (isRender ? trueValue : falseValue);
 
 /**
  * Returns a POJO like `{'123asd' : {id: '123asd', name: 'Juan'}, ...}`.
