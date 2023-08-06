@@ -18,6 +18,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "test/getTimeAgo.test.ts"],
+  "include": ["src", "test/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
