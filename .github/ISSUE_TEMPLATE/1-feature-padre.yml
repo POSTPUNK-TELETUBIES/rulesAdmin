@@ -1,6 +1,6 @@
 name: Feature Padre (p)
 description: Agregar una nueva funcionalidad
-labels: [parent]
+labels: [parent, feature]
 
 body:
   - type: textarea

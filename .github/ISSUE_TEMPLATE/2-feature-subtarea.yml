@@ -1,6 +1,6 @@
 name: Feature Subtarea (st)
 description: Agregar subtarea que pertenece a una tarea padre que agrega una nueva funcionalidad
-labels: [subtarea]
+labels: [subtask, feature]
 
 body:
   - type: input
@@ -8,7 +8,7 @@ body:
     attributes:
       label: Tarea padre
       description: 'Numero de la tarea padre a la que pertenece esta subtarea, Ejemplo: "- #12345"'
-      placeholder: "- #numero_de_tarea_padre"
+      placeholder: '- #numero_de_tarea_padre'
     validations:
       required: true
 
