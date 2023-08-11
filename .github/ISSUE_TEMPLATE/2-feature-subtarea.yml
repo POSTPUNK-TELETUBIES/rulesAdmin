@@ -1,4 +1,4 @@
-name: Feature Subtarea (st)
+name: Feature Subtask (st)
 description: Agregar subtarea que pertenece a una tarea padre que agrega una nueva funcionalidad
 labels: [subtask, feature]
 

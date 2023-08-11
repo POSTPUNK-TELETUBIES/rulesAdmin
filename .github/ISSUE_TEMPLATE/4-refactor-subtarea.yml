@@ -1,4 +1,4 @@
-name: Refactor Subtarea (st)
+name: Refactor Subtask (st)
 description: Agregar subtarea que pertenece a una tarea padre que soluciona un problema, mejora el codigo, etc.
 labels: [subtask, refactor]
 
