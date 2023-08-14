@@ -1,12 +1,19 @@
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { renderConditional } from '../src/tools/index';
+import faker from 'faker';
 
-test('render condition is false', () => {
-  const result = renderConditional(false, 'asdsa', 'zzzz');
-  expect(result).toBe('zzzz');
-});
+describe('render test', () => {
+  test('render condition is false', () => {
+    const randomValue1 = faker.lorem.words();
+    const randomValue2 = faker.lorem.words();
+    const result = renderConditional(false, randomValue1, randomValue2);
+    expect(result).toBe(randomValue2);
+  });
 
-test('render condition is true', () => {
-  const result = renderConditional(true, 'asdsa', 'zzzz');
-  expect(result).toBe('asdsa');
+  test('render condition is true', () => {
+    const randomValue1 = faker.lorem.words();
+    const randomValue2 = faker.lorem.words();
+    const result = renderConditional(true, randomValue1, randomValue2);
+    expect(result).toBe(randomValue1);
+  });
 });
