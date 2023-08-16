@@ -54,6 +54,7 @@ export const FilterPopover = ({
             label={label}
             value={value}
             reactiveCb={_handleReactive}
+            key={value}
           />
         ))}
       </Menu>

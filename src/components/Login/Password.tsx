@@ -35,6 +35,7 @@ export const Password = ({
         id={id}
         type={isVisible ? 'text' : 'password'}
         inputProps={inputProps}
+        autoComplete='current-password'
         endAdornment={
           <InputAdornment position='end'>
             <IconButton
