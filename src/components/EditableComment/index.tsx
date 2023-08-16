@@ -1,10 +1,12 @@
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent } from 'react';
 import { RuleDTO, RulesStatus } from '../../types/supabase';
-import { AuthContext } from '../../context/auth';
+
 import { useDebouncedCallback } from 'use-debounce';
 import synchroDB from '../../lib/service/dexie';
 import { IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+
+import { useAuthUser } from 'react-auth-kit';
 
 interface EditableCommentProps {
   title: string;
@@ -13,11 +15,12 @@ interface EditableCommentProps {
 
 export const EditableComment = ({ title, result }: EditableCommentProps) => {
   // TODO: add waiter
-  const { user } = useContext(AuthContext);
+  const auth = useAuthUser();
+
   const _handleChange = useDebouncedCallback(
     async ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
       return await synchroDB.saveDescription(
-        { ...result, user_email: user?.email },
+        { ...result, user_email: auth().user?.email },
         target.value
       );
     },

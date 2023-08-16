@@ -14,25 +14,35 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+
 import { MouseEvent, useCallback, useContext, useState } from 'react';
+
+import { useAuthUser, useIsAuthenticated } from 'react-auth-kit';
+
 import { ColorModeContext, ColorPalletes } from '../../theme';
 import { useTheme } from '@mui/material/styles';
 import { LightMode, Logout, ModeNight } from '@mui/icons-material';
 import { Status } from './status';
-import { AuthContext } from '../../context/auth';
+
 import { useNavigate } from 'react-router-dom';
 import styles from './navbar.module.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { useLogout } from '../../hooks/auth';
 
 // TODO: Planear pasar a layout
 export const NavBar = () => {
   const navigate = useNavigate();
   const { palette } = useTheme();
   const colorMode = useContext(ColorModeContext);
-  const { isLogged, user } = useContext(AuthContext);
+
   const [anchorRef, setAnchorRef] = useState(null);
-  const authClient = useContext(AuthContext);
+
+  const isAuthenticated = useIsAuthenticated();
+
+  const auth = useAuthUser();
+
+  const logout = useLogout();
 
   const _handleChange = useCallback(
     () => colorMode.toggleColorMode(),
@@ -48,6 +58,12 @@ export const NavBar = () => {
 
   const _handleClose = useCallback(() => {
     setAnchorRef(null);
+  }, []);
+
+  const _handleLogoutClick = useCallback(() => {
+    logout();
+    _handleClose();
+    navigate('home');
   }, []);
 
   return (
@@ -80,7 +96,7 @@ export const NavBar = () => {
               </Box>
               <Typography variant='body1'>/ Gestión de Reglas</Typography>
             </Box>
-            {isLogged && <Status />}
+            {isAuthenticated() && <Status />}
             <Stack direction='row' justifyContent='center' alignItems='center'>
               {palette?.mode === ColorPalletes.DARK ? (
                 <ModeNight />
@@ -88,10 +104,10 @@ export const NavBar = () => {
                 <LightMode />
               )}
               <Switch color='warning' onChange={_handleChange} />
-              {isLogged && (
+              {isAuthenticated() && (
                 <Button sx={{ borderRadius: '50%' }} onClick={_handleClick}>
                   <Avatar sx={{ width: 40, height: 40 }} variant='circular'>
-                    {user?.email[0]}
+                    {auth()?.user?.email}
                   </Avatar>
                 </Button>
               )}
@@ -101,13 +117,7 @@ export const NavBar = () => {
       </AppBar>
       <Menu open={!!anchorRef} anchorEl={anchorRef} onClose={_handleClose}>
         <List>
-          <MenuItem
-            onClick={() => {
-              authClient.logOut();
-              _handleClose();
-              navigate('home');
-            }}
-          >
+          <MenuItem onClick={_handleLogoutClick}>
             <ListItemIcon>
               <Logout />
             </ListItemIcon>

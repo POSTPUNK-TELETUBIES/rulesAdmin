@@ -193,7 +193,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     return count ?? 0;
   }
 
-  getQualityProfilesByLanguageQuery(languageId: string) {
+  private getQualityProfilesByLanguageQuery(languageId: string) {
     return this.client
       .from('qualityprofiles')
       .select()
@@ -216,6 +216,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
     qualityProfile_id: 'qualityProfile_id',
   };
 
+  // TODO: this is most likely a code smell, maybe separate to a util or  SRP class
   private buildQuery(
     query: PostgrestFilterBuilder<
       GenericSchema,
@@ -252,7 +253,7 @@ export class LocalSupabaseClient implements FetchClientSingleton {
       { count: 'exact' }
     );
 
-    return this.buildQuery(query, filter);
+    return this.buildQuery(query as any, filter);
   }
 
   getPaginatedRulesByFilterQuery(
@@ -316,6 +317,8 @@ export class LocalSupabaseClient implements FetchClientSingleton {
   subscribeChanges(
     cb: (payload: RealtimePostgresUpdatePayload<RulesStatus>) => void
   ) {
+    if (import.meta.env.VITE_IS_INTERCEPTOR_ON) return;
+
     return this.client
       .channel('changes')
       .on(

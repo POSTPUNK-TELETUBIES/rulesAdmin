@@ -74,6 +74,10 @@ export const serverInit = () =>
         return USER;
       });
 
+      this.post('/logout', () => {
+        return USER;
+      });
+
       this.namespace = '/rest/v1';
 
       this.get('/languages', (schema, request) => {

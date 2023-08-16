@@ -8,16 +8,17 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AuthContext } from '../../context/auth';
+
 import { Password } from './Password';
 
 import { LoadingButton } from '@mui/lab';
-import { AuthError } from '@supabase/supabase-js';
+
 import { useSnackbar } from 'notistack';
 
 import { useNavigate } from 'react-router-dom';
+import { useLogin } from '../../hooks/auth';
 
 interface LoginFields {
   email: string;
@@ -29,42 +30,32 @@ interface LoginProps {
   isSingUpAvailable?: boolean;
 }
 
-function useLogin() {
-  const authClient = useContext(AuthContext);
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-
-  async function login(email: string, password: string) {
-    try {
-      await authClient.login(email, password);
-      navigate('/admin');
-    } catch (error) {
-      const { message } = error as AuthError;
-      enqueueSnackbar('Credenciales inválidas', {
-        variant: 'error',
-        autoHideDuration: 3000,
-      });
-      return message;
-    }
-  }
-
-  return login;
-}
-
 export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
   const { handleSubmit, register, resetField } = useForm();
-  const login = useLogin();
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, setLoginInfo, isFetching: isLoading, error } = useLogin();
+  const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
     async ({ email, password }) => {
-      setIsLoading(true);
+      setLoginInfo({ email, password });
       resetField('password');
-      login(email, password);
-      setIsLoading(false);
     },
-    [login, resetField]
+    [resetField, setLoginInfo]
   );
+
+  useEffect(() => {
+    if (error)
+      enqueueSnackbar({
+        message: 'Credenciales invalidas',
+        variant: 'error',
+      });
+  }, [enqueueSnackbar, error]);
+
+  useEffect(() => {
+    if (!error && data) navigate('/admin');
+  }, [error, data, navigate]);
 
   return (
     <Stack

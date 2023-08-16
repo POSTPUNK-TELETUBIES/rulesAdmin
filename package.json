@@ -35,12 +35,16 @@
     "notistack": "^3.0.1",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
+    "react-auth-kit": "^2.12.4",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-hook-form": "^7.43.9",
     "react-lazy-load-image-component": "^1.6.0",
     "react-router-dom": "^6.14.1",
+    "react-tsparticles": "^2.11.0",
     "rxjs": "^7.8.0",
+    "tsparticles-engine": "^2.11.1",
+    "tsparticles-slim": "^2.11.1",
     "use-debounce": "^9.0.4"
   },
   "devDependencies": {
@@ -72,6 +76,7 @@
     "prettier": "^2.8.8",
     "prop-types": "15.8.1",
     "storybook": "7.0.23",
+    "storybook-css-modules": "^1.0.8",
     "typescript": "^5.0.2",
     "vite": "^4.3.0",
     "vitest": "^0.33.0"

@@ -1,20 +1,12 @@
 name: POC
 description: Realizar una prueba de concepto de alguna libreria o tecnologia, etc.
-labels: [poc, doc]
+labels: [poc, parent]
 
 body:
   - type: input
     id: descripcion
     attributes:
       label: Descripción del problema
-      value: Aqui explica detalladamente...
-    validations:
-      required: false
-
-  - type: input
-    id: solucion
-    attributes:
-      label: Descripción de como se solucionó
       value: Aqui explica detalladamente...
     validations:
       required: false

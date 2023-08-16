@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { getTimeAgo } from './getTimeAgo';
+import { getTimeAgo } from '../src/tools/getTimeAgo';
 
 test('Debe devolver el tiempo relativo correctamente para fechas pasadas', () => {
   const now = new Date();

@@ -7,41 +7,24 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AuthContext } from '../../context/auth';
+
 import type { SingUpFields } from '../../types/auth';
 import { Password } from '../Login/Password';
+import { useSignUp } from '../../hooks/auth';
 
 interface SingUpProps {
   handleLoginClick?: () => void;
 }
 
 export const SingUp = ({ handleLoginClick }: SingUpProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasSingUp, setHasSingUp] = useState(false);
   const { register, handleSubmit } = useForm();
-  const authClient = useContext(AuthContext);
+  const { setRegisterInfo, isFetching: isLoading } = useSignUp();
 
-  const _handleSubmit: SubmitHandler<SingUpFields> = useCallback(
-    async (data) => {
-      setIsLoading(true);
-      await authClient.singUp(data);
-      setIsLoading(false);
-      setHasSingUp(true);
-    },
-    [authClient]
-  );
-
-  if (hasSingUp)
-    return (
-      <Stack>
-        <Typography>
-          Revisa tu correo y haz click en el enalnce de confirmacion, si ya lo
-          hiciste, <Link onClick={handleLoginClick}>Logueate</Link>
-        </Typography>
-      </Stack>
-    );
+  const _handleSubmit: SubmitHandler<SingUpFields> = useCallback((data) => {
+    setRegisterInfo(data);
+  }, []);
 
   return (
     <Stack component='form' onSubmit={handleSubmit(_handleSubmit)} spacing={2}>

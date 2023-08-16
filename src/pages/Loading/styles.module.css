@@ -1,0 +1,6 @@
+.loadingPage{
+  display: grid;
+  place-items: center;
+  min-inline-size: 100vw;
+  min-block-size: 100vh;
+}
