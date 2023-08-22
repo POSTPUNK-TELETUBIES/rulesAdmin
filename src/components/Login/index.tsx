@@ -1,3 +1,8 @@
+import React, { useCallback, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import * as yup from 'yup';
 import {
   Avatar,
   Box,
@@ -8,22 +13,20 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-
+import { useLogin } from '../../hooks/auth';
+import { LoadingButton } from '@mui/lab';
 import { Password } from './Password';
 
-import { LoadingButton } from '@mui/lab';
-
-import { useSnackbar } from 'notistack';
-
-import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../../hooks/auth';
-
-interface LoginFields {
-  email: string;
-  password: string;
-}
+const loginValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email('Ingresa un correo electrónico válido')
+    .required('El correo electrónico es requerido'),
+  password: yup
+    .string()
+    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .required('La contraseña es requerida'),
+});
 
 interface LoginProps {
   singUpClick?: () => void;
@@ -37,24 +40,35 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
+  const _handleSubmit = useCallback(
     async ({ email, password }) => {
-      setLoginInfo({ email, password });
-      resetField('password');
+      try {
+        await loginValidationSchema.validate({ email, password });
+        setLoginInfo({ email, password });
+        resetField('password');
+      } catch (validationError) {
+        enqueueSnackbar({
+          message: validationError.message,
+          variant: 'error',
+        });
+      }
     },
-    [resetField, setLoginInfo]
+    [enqueueSnackbar, resetField, setLoginInfo]
   );
 
   useEffect(() => {
-    if (error)
+    if (error) {
       enqueueSnackbar({
-        message: 'Credenciales invalidas',
+        message: 'Credenciales inválidas',
         variant: 'error',
       });
+    }
   }, [enqueueSnackbar, error]);
 
   useEffect(() => {
-    if (!error && data) navigate('/admin');
+    if (!error && data) {
+      navigate('/admin');
+    }
   }, [error, data, navigate]);
 
   return (
@@ -66,6 +80,7 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
       <Box display='flex' justifyContent='center'>
         <Avatar sx={{ width: 80, height: 80 }} />
       </Box>
+
       <FormControl disabled={isLoading}>
         <InputLabel htmlFor={'email'}>Correo Electronico</InputLabel>
         <OutlinedInput
