@@ -1,11 +1,11 @@
-import { Box, Typography } from '@mui/material';
-
+import { Box, CircularProgress, Typography } from '@mui/material';
 import styles from './styles.module.css';
 
 function Loading() {
   return (
     <Box className={styles.loadingPage}>
-      <Typography>Cargando...</Typography>
+      <Typography variant='h6'>Cargando...</Typography>
+      <CircularProgress />
     </Box>
   );
 }

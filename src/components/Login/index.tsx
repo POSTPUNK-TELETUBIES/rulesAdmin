@@ -72,6 +72,7 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
           id='email'
           label='Correo Electronico'
           inputProps={register('email')}
+          autoComplete='email'
         />
       </FormControl>
       <Password disabled={isLoading} inputProps={register('password')} />
