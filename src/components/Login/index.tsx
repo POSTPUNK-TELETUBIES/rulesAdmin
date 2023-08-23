@@ -23,6 +23,12 @@ interface LoginProps {
   isSingUpAvailable?: boolean;
 }
 
+const parseErrors = (errors: Record<string, any>) =>
+  Object.entries(errors)
+    .filter(([, value]) => value && value.message)
+    .map(([fieldName, value]) => `${fieldName}: ${value.message}`)
+    .join('\n');
+
 export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
   const {
     handleSubmit,
@@ -35,33 +41,13 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
   const { data, setLoginInfo, isFetching: isLoading, error } = useLogin();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const parseErrors = (errors) => {
-    let errorMessage = '';
-    for (const fieldName in errors) {
-      if (errors[fieldName]) {
-        errorMessage += `${fieldName}: ${errors[fieldName].message}\n`;
-      }
-    }
-    return errorMessage.trim();
-  };
-
-  const onSubmit = async ({ email, password }) => {
-    try {
-      await loginSchema.validate({ email, password });
-      setLoginInfo({ email, password });
-      resetField('password');
-    } catch (validationError) {
-      enqueueSnackbar({
-        message: validationError.message,
-        variant: 'error',
-      });
-    }
+  const onSubmit = ({ email, password }) => {
+    setLoginInfo({ email, password });
+    resetField('password');
   };
 
   useEffect(() => {
-    if (!error && data) {
-      navigate('/admin');
-    }
+    if (!error && data) navigate('/admin');
   }, [error, data, navigate]);
 
   useEffect(() => {

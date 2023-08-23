@@ -7,6 +7,6 @@ export const loginSchema = yup.object().shape({
     .required('El correo es obligatorio'),
   password: yup
     .string()
-    .min(6, 'Debe ser mínimo de 6 caracteres')
-    .required('La contraseña es obligatoria'),
+    .required('La contraseña es obligatoria')
+    .min(6, 'La contraseña debe ser mínima de 6 caracteres'),
 });
