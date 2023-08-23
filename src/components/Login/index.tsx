@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -24,46 +24,56 @@ interface LoginProps {
 }
 
 export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
-  const { handleSubmit, register, resetField } = useForm({
+  const {
+    handleSubmit,
+    register,
+    resetField,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(loginSchema),
   });
   const { data, setLoginInfo, isFetching: isLoading, error } = useLogin();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const _handleSubmit = useCallback(
-    async ({ email, password }) => {
-      try {
-        await loginSchema.validate({ email, password });
-        setLoginInfo({ email, password });
-        resetField('password');
-      } catch (validationError) {
-        enqueueSnackbar({
-          message: validationError.message,
-          variant: 'error',
-        });
+  const parseErrors = (errors) => {
+    let errorMessage = '';
+    for (const fieldName in errors) {
+      if (errors[fieldName]) {
+        errorMessage += `${fieldName}: ${errors[fieldName].message}\n`;
       }
-    },
-    [enqueueSnackbar, resetField, setLoginInfo]
-  );
+    }
+    return errorMessage.trim();
+  };
 
-  useEffect(() => {
-    if (error)
+  const onSubmit = async ({ email, password }) => {
+    try {
+      await loginSchema.validate({ email, password });
+      setLoginInfo({ email, password });
+      resetField('password');
+    } catch (validationError) {
       enqueueSnackbar({
-        message: 'Credenciales inválidas',
+        message: validationError.message,
         variant: 'error',
       });
-  }, [enqueueSnackbar, error]);
+    }
+  };
 
   useEffect(() => {
-    if (!error && data) navigate('/admin');
+    if (!error && data) {
+      navigate('/admin');
+    }
   }, [error, data, navigate]);
 
+  useEffect(() => {
+    if (Object.values(errors).some(Boolean))
+      enqueueSnackbar({
+        message: parseErrors(errors),
+        variant: 'error',
+      });
+  }, [errors, enqueueSnackbar]);
+
   return (
-    <Stack
-      component={'form'}
-      onSubmit={handleSubmit(_handleSubmit)}
-      spacing={2}
-    >
+    <Stack component={'form'} onSubmit={handleSubmit(onSubmit)} spacing={2}>
       <Box display='flex' justifyContent='center'>
         <Avatar sx={{ width: 80, height: 80 }} />
       </Box>
