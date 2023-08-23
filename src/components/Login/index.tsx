@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import * as yup from 'yup';
 import {
   Avatar,
   Box,
@@ -16,17 +15,8 @@ import {
 import { useLogin } from '../../hooks/auth';
 import { LoadingButton } from '@mui/lab';
 import { Password } from './Password';
-
-const loginValidationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email('Ingresa un correo electrónico válido')
-    .required('El correo electrónico es requerido'),
-  password: yup
-    .string()
-    .min(6, 'La contraseña debe tener al menos 6 caracteres')
-    .required('La contraseña es requerida'),
-});
+import { loginSchema } from './loginSchema';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface LoginProps {
   singUpClick?: () => void;
@@ -34,16 +24,16 @@ interface LoginProps {
 }
 
 export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
-  const { handleSubmit, register, resetField } = useForm();
+  const { handleSubmit, register, resetField } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
   const { data, setLoginInfo, isFetching: isLoading, error } = useLogin();
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const _handleSubmit = useCallback(
     async ({ email, password }) => {
       try {
-        await loginValidationSchema.validate({ email, password });
+        await loginSchema.validate({ email, password });
         setLoginInfo({ email, password });
         resetField('password');
       } catch (validationError) {
@@ -57,18 +47,15 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
   );
 
   useEffect(() => {
-    if (error) {
+    if (error)
       enqueueSnackbar({
         message: 'Credenciales inválidas',
         variant: 'error',
       });
-    }
   }, [enqueueSnackbar, error]);
 
   useEffect(() => {
-    if (!error && data) {
-      navigate('/admin');
-    }
+    if (!error && data) navigate('/admin');
   }, [error, data, navigate]);
 
   return (
@@ -80,7 +67,6 @@ export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
       <Box display='flex' justifyContent='center'>
         <Avatar sx={{ width: 80, height: 80 }} />
       </Box>
-
       <FormControl disabled={isLoading}>
         <InputLabel htmlFor={'email'}>Correo Electronico</InputLabel>
         <OutlinedInput
