@@ -1,3 +1,7 @@
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import {
   Avatar,
   Box,
@@ -8,61 +12,54 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useCallback, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-
-import { Password } from './Password';
-
-import { LoadingButton } from '@mui/lab';
-
-import { useSnackbar } from 'notistack';
-
-import { useNavigate } from 'react-router-dom';
 import { useLogin } from '../../hooks/auth';
-
-interface LoginFields {
-  email: string;
-  password: string;
-}
+import { LoadingButton } from '@mui/lab';
+import { Password } from './Password';
+import { loginSchema } from './loginSchema';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 interface LoginProps {
   singUpClick?: () => void;
   isSingUpAvailable?: boolean;
 }
 
+const parseErrors = (errors: Record<string, any>) =>
+  Object.entries(errors)
+    .filter(([, value]) => value && value.message)
+    .map(([fieldName, value]) => `${fieldName}: ${value.message}`)
+    .join('\n');
+
 export function Login({ singUpClick, isSingUpAvailable }: LoginProps) {
-  const { handleSubmit, register, resetField } = useForm();
+  const {
+    handleSubmit,
+    register,
+    resetField,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
   const { data, setLoginInfo, isFetching: isLoading, error } = useLogin();
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
-  const _handleSubmit: SubmitHandler<LoginFields> = useCallback(
-    async ({ email, password }) => {
-      setLoginInfo({ email, password });
-      resetField('password');
-    },
-    [resetField, setLoginInfo]
-  );
-
-  useEffect(() => {
-    if (error)
-      enqueueSnackbar({
-        message: 'Credenciales invalidas',
-        variant: 'error',
-      });
-  }, [enqueueSnackbar, error]);
+  const onSubmit = ({ email, password }) => {
+    setLoginInfo({ email, password });
+    resetField('password');
+  };
 
   useEffect(() => {
     if (!error && data) navigate('/admin');
   }, [error, data, navigate]);
 
+  useEffect(() => {
+    if (Object.values(errors).some(Boolean))
+      enqueueSnackbar({
+        message: parseErrors(errors),
+        variant: 'error',
+      });
+  }, [errors, enqueueSnackbar]);
+
   return (
-    <Stack
-      component={'form'}
-      onSubmit={handleSubmit(_handleSubmit)}
-      spacing={2}
-    >
+    <Stack component={'form'} onSubmit={handleSubmit(onSubmit)} spacing={2}>
       <Box display='flex' justifyContent='center'>
         <Avatar sx={{ width: 80, height: 80 }} />
       </Box>
