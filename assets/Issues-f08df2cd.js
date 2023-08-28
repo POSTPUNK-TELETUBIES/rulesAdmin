@@ -1,0 +1,1 @@
+import{j as s}from"./@mui/icons-material-21caf791.js";import"./vendor-207237f2.js";import"./@emotion/react-23f5b1b9.js";import"./@emotion/styled-94d978bf.js";const i=()=>s.jsx("div",{children:"Issues"});export{i as default};
