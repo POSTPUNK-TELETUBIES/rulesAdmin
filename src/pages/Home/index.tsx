@@ -1,8 +1,8 @@
 import { Stack, Button, Box, Grid } from '@mui/material';
 import { useCallback, useState } from 'react';
-import { LoginDrawer } from '../components/LoginDrawer';
-import { Login } from '../components/Login';
-import { SingUp } from '../components/SingUp';
+import { LoginDrawer } from '../../components/LoginDrawer';
+import { Login } from '../../components/Login';
+import { SingUp } from '../../components/SingUp';
 import styles from './home.module.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
